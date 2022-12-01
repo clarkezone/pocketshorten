@@ -5,6 +5,7 @@
 
 # project state
 
+Bootstrapping infra:
 - [x] Local build
 - [x] Local build from dockerfile
 - [ ] Local precommit / linting
@@ -15,3 +16,5 @@
 - [ ] k8s local override with staging / prod
 - [ ] Best practices from mail log
 - [ ] Fork and make template
+
+Bring over shortening prototype
