@@ -80,10 +80,10 @@ buildimage:
 	@echo ${IMG}
 	@echo ${VERSION}
 
-	-podman manifest exists localhost/$(IMG):latest && podman manifest rm localhost/pocketgeotemp:latest
+	-podman manifest exists localhost/$(IMG):latest && podman manifest rm localhost/$(IMG):latest
 
-	podman build --arch=amd64 --build-arg BUILD_VERSION="${VERSION_STRING}" --build-arg BUILD_HASH="${VERSION_HASH}" -t ${IMG}:${VERSION}.amd64 -f Dockerfile
-	podman build --arch=arm64 --build-arg BUILD_VERSION="${VERSION_STRING}" --build-arg BUILD_HASH="${VERSION_HASH}" -t ${IMG}:${VERSION}.arm64 -f Dockerfile
+	podman build --arch=amd64 --build-arg BUILD_HEADTAG="${HEAD_TAG}" --build-arg BUILD_HASH="${VERSION_HASH}" --build-arg BUILD_BRANCH="${HEAD_BRANCH}" -t ${IMG}:${VERSION}.amd64 -f Dockerfile
+	podman build --arch=arm64 --build-arg BUILD_VERSION="${HEAD_TAG}" --build-arg BUILD_HASH="${VERSION_HASH}" --build-arg BUILD_BRANCH="${HEAD_BRANCH}" -t ${IMG}:${VERSION}.arm64 -f Dockerfile
 
 	podman manifest create ${IMG}:${VERSION}
 	podman manifest add ${IMG}:${VERSION} containers-storage:localhost/${IMG}:${VERSION}.amd64

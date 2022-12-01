@@ -16,10 +16,10 @@ RUN go mod download
 COPY . .
 #RUN --mount=type=cache,target=/root/.cache make build
 RUN apk --no-cache add gcc build-base git
-RUN make build HEAD_TAG="$BUILD_HEADTAG" VERSION_HASH=$BUILD_HASH BRANCH_NAME=$BUILD_BRANCH
+RUN make build HEAD_TAG="$BUILD_HEADTAG" VERSION_HASH="$BUILD_HASH" BRANCH_NAME="$BUILD_BRANCH"
 
 # test that that the build is good and app launches
-RUN /build/bin/previewd version
+RUN /build/bin/pocketshorten version
 
 #RUN go test -v
 
