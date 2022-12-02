@@ -64,6 +64,10 @@ lint:
 	go vet $(shell go list ./...)
 	golangci-lint run
 
+.PHONY: precommit-installhooks
+precommit:
+	pre-commit install-hooks
+
 .PHONY: precommit
 precommit:
 	pre-commit run --all-files
