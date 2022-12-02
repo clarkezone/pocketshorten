@@ -1,0 +1,71 @@
+on: [push, pull_request]
+
+env:
+  TEST_GITLAYER_REPO_NOAUTHURL: ${{ secrets.TEST_GITLAYER_REPO_NOAUTHURL }}
+  TEST_GITLAYER_LOCALDIR: ${{ secrets.TEST_GITLAYER_LOCALDIR }}
+  TEST_GITLAYER_BRANCHSWITCH: ${{ secrets.TEST_GITLAYER_BRANCHSWITCH }}
+  TEST_GITLAYER_SECURE_REPO_NOAUTH: ${{ secrets.TEST_GITLAYER_SECURE_REPO_NOAUTH }}
+  TEST_GITLAYER_SECURECLONEPWNAME: ${{ secrets.TEST_GITLAYER_SECURECLONEPWNAME }}
+
+name: run tests
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: 1.18.0
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Run linters
+        uses: golangci/golangci-lint-action@v3
+        with:
+          version: v1.45.2
+
+  test:
+    strategy:
+      matrix:
+        go-version: [1.19.x]
+        platform: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.platform }}
+    steps:
+      - name: Install Go
+        if: success()
+        uses: actions/setup-go@v2
+        with:
+          go-version: ${{ matrix.go-version }}
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: install compare tool
+        run: go install github.com/homeport/dyff/cmd/dyff@latest
+      - name: Run tests
+        env:
+          TEST_GITLAYER_REPO_NOAUTHURL: ${{ secrets.TEST_GITLAYER_REPO_NOAUTHURL }}
+          TEST_GITLAYER_LOCALDIR: ${{ secrets.TEST_GITLAYER_LOCALDIR }}
+          TEST_GITLAYER_BRANCHSWITCH: ${{ secrets.TEST_GITLAYER_BRANCHSWITCH }}
+          TEST_GITLAYER_SECURE_REPO_NOAUTH: ${{ secrets.TEST_GITLAYER_SECURE_REPO_NOAUTH }}
+          TEST_GITLAYER_SECURECLONEPWNAME: ${{ secrets.TEST_GITLAYER_SECURECLONEPWNAME }}
+        run: go test -v -covermode=count ./...
+
+  coverage:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install Go
+        if: success()
+        uses: actions/setup-go@v3
+        with:
+          go-version: 1.19.x
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: install compare tool
+        run: go install github.com/homeport/dyff/cmd/dyff@latest
+      - name: Calc coverage
+        run: |
+          go test -race -covermode atomic -coverprofile=covprofile ./...
+      - name: Install goveralls
+        run: go install github.com/mattn/goveralls@latest
+      - name: Send coverage
+        env:
+          COVERALLS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: goveralls -coverprofile=covprofile -service=github

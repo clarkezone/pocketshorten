@@ -10,13 +10,14 @@ Bootstrapping infra:
 - [x] Local build
 - [x] Local build from dockerfile
 - [x] Local precommit / linting / githook
-- [ ] Fix name to be consistent
+- [x] Fix name to be consistent
 - [ ] Implement CI build, publish to docker
-- [ ] Fix CI artifacts
-- [ ] k8s public
-- [ ] Instructions for prerequs
-- [ ] k8s local override with staging / prod
+- [ ] Fix CI artifacts (eg code coverage)
+- [ ] Fix repo badges
 - [ ] Best practices from mail log
+- [ ] k8s public
+- [ ] k8s local override with staging / prod
+- [ ] Instructions for prerequs
 - [ ] Fork and make template
 
 Bring over shortening prototype
@@ -25,5 +26,11 @@ Bring over shortening prototype
 
 ## Install prerequisits
 
-TODO
-`pre-commit install-hooks`
+1. golang 1.9x
+2. make
+3. TODO rest of items
+4. `pre-commit install-hooks`
+
+# backlog
+git pre-commit hook not working
+Add vscode devcontaienr
