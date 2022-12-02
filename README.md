@@ -22,6 +22,8 @@ Bootstrapping infra:
 Bring over shortening prototype
 
 # Building
+
 ## Install prerequisits
+
 TODO
 `pre-commit install-hooks`

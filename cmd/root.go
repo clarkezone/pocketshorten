@@ -20,9 +20,9 @@ var outputMode string
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:   "pocketshortener",
-	Short: "pocketshortener is a URL shortener.",
-	Long: `pocketshortener is a URL shortener based on the pocketbase backend.
+	Use:   "pocketshorten",
+	Short: "pocketshorten is a URL shortener.",
+	Long: `pocketshorten is a URL shortener based on the pocketbase backend.
 
 To install the completion script on zsh,
 ensure that .zshrc contains:
@@ -30,7 +30,7 @@ ensure that .zshrc contains:
   compinit -i
 
 Then run the following:
-  sudo -- sh -c 'previewd completion zsh > /usr/local/share/zsh/site-functions/_previewd'
+  sudo -- sh -c 'pocketshorten completion zsh > /usr/local/share/zsh/site-functions/_pocketshorten'
 
 to quickly create a Cobra application.`,
 	// Uncomment the following line if your bare application

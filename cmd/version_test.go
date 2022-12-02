@@ -2,7 +2,7 @@ package cmd
 
 import (
 	"bytes"
-	"io/ioutil"
+	"io"
 	"os"
 	"testing"
 
@@ -31,11 +31,11 @@ func Test_ExecuteVersion(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	out, err := ioutil.ReadAll(b)
+	out, err := io.ReadAll(b)
 	if err != nil {
 		t.Fatal(err)
 	}
-	expected := "pocketshortener version:1 hash:A\n"
+	expected := "pocketshorten version:1 hash:A\n"
 	if string(out) != expected {
 		t.Fatalf("expected \"%s\" got \"%s\"", expected, string(out))
 	}
