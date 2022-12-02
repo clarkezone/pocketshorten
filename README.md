@@ -6,15 +6,22 @@
 # project state
 
 Bootstrapping infra:
+
 - [x] Local build
 - [x] Local build from dockerfile
-- [ ] Local precommit / linting
+- [x] Local precommit / linting / githook
 - [ ] Fix name to be consistent
 - [ ] CI build, publish to docker
 - [ ] Fix CI artifacts
+- [ ] Instructions for prerequs
 - [ ] k8s public
 - [ ] k8s local override with staging / prod
 - [ ] Best practices from mail log
 - [ ] Fork and make template
 
 Bring over shortening prototype
+
+# Building
+## Install prerequisits
+TODO
+`pre-commit install-hooks`
