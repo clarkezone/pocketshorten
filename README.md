@@ -1,4 +1,4 @@
-# pocketshortener
+# Pocketshorten
 
 [![License](https://img.shields.io/github/license/clarkezone/pocketshorten.svg)](https://github.com/clarkezone/pocketshorten/blob/main/LICENSE)
 [![Go Report Card](https://goreportcard.com/badge/github.com/clarkezone/pocketshorten)](https://goreportcard.com/report/github.com/clarkezone/pocketshorten)
@@ -24,6 +24,7 @@ Bootstrapping infra:
 - [ ] k8s local override with staging / prod
 - [ ] Instructions for prerequs
 - [ ] Fork and make template
+- [ ] Turn on PR enforcement, protect main branch
 
 Bring over shortening prototype
 
@@ -36,12 +37,13 @@ Bring over shortening prototype
 3. TODO rest of items
 4. `precommit-installhooks`
 
-# backlog
+# Backlog
 
-Add vscode devcontaienr
-complete openssf best practices
+- Add vscode devcontaienr
+- complete openssf best practices
+- Add minimal viable covernance
 
-# creating a new release
+# Breating a new release
 
 ```bash
 git tag -a v0.0.1 -m "helloinfra"
