@@ -29,9 +29,8 @@ Bring over shortening prototype
 1. golang 1.9x
 2. make
 3. TODO rest of items
-4. `pre-commit install-hooks`
+4. `precommit-installhooks`
 
 # backlog
 
-git pre-commit hook not working
 Add vscode devcontaienr

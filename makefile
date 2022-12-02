@@ -66,7 +66,7 @@ lint:
 
 .PHONY: precommit-installhooks
 precommit:
-	pre-commit install-hooks
+	pre-commit install
 
 .PHONY: precommit
 precommit:
