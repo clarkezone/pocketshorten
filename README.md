@@ -11,10 +11,10 @@ Bootstrapping infra:
 - [x] Local build from dockerfile
 - [x] Local precommit / linting / githook
 - [ ] Fix name to be consistent
-- [ ] CI build, publish to docker
+- [ ] Implement CI build, publish to docker
 - [ ] Fix CI artifacts
-- [ ] Instructions for prerequs
 - [ ] k8s public
+- [ ] Instructions for prerequs
 - [ ] k8s local override with staging / prod
 - [ ] Best practices from mail log
 - [ ] Fork and make template
