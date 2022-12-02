@@ -17,9 +17,9 @@ Bootstrapping infra:
 - [x] Local precommit / linting / githook
 - [x] Fix name to be consistent
 - [x] Implement CI build, publish to docker
-- [ ] Fix CI artifacts (eg code coverage)
-- [ ] Fix repo badges
-- [ ] Best practices from mail log
+- [x] Fix CI artifacts (eg code coverage)
+- [x] Fix repo badges
+- [x] Best practices from mail log
 - [ ] k8s public
 - [ ] k8s local override with staging / prod
 - [ ] Instructions for prerequs
@@ -40,3 +40,11 @@ Bring over shortening prototype
 
 Add vscode devcontaienr
 complete openssf best practices
+
+# creating a new release
+
+```bash
+git tag -a v0.0.1 -m "helloinfra"
+git push origin v0.0.1
+gh release create
+```
