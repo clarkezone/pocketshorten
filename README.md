@@ -6,7 +6,7 @@
 [![Go Reference](https://pkg.go.dev/badge/github.com/clarkezone/pocketshorten.svg)](https://pkg.go.dev/github.com/clarkezone/pocketshorten)
 [![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/6231/badge)](https://bestpractices.coreinfrastructure.org/projects/6231)
 [![GitHub release](https://img.shields.io/github/release/okteto/okteto.svg?style=flat-square)](https://github.com/clarkezone/pocketshorten/releases)
-[!![Total Downloads](https://img.shields.io/github/downloads/clarkezone/pocketshorten/total?logo=github&logoColor=white)
+[![Total Downloads](https://img.shields.io/github/downloads/clarkezone/pocketshorten/total?logo=github&logoColor=white)
 
 # project state
 
