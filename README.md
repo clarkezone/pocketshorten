@@ -22,6 +22,7 @@ Bootstrapping infra:
 - [x] Best practices from mail log
 - [ ] k8s public
 - [ ] k8s local override with staging / prod
+- [ ] Service Monitor and dashboard for telemetry
 - [ ] Instructions for prerequs
 - [ ] Fork and make template
 - [ ] Turn on PR enforcement, protect main branch
