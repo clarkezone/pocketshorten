@@ -10,11 +10,11 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/clarkezone/pocketshorten/internal"
 	"github.com/clarkezone/pocketshorten/pkg/basicserver"
 	"github.com/clarkezone/pocketshorten/pkg/config"
-	"github.com/spf13/cobra"
-
 	clarkezoneLog "github.com/clarkezone/pocketshorten/pkg/log"
+	"github.com/spf13/cobra"
 )
 
 var bs = basicserver.CreateBasicServer()
@@ -33,6 +33,7 @@ to quickly create a Cobra application.`,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clarkezoneLog.Successf("previewd version %v,%v started in testserver mode\n",
 				config.VersionString, config.VersionHash)
+			clarkezoneLog.Successf("Log level set to %v", internal.LogLevel)
 			mux := basicserver.DefaultMux()
 			mux.HandleFunc("/", getHelloHandler())
 			// mux.Handle("/metrics", promhttp.Handler())
@@ -49,7 +50,7 @@ to quickly create a Cobra application.`,
 
 func getHelloHandler() func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
-		message := fmt.Sprintln("Hello World<BR>")
+		message := fmt.Sprintln("Hello World")
 		_, err := w.Write([]byte(message))
 		if err != nil {
 			clarkezoneLog.Debugf("Failed to write bytes %v\n", err)
