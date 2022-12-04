@@ -40,7 +40,7 @@ to quickly create a Cobra application.`,
 
 			var wrappedmux http.Handler
 			wrappedmux = basicserver.NewLoggingMiddleware(mux)
-			wrappedmux = basicserver.NewPromMetricsMiddleware("previewd_testserver_", wrappedmux)
+			wrappedmux = basicserver.NewPromMetricsMiddleware("pocketshortener_testservice", wrappedmux)
 
 			bs.StartListen("", wrappedmux)
 			return bs.WaitforInterupt()
