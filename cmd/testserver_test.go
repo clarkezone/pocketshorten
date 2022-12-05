@@ -19,7 +19,8 @@ func Test_testserver(t *testing.T) {
 	if err != nil {
 		t.Errorf("expected error to be nil got %v", err)
 	}
-	if string(data) != "Hello World>\n" {
-		t.Errorf("expected Hello World got %v", string(data))
+	expected := "Hello World<br>\n"
+	if string(data) != expected {
+		t.Errorf("expected %v World got %v", expected, string(data))
 	}
 }

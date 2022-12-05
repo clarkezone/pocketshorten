@@ -50,7 +50,7 @@ to quickly create a Cobra application.`,
 
 func getHelloHandler() func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
-		message := fmt.Sprintln("Hello World")
+		message := fmt.Sprintln("Hello World<br>")
 		_, err := w.Write([]byte(message))
 		if err != nil {
 			clarkezoneLog.Debugf("Failed to write bytes %v\n", err)
