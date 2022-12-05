@@ -36,12 +36,14 @@ to quickly create a Cobra application.`,
 			clarkezoneLog.Successf("Log level set to %v", internal.LogLevel)
 			mux := basicserver.DefaultMux()
 			mux.HandleFunc("/", getHelloHandler())
-			// mux.Handle("/metrics", promhttp.Handler())
 
 			var wrappedmux http.Handler
 			wrappedmux = basicserver.NewLoggingMiddleware(mux)
 			wrappedmux = basicserver.NewPromMetricsMiddleware("pocketshortener_testservice", wrappedmux)
 
+			clarkezoneLog.Successf("Starting httpserver on port %v", internal.Port)
+			bs.StartMetrics()
+			clarkezoneLog.Successf("Starting metrics on port %v", internal.MetricsPort)
 			bs.StartListen("", wrappedmux)
 			return bs.WaitforInterupt()
 		},

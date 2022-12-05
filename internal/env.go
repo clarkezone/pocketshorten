@@ -16,6 +16,10 @@ const (
 	PortVar     = "port"
 	defaultPort = 8090
 
+	// PortVar is name of environment variable containing port
+	MetricsPortVar     = "metricsport"
+	defaultMetricsPort = 8095
+
 	// LogLevelVar is name of environment variable containing loglevel
 	LogLevelVar     = "loglevel"
 	defaultLogLevel = "Warn"
@@ -46,8 +50,11 @@ const (
 )
 
 var (
-	// Port is the port set in environment
+	// Port is the port set in environment for serving http traffic
 	Port int
+
+	// MetricsPort is the port set in environment for metrics
+	MetricsPort int
 
 	// LogLevel is read from env
 	LogLevel string
@@ -80,6 +87,7 @@ var (
 func init() {
 	viper.AutomaticEnv()
 	viper.SetDefault(PortVar, defaultPort)
+	viper.SetDefault(MetricsPortVar, defaultMetricsPort)
 	viper.SetDefault(LogLevelVar, defaultLogLevel)
 	viper.SetDefault(KubeConfigPathVar, getDefaultKubeConfig())
 	viper.SetDefault(InitialBuildVar, true)
@@ -87,6 +95,7 @@ func init() {
 	viper.SetDefault(WebhookListenVar, true)
 
 	Port = viper.GetInt(PortVar)
+	MetricsPort = viper.GetInt(MetricsPortVar)
 	LogLevel = viper.GetString(LogLevelVar)
 	TargetRepo = viper.GetString(TargetRepoVar)
 	LocalDir = viper.GetString(LocalDirVar)
@@ -120,6 +129,10 @@ func ValidateEnv() error {
 	clarkezoneLog.Debugf("ValidateEnv called")
 	if Port == 0 {
 		clarkezoneLog.Debugf("ValudateEnv() error port == 0")
+		return fmt.Errorf("bad port")
+	}
+	if MetricsPort == 0 {
+		clarkezoneLog.Debugf("ValudateEnv() error etricsport == 0")
 		return fmt.Errorf("bad port")
 	}
 	if TargetRepo == "" {

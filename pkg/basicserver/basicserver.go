@@ -19,10 +19,12 @@ type cleanupfunc func()
 
 // BasicServer object
 type BasicServer struct {
-	httpserver *http.Server
-	ctx        context.Context
-	cancel     context.CancelFunc
-	exitchan   chan (bool)
+	httpserver      *http.Server
+	ctx             context.Context
+	cancel          context.CancelFunc
+	exitchan        chan (bool)
+	metricsserver   *http.Server
+	metricsexitchan chan (bool)
 }
 
 // CreateBasicServer Create BasicServer object and return
@@ -34,7 +36,7 @@ func CreateBasicServer() *BasicServer {
 // DefaultMux returns a mux preconfigured with defaults
 func DefaultMux() *http.ServeMux {
 	mux := http.NewServeMux()
-	mux.Handle("/metrics", promhttp.Handler())
+	//	mux.Handle("/metrics", promhttp.Handler())
 	return mux
 }
 
@@ -48,10 +50,6 @@ func (bs *BasicServer) StartListen(secret string, mux http.Handler) {
 	bs.httpserver = &http.Server{Addr: ":" + fmt.Sprint(internal.Port)}
 	bs.httpserver.Handler = mux
 
-	// expose metrics endpoint
-	// m := mux.(*http.ServeMux)
-	// m.Handle("/metrics", promhttp.Handler())
-
 	go func() {
 		err := bs.httpserver.ListenAndServe()
 		if err.Error() != "http: Server closed" {
@@ -60,6 +58,30 @@ func (bs *BasicServer) StartListen(secret string, mux http.Handler) {
 		defer func() {
 			clarkezoneLog.Debugf("Webserver goroutine exited")
 			bs.exitchan <- true
+		}()
+	}()
+}
+
+// StartListen Start listening for a connection
+func (bs *BasicServer) StartMetrics() {
+	clarkezoneLog.Successf("starting... metrics on :%v", fmt.Sprint(internal.MetricsPort))
+
+	if bs.ctx == nil {
+		bs.ctx, bs.cancel = context.WithCancel(context.Background())
+	}
+
+	bs.metricsexitchan = make(chan bool)
+	bs.metricsserver = &http.Server{Addr: ":" + fmt.Sprint(internal.MetricsPort)}
+	bs.metricsserver.Handler = promhttp.Handler()
+
+	go func() {
+		err := bs.metricsserver.ListenAndServe()
+		if err.Error() != "http: Server closed" {
+			panic(err)
+		}
+		defer func() {
+			clarkezoneLog.Debugf("Metrics server goroutine exited")
+			bs.metricsexitchan <- true
 		}()
 	}()
 }
@@ -109,5 +131,23 @@ func (bs *BasicServer) Shutdown() error {
 	clarkezoneLog.Debugf("BasicServer: shutdwon completed, wait for exitchan")
 	<-bs.exitchan
 	clarkezoneLog.Debugf("BasicServer: exit completed function returqn")
+
+	if bs.metricsserver != nil {
+		if bs.metricsexitchan == nil {
+			clarkezoneLog.Debugf("BasicServer: metrics no exit channel detected on shutdown\n")
+			return fmt.Errorf("BasicServer: metrics no exit channel detected on shutdown")
+		}
+		metricsexit := bs.metricsserver.Shutdown(bs.ctx)
+
+		clarkezoneLog.Debugf("BasicServer: metrics shutdwon completed, wait for exitchan")
+		<-bs.metricsexitchan
+		clarkezoneLog.Debugf("BasicServer: metrics exit completed function returqn")
+		if metricsexit != nil {
+			return metricsexit
+		}
+	} else {
+
+		clarkezoneLog.Debugf("BasicServer: no metrics server detected on shutdown hence skipping extichannel\n")
+	}
 	return httpexit
 }
