@@ -1,0 +1,16 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: pocketshorterner-servicemonitor
+  namespace: monitoring
+  labels:
+    name: pocketshorterner-servicemonitor
+spec:
+  selector:
+    matchLabels:
+      app: pocketshorten-fe
+  namespaceSelector:
+    matchNames:
+      - pocketshorten-real
+  endpoints:
+    - port: metrics

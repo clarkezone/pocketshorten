@@ -16,13 +16,18 @@ spec:
         - name: pocketshorten
           # image: registry.dev.clarkezone.dev/pocketgeotemp:latest
           image:
-            registry.hub.docker.com/clarkezone/pocketshorten:latest
+            registry.hub.docker.com/clarkezone/pocketshorten:main
             #        image: registry.hub.docker.com/clarkezone/previewd:webhooke2e
 
           imagePullPolicy: Always
           ports:
             - containerPort: 8090
           env:
+            - name: LOGLEVEL
+              valueFrom:
+                configMapKeyRef:
+                  name: psconfig
+                  key: LOGLEVEL
             - name: POCKET_SHORTEN_USERNAME
               valueFrom:
                 secretKeyRef:
