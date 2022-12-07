@@ -20,6 +20,7 @@ func Test_webhooklistening(t *testing.T) {
 	// wait := make(chan bool)
 	wh := BasicServer{}
 	mux := http.NewServeMux()
+	wh.StartMetrics()
 	wh.StartListen("ss", mux)
 	// TODO: how to wait for server async start
 	// client := &http.Client{}

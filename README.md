@@ -20,9 +20,15 @@ Bootstrapping infra:
 - [x] Fix CI artifacts (eg code coverage)
 - [x] Fix repo badges
 - [x] Best practices from mail log
-- [ ] k8s public
+- [x] Metrics exposed on independent port
+- [x] k8s public
+- [x] Service Monitor
+- [ ] Add load tester
+- [ ] Dashboard for telemetry
+- [ ] Hello world comes from microservice with switch / env for mode in single binary
+- [ ] Cleanup names
+- [ ] Fix double counting of metrics
 - [ ] k8s local override with staging / prod
-- [ ] Service Monitor and dashboard for telemetry
 - [ ] Instructions for prerequs
 - [ ] Fork and make template
 - [ ] Turn on PR enforcement, protect main branch

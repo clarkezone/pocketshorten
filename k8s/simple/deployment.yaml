@@ -5,6 +5,7 @@ metadata:
   labels:
     app: kustomize
 spec:
+  replicas: 2
   strategy:
     type: Recreate
   template:
@@ -22,6 +23,7 @@ spec:
           imagePullPolicy: Always
           ports:
             - containerPort: 8090
+            - containerPort: 8095
           env:
             - name: LOGLEVEL
               valueFrom:
