@@ -30,8 +30,13 @@ Bootstrapping infra:
 - [ ] Fix double counting of metrics
 - [ ] k8s local override with staging / prod
 - [ ] Instructions for prerequs
-- [ ] Fork and make template
+- [ ] Fork and make template (rename target to be new baseline)
 - [ ] Turn on PR enforcement, protect main branch
+
+Template backlog
+
+- Add k8s manifest scanner for best practices (PDB, CPU/MEM requests and limits)
+- Add DT
 
 Bring over shortening prototype
 
