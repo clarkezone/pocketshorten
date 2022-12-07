@@ -22,6 +22,7 @@ spec:
           imagePullPolicy: Always
           ports:
             - containerPort: 8090
+            - metricsPort: 8095
           env:
             - name: LOGLEVEL
               valueFrom:

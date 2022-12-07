@@ -6,5 +6,5 @@ spec:
   selector:
     app: kustomize
   ports:
-    - port: 8090
+    - port: 8095
       name: metrics

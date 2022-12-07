@@ -20,6 +20,7 @@ Bootstrapping infra:
 - [x] Fix CI artifacts (eg code coverage)
 - [x] Fix repo badges
 - [x] Best practices from mail log
+- [x] Metrics exposed on independent port
 - [ ] k8s public
 - [ ] k8s local override with staging / prod
 - [ ] Service Monitor and dashboard for telemetry
