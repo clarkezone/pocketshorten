@@ -7,24 +7,21 @@ ARG BUILD_HASH
 ARG BUILD_BRANCH
 RUN mkdir /build
 
-run apk update && \
-	apk add protobuf-dev
+#run apk update && \
+#	apk add protobuf-dev
 RUN apk --no-cache add gcc build-base git
 
 WORKDIR /build
 COPY go.mod .
 COPY go.sum .
 
-# TODO this doesn't work with podman 3.x but does with 4.x
-#RUN --mount=type=cache,target=/root/.cache go mod download
 RUN go mod download
 COPY . .
-#RUN --mount=type=cache,target=/root/.cache make build
 
-RUN make install-protoc-go
-RUN protoc --version
+#RUN make install-protoc-go
+#RUN protoc --version
 
-RUN make buildproto
+#RUN make buildproto
 
 RUN make build HEAD_TAG="$BUILD_HEADTAG" VERSION_HASH="$BUILD_HASH" BRANCH_NAME="$BUILD_BRANCH"
 
