@@ -16,7 +16,7 @@ const (
 	PortVar     = "port"
 	defaultPort = 8090
 
-	// PortVar is name of environment variable containing port
+	// MetricsPortVar is name of environment variable containing port used for metrics
 	MetricsPortVar     = "metricsport"
 	defaultMetricsPort = 8095
 

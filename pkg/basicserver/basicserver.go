@@ -62,7 +62,7 @@ func (bs *BasicServer) StartListen(secret string, mux http.Handler) {
 	}()
 }
 
-// StartListen Start listening for a connection
+// StartMetrics Start listening for a connection for metrics
 func (bs *BasicServer) StartMetrics() {
 	clarkezoneLog.Successf("starting... metrics on :%v", fmt.Sprint(internal.MetricsPort))
 
