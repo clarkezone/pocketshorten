@@ -6,6 +6,10 @@ ARG BUILD_HEADTAG
 ARG BUILD_HASH
 ARG BUILD_BRANCH
 RUN mkdir /build
+
+run apk update && \
+	apk add build-base autoconf libtool pkgconfig
+
 WORKDIR /build
 COPY go.mod .
 COPY go.sum .
