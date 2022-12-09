@@ -47,6 +47,9 @@ const (
 
 	// InitialBranchVar is the name environment variable for the webhook listen flag
 	InitialBranchVar = "initialbranch"
+
+	StartupMode        = "startupmode"
+	defaultStartupMode = "webserver"
 )
 
 var (

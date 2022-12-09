@@ -17,13 +17,13 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var bs = basicserver.CreateBasicServer()
+var bsweb = basicserver.CreateBasicServer()
 
 var (
-	// testserverCmd represents the testserver command
-	testserverCmd = &cobra.Command{
-		Use:   "testserver",
-		Short: "Starts a test server to test logging and metrics",
+	// testserverWebCmd represents the testserver command
+	testserverWebCmd = &cobra.Command{
+		Use:   "testserverweb",
+		Short: "Starts a test http server to test logging and metrics",
 		Long: `Starts a listener that will
 and usage of using your command. For example:
 
@@ -39,13 +39,13 @@ to quickly create a Cobra application.`,
 
 			var wrappedmux http.Handler
 			wrappedmux = basicserver.NewLoggingMiddleware(mux)
-			wrappedmux = basicserver.NewPromMetricsMiddleware("pocketshortener_testservice", wrappedmux)
+			wrappedmux = basicserver.NewPromMetricsMiddleware("pocketshortener_testWebservice", wrappedmux)
 
-			clarkezoneLog.Successf("Starting httpserver on port %v", internal.Port)
-			bs.StartMetrics()
+			clarkezoneLog.Successf("Starting web server on port %v", internal.Port)
+			bsweb.StartMetrics()
 			clarkezoneLog.Successf("Starting metrics on port %v", internal.MetricsPort)
-			bs.StartListen("", wrappedmux)
-			return bs.WaitforInterupt()
+			bsweb.StartListen("", wrappedmux)
+			return bsweb.WaitforInterupt()
 		},
 	}
 )
@@ -62,7 +62,7 @@ func getHelloHandler() func(w http.ResponseWriter, r *http.Request) {
 }
 
 func init() {
-	rootCmd.AddCommand(testserverCmd)
+	rootCmd.AddCommand(testserverWebCmd)
 
 	// Here you will define your flags and configuration settings.
 
