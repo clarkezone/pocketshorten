@@ -6,16 +6,23 @@ ARG BUILD_HEADTAG
 ARG BUILD_HASH
 ARG BUILD_BRANCH
 RUN mkdir /build
+
+#run apk update && \
+#	apk add protobuf-dev
+RUN apk --no-cache add gcc build-base git
+
 WORKDIR /build
 COPY go.mod .
 COPY go.sum .
 
-# TODO this doesn't work with podman 3.x but does with 4.x
-#RUN --mount=type=cache,target=/root/.cache go mod download
 RUN go mod download
 COPY . .
-#RUN --mount=type=cache,target=/root/.cache make build
-RUN apk --no-cache add gcc build-base git
+
+#RUN make install-protoc-go
+#RUN protoc --version
+
+#RUN make buildproto
+
 RUN make build HEAD_TAG="$BUILD_HEADTAG" VERSION_HASH="$BUILD_HASH" BRANCH_NAME="$BUILD_BRANCH"
 
 # test that that the build is good and app launches
@@ -24,9 +31,8 @@ RUN /build/bin/pocketshorten version
 #RUN go test -v
 
 # generate clean, final image for end users
-FROM alpine:3.11.3
+FROM alpine:3.16
 RUN apk update
-RUN apk add git
 COPY --from=builder /build/bin/pocketshorten .
 
 # executable

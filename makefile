@@ -41,6 +41,10 @@ endif
 
 .DEFAULT_GOAL := build
 
+install-protoc-go:
+	go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
+	go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
+
 install-tools:
 	go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest && \
 	go install github.com/uw-labs/strongbox@latest
@@ -75,6 +79,12 @@ precommit:
 .PHONY: build
 build:
 	$(BUILDCOMMAND) -o ${BINDIR}/${BIN_NAME}
+
+.PHONY: buildproto
+buildproto:
+	mkdir -p pkg/greetingservice && protoc -I proto --go_out=pkg/greetingservice --go_opt=paths=source_relative \
+          --go-grpc_out=pkg/greetingservice --go-grpc_opt=paths=source_relative \
+          proto/*.proto
 
 .PHONY: buildimage
 buildimage:
