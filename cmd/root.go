@@ -91,7 +91,12 @@ func init() {
 		panic(err)
 	}
 
-	_, err = newTestserverGrpcCmd(rootCmd)
+	_, err = newTestServerGrpcCmd(rootCmd)
+	if err != nil {
+		panic(err)
+	}
+
+	_, err = newTestClientGrpcCmd(rootCmd)
 	if err != nil {
 		panic(err)
 	}

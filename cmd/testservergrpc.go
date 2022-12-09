@@ -17,13 +17,13 @@ import (
 	"github.com/spf13/viper"
 )
 
-type TestserverGrpcCmd struct {
+type TestServerGrpcCmd struct {
 	bs *basicserver.BasicServer
 }
 
-func newTestserverGrpcCmd(partent *cobra.Command) (*TestserverGrpcCmd, error) {
+func newTestServerGrpcCmd(partent *cobra.Command) (*TestServerGrpcCmd, error) {
 	bsGrpc := basicserver.CreateBasicServer()
-	tsGrpc := &TestserverGrpcCmd{
+	tsGrpc := &TestServerGrpcCmd{
 		bs: bsGrpc,
 	}
 	cmd := &cobra.Command{
@@ -53,7 +53,7 @@ to quickly create a Cobra application.`,
 			return bsGrpc.WaitforInterupt()
 		},
 	}
-	err := configFlags(cmd)
+	err := tsGrpc.configFlags(cmd)
 	if err != nil {
 		return nil, err
 	}
@@ -61,7 +61,7 @@ to quickly create a Cobra application.`,
 	return tsGrpc, nil
 }
 
-func configFlags(cmd *cobra.Command) error {
+func (ts *TestServerGrpcCmd) configFlags(cmd *cobra.Command) error {
 	m := modeValue(internal.StartupMode)
 
 	cmd.PersistentFlags().VarP(&m, "startupmode", "", "startup mode (httpserver, grpcserver, grpcclient) (default is httpserver)")

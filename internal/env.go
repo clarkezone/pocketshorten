@@ -50,6 +50,9 @@ const (
 
 	StartupMode        = "startupmode"
 	defaultStartupMode = "webserver"
+
+	ServiceUrlVar     = "serviceurl"
+	defaultServiceUrl = ""
 )
 
 var (
@@ -85,6 +88,9 @@ var (
 
 	// InitialBranch holds the branch that should be cloned on startup
 	InitialBranch string
+
+	// ServiceUrl is the url of the service
+	ServiceUrl string
 )
 
 func init() {
@@ -108,6 +114,7 @@ func init() {
 	InitialBuild = viper.GetBool(InitialBuildVar)
 	WebhookListen = viper.GetBool(WebhookListenVar)
 	InitialBranch = viper.GetString(InitialBranchVar)
+	ServiceUrl = viper.GetString(ServiceUrlVar)
 }
 
 func getDefaultKubeConfig() string {

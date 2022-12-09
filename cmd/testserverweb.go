@@ -15,6 +15,7 @@ import (
 	"github.com/clarkezone/pocketshorten/pkg/config"
 	clarkezoneLog "github.com/clarkezone/pocketshorten/pkg/log"
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 var bsweb = basicserver.CreateBasicServer()
@@ -41,6 +42,12 @@ to quickly create a Cobra application.`,
 			wrappedmux = basicserver.NewLoggingMiddleware(mux)
 			wrappedmux = basicserver.NewPromMetricsMiddleware("pocketshortener_testWebservice", wrappedmux)
 
+			if viper.GetString(internal.ServiceUrlVar) != "" {
+				clarkezoneLog.Successf("Delegating to %v", internal.ServiceUrl)
+			} else {
+				clarkezoneLog.Debugf("Not delegating to %v", internal.ServiceUrl)
+			}
+
 			clarkezoneLog.Successf("Starting web server on port %v", internal.Port)
 			bsweb.StartMetrics()
 			clarkezoneLog.Successf("Starting metrics on port %v", internal.MetricsPort)
@@ -52,6 +59,7 @@ to quickly create a Cobra application.`,
 
 func getHelloHandler() func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
+		//TODO if serviceurl is set, call that service and return the result
 		message := fmt.Sprintln("Hello World<br>")
 		_, err := w.Write([]byte(message))
 		if err != nil {
@@ -63,14 +71,10 @@ func getHelloHandler() func(w http.ResponseWriter, r *http.Request) {
 
 func init() {
 	rootCmd.AddCommand(testserverWebCmd)
-
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// testserverCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// testserverCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	testserverWebCmd.PersistentFlags().StringVarP(&internal.ServiceUrl, internal.ServiceUrlVar, "",
+		viper.GetString(internal.ServiceUrlVar), "If value passed, testserverweb will delegate to this service")
+	err := viper.BindPFlag(internal.ServiceUrlVar, testserverWebCmd.PersistentFlags().Lookup(internal.ServiceUrlVar))
+	if err != nil {
+		panic(err)
+	}
 }
