@@ -70,18 +70,17 @@ func init() {
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
 	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
-
 	rootCmd.PersistentFlags().IntVar(&internal.Port, internal.PortVar, viper.GetInt(internal.PortVar), "server port")
+	rootCmd.PersistentFlags().IntVar(&internal.MetricsPort, internal.MetricsPortVar, viper.GetInt(internal.MetricsPortVar), "metrics port")
 	rootCmd.PersistentFlags().StringVarP(&internal.LogLevel, internal.LogLevelVar, "l",
 		viper.GetString(internal.LogLevelVar), "amount of information outputted (debug, info, warn, error)")
 	rootCmd.PersistentFlags().StringVar(&outputMode, "logoutput", clarkezoneLog.TTYFormat,
 		"output format for logs (tty, plain, json)")
 	err := viper.BindPFlag(internal.PortVar, rootCmd.PersistentFlags().Lookup(internal.PortVar))
-
 	if err != nil {
 		panic(err)
 	}
-
+	err = viper.BindPFlag(internal.MetricsPortVar, rootCmd.PersistentFlags().Lookup(internal.MetricsPortVar))
 	if err != nil {
 		panic(err)
 	}
