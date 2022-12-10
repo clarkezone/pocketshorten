@@ -1,7 +1,11 @@
 // Package greetingservice is an implementation of the GreetingService service.
 package greetingservice
 
-import context "context"
+import (
+	context "context"
+
+	clarkezoneLog "github.com/clarkezone/pocketshorten/pkg/log"
+)
 
 // GreetingServer is the server API for GreetingService service.
 type GreetingServer struct {
@@ -10,10 +14,7 @@ type GreetingServer struct {
 
 // GetGreeting implements GreetingServer
 func (s *GreetingServer) GetGreeting(ctx context.Context, in *Empty) (*Greeting, error) {
-	// Do something with the input message
-	// ...
-
-	// Return a response message
+	clarkezoneLog.Debugf("GetGreeting called")
 	return &Greeting{
 		Name:     "James",
 		Greeting: "Hello",
