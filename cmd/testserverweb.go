@@ -70,7 +70,7 @@ func getHelloHandler() func(w http.ResponseWriter, r *http.Request) {
 }
 
 func init() {
-	rootCmd.AddCommand(testserverWebCmd)
+	//rootCmd.AddCommand(testserverWebCmd)
 	testserverWebCmd.PersistentFlags().StringVarP(&internal.ServiceURL, internal.ServiceURLVar, "",
 		viper.GetString(internal.ServiceURLVar), "If value passed, testserverweb will delegate to this service")
 	err := viper.BindPFlag(internal.ServiceURLVar, testserverWebCmd.PersistentFlags().Lookup(internal.ServiceURLVar))

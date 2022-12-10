@@ -16,6 +16,7 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 )
 
 // TestClientGrpcCmd is the command to start a test grpc client
@@ -35,20 +36,19 @@ have already been started with the testservergrpc command`,
 
 			clarkezoneLog.Successf("ServiceURL %v", internal.ServiceURL)
 
-			var opts []grpc.DialOption
-			conn, err := grpc.Dial(internal.ServiceURL, opts...)
+			conn, err := grpc.Dial(internal.ServiceURL, grpc.WithTransportCredentials(insecure.NewCredentials()))
 			if err != nil {
 				clarkezoneLog.Errorf("fail to dial: %v", err)
 			}
 			defer conn.Close()
 
-			if err != nil {
+			if err == nil {
 				client := greetingservice.NewGreeterClient(conn)
-				result, err := client.GetGreeting(context.Background(), nil)
+				result, err := client.GetGreeting(context.Background(), &greetingservice.Empty{})
 				if err != nil {
 					clarkezoneLog.Errorf("Error %v", err)
 				} else {
-					clarkezoneLog.Successf("Result %v", result)
+					clarkezoneLog.Successf("Result %v", result.Name+result.Greeting)
 				}
 			}
 

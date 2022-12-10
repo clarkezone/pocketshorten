@@ -39,7 +39,7 @@ func (bs *BasicServerGrpc) StartListen(secret string) *grpc.Server {
 
 	bs.exitchan = make(chan bool)
 	bs.ctx, bs.cancel = context.WithCancel(context.Background())
-	lis, err := net.Listen("tcp", ":"+fmt.Sprint(internal.Port))
+	lis, err := net.Listen("tcp", "0.0.0.0:"+fmt.Sprint(internal.Port))
 	if err != nil {
 		panic(err)
 	}

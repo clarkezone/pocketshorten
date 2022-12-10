@@ -14,5 +14,8 @@ func (s *GreetingServer) GetGreeting(ctx context.Context, in *Empty) (*Greeting,
 	// ...
 
 	// Return a response message
-	return &Greeting{}, nil
+	return &Greeting{
+		Name:     "James",
+		Greeting: "Hello",
+	}, nil
 }
