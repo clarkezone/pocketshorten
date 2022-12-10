@@ -13,6 +13,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// TestClientGrpcCmd is the command to start a test grpc client
 type TestClientGrpcCmd struct {
 }
 

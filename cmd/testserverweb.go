@@ -42,10 +42,10 @@ to quickly create a Cobra application.`,
 			wrappedmux = basicserver.NewLoggingMiddleware(mux)
 			wrappedmux = basicserver.NewPromMetricsMiddleware("pocketshortener_testWebservice", wrappedmux)
 
-			if viper.GetString(internal.ServiceUrlVar) != "" {
-				clarkezoneLog.Successf("Delegating to %v", internal.ServiceUrl)
+			if viper.GetString(internal.ServiceURLVar) != "" {
+				clarkezoneLog.Successf("Delegating to %v", internal.ServiceURL)
 			} else {
-				clarkezoneLog.Debugf("Not delegating to %v", internal.ServiceUrl)
+				clarkezoneLog.Debugf("Not delegating to %v", internal.ServiceURL)
 			}
 
 			clarkezoneLog.Successf("Starting web server on port %v", internal.Port)
@@ -71,9 +71,9 @@ func getHelloHandler() func(w http.ResponseWriter, r *http.Request) {
 
 func init() {
 	rootCmd.AddCommand(testserverWebCmd)
-	testserverWebCmd.PersistentFlags().StringVarP(&internal.ServiceUrl, internal.ServiceUrlVar, "",
-		viper.GetString(internal.ServiceUrlVar), "If value passed, testserverweb will delegate to this service")
-	err := viper.BindPFlag(internal.ServiceUrlVar, testserverWebCmd.PersistentFlags().Lookup(internal.ServiceUrlVar))
+	testserverWebCmd.PersistentFlags().StringVarP(&internal.ServiceURL, internal.ServiceURLVar, "",
+		viper.GetString(internal.ServiceURLVar), "If value passed, testserverweb will delegate to this service")
+	err := viper.BindPFlag(internal.ServiceURLVar, testserverWebCmd.PersistentFlags().Lookup(internal.ServiceURLVar))
 	if err != nil {
 		panic(err)
 	}

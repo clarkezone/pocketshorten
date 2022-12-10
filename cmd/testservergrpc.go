@@ -7,22 +7,22 @@ Copyright © 2022 NAME HERE <EMAIL ADDRESS>
 */
 
 import (
-	"net/http"
-
 	"github.com/clarkezone/pocketshorten/internal"
 	"github.com/clarkezone/pocketshorten/pkg/basicserver"
 	"github.com/clarkezone/pocketshorten/pkg/config"
+	"github.com/clarkezone/pocketshorten/pkg/greetingservice"
 	clarkezoneLog "github.com/clarkezone/pocketshorten/pkg/log"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
 
+// TestServerGrpcCmd is the command to start a test grpc server
 type TestServerGrpcCmd struct {
-	bs *basicserver.BasicServer
+	bs *basicserver.BasicServerGrpc
 }
 
 func newTestServerGrpcCmd(partent *cobra.Command) (*TestServerGrpcCmd, error) {
-	bsGrpc := basicserver.CreateBasicServer()
+	bsGrpc := basicserver.CreateBasicServerGrpc()
 	tsGrpc := &TestServerGrpcCmd{
 		bs: bsGrpc,
 	}
@@ -39,17 +39,14 @@ to quickly create a Cobra application.`,
 			clarkezoneLog.Successf("pocketshorten version %v,%v started in testservergrpc mode\n",
 				config.VersionString, config.VersionHash)
 			clarkezoneLog.Successf("Log level set to %v", internal.LogLevel)
-			mux := basicserver.DefaultMux()
-			mux.HandleFunc("/", getHelloHandler())
-
-			var wrappedmux http.Handler
-			wrappedmux = basicserver.NewLoggingMiddleware(mux)
-			wrappedmux = basicserver.NewPromMetricsMiddleware("pocketshorten_testGrpcservice", wrappedmux)
+			// wrappedmux = basicserver.NewLoggingMiddleware(mux)
+			// wrappedmux = basicserver.NewPromMetricsMiddleware("pocketshorten_testGrpcservice", wrappedmux)
 
 			clarkezoneLog.Successf("Starting grpc server on port %v", internal.Port)
 			bsGrpc.StartMetrics()
 			clarkezoneLog.Successf("Starting metrics on port %v", internal.MetricsPort)
-			bsGrpc.StartListen("", wrappedmux)
+			serv := bsGrpc.StartListen("")
+			greetingservice.RegisterGreeterServer(serv, &greetingservice.GreetingServer{})
 			return bsGrpc.WaitforInterupt()
 		},
 	}

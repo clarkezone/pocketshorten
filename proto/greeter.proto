@@ -14,5 +14,6 @@ message Empty {
 message Greeting {
     int32 id = 1;
     string name = 2;
-    google.protobuf.Timestamp last_updated = 3;
+    string greeting = 3;
+    google.protobuf.Timestamp last_updated = 4;
 }
