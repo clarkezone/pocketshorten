@@ -49,12 +49,10 @@ const (
 	InitialBranchVar = "initialbranch"
 
 	// StartupMode is the name of the environment variable for the startup mode
-	StartupMode        = "startupmode"
-	defaultStartupMode = "webserver"
+	StartupMode = "startupmode"
 
 	// ServiceURLVar is the name of the environment variable for the service url
-	ServiceURLVar     = "serviceurl"
-	defaultServiceURL = ""
+	ServiceURLVar = "serviceurl"
 )
 
 var (
