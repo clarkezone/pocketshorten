@@ -17,4 +17,4 @@ configMapGenerator:
     literals:
       - URL=http://pb-service:8080
       - LOGLEVEL=debug
-      - SERVICEURL=dns://pocketshorten-service-backend:8091
+      - SERVICEURL=pocketshorten-service-backend.pocketgeo-real.svc.cluster.local:8091

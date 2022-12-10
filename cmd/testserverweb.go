@@ -66,7 +66,7 @@ func getHelloHandler() func(w http.ResponseWriter, r *http.Request) {
 		var message string
 
 		if viper.GetString(internal.ServiceURLVar) != "" {
-			conn, err := grpc.Dial(internal.ServiceURL, grpc.WithTransportCredentials(insecure.NewCredentials()), grpc.WithDefaultServiceConfig(`{"loadBalancingPolicy":"round_robin"}`))
+			conn, err := grpc.Dial(internal.ServiceURL, grpc.WithTransportCredentials(insecure.NewCredentials()))
 			if err != nil {
 				clarkezoneLog.Errorf("fail to dial: %v", err)
 			}
