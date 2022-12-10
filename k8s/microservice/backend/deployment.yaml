@@ -30,3 +30,7 @@ spec:
                 configMapKeyRef:
                   name: config-backend
                   key: LOGLEVEL
+            - name: MY_POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
