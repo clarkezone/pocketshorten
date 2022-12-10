@@ -45,7 +45,7 @@ func (bs *BasicServerGrpc) StartListen(secret string) *grpc.Server {
 	}
 
 	bs.lis = &lis
-	var opts []grpc.ServerOption
+	opts := []grpc.ServerOption{grpc.UnaryInterceptor(bs.metricsUnaryInterceptor)}
 	bs.grpcServer = grpc.NewServer(opts...)
 
 	go func() {
@@ -149,4 +149,9 @@ func (bs *BasicServerGrpc) Shutdown() error {
 		clarkezoneLog.Debugf("BasicServerGrpc: no metrics server detected on shutdown hence skipping extichannel\n")
 	}
 	return nil
+}
+
+func (bs *BasicServerGrpc) metricsUnaryInterceptor(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (interface{}, error) {
+	clarkezoneLog.Debugf("gRPC method called %v", info.FullMethod)
+	return handler(ctx, req)
 }
