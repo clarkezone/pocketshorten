@@ -35,7 +35,7 @@ func CreateBasicServerGrpc() *BasicServerGrpc {
 
 // StartListen Start listening for a connection
 func (bs *BasicServerGrpc) StartListen(secret string) *grpc.Server {
-	clarkezoneLog.Successf("starting... basic server on :%v", fmt.Sprint(internal.Port))
+	clarkezoneLog.Successf("starting... basic grpc server on :%v", fmt.Sprint(internal.Port))
 
 	bs.exitchan = make(chan bool)
 	bs.ctx, bs.cancel = context.WithCancel(context.Background())
@@ -120,33 +120,33 @@ func (bs *BasicServerGrpc) WaitforInterupt() error {
 // Shutdown terminates the listening thread
 func (bs *BasicServerGrpc) Shutdown() error {
 	if bs.exitchan == nil {
-		clarkezoneLog.Debugf("BasicServer: no exit channel detected on shutdown\n")
-		return fmt.Errorf("BasicServer: no exit channel detected on shutdown")
+		clarkezoneLog.Debugf("BasicServerGrpc: no exit channel detected on shutdown\n")
+		return fmt.Errorf("BasicServerGrpc: no exit channel detected on shutdown")
 	}
 	defer bs.ctx.Done()
 	defer bs.cancel()
-	clarkezoneLog.Debugf("BasicServer: request httpserver shutdown")
+	clarkezoneLog.Debugf("BasicServerGrpc: request httpserver shutdown")
 	bs.grpcServer.GracefulStop()
-	clarkezoneLog.Debugf("BasicServer: shutdwon completed, wait for exitchan")
+	clarkezoneLog.Debugf("BasicServerGrpc: shutdwon completed, wait for exitchan")
 	<-bs.exitchan
-	clarkezoneLog.Debugf("BasicServer: exit completed function returqn")
+	clarkezoneLog.Debugf("BasicServerGrpc: exit completed function returqn")
 
 	if bs.metricsserver != nil {
 		if bs.metricsexitchan == nil {
-			clarkezoneLog.Debugf("BasicServer: metrics no exit channel detected on shutdown\n")
-			return fmt.Errorf("BasicServer: metrics no exit channel detected on shutdown")
+			clarkezoneLog.Debugf("BasicServerGrpc: metrics no exit channel detected on shutdown\n")
+			return fmt.Errorf("BasicServerGrpc: metrics no exit channel detected on shutdown")
 		}
 		metricsexit := bs.metricsserver.Shutdown(bs.ctx)
 
-		clarkezoneLog.Debugf("BasicServer: metrics shutdwon completed, wait for exitchan")
+		clarkezoneLog.Debugf("BasicServerGrpc: metrics shutdwon completed, wait for exitchan")
 		<-bs.metricsexitchan
-		clarkezoneLog.Debugf("BasicServer: metrics exit completed function returqn")
+		clarkezoneLog.Debugf("BasicServerGrpc: metrics exit completed function returqn")
 		if metricsexit != nil {
 			return metricsexit
 		}
 	} else {
 
-		clarkezoneLog.Debugf("BasicServer: no metrics server detected on shutdown hence skipping extichannel\n")
+		clarkezoneLog.Debugf("BasicServerGrpc: no metrics server detected on shutdown hence skipping extichannel\n")
 	}
 	return nil
 }
