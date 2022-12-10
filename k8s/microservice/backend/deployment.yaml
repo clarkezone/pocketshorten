@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pocketshorten-backend
+  labels:
+    app: kustomize
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: kustomize
+    spec:
+      containers:
+        - name: pocketshorten-backend
+          # image: registry.dev.clarkezone.dev/pocketgeotemp:latest
+          image:
+            registry.hub.docker.com/clarkezone/pocketshorten:microservicept3
+            #        image: registry.hub.docker.com/clarkezone/previewd:webhooke2e
+          args: ["testservergrpc"]
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8090
+            - containerPort: 8095
+          env:
+            - name: LOGLEVEL
+              valueFrom:
+                configMapKeyRef:
+                  name: config-backend
+                  key: LOGLEVEL
