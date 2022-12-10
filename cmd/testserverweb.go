@@ -15,15 +15,16 @@ import (
 	"github.com/clarkezone/pocketshorten/pkg/config"
 	clarkezoneLog "github.com/clarkezone/pocketshorten/pkg/log"
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
-var bs = basicserver.CreateBasicServer()
+var bsweb = basicserver.CreateBasicServer()
 
 var (
-	// testserverCmd represents the testserver command
-	testserverCmd = &cobra.Command{
-		Use:   "testserver",
-		Short: "Starts a test server to test logging and metrics",
+	// testserverWebCmd represents the testserver command
+	testserverWebCmd = &cobra.Command{
+		Use:   "testserverweb",
+		Short: "Starts a test http server to test logging and metrics",
 		Long: `Starts a listener that will
 and usage of using your command. For example:
 
@@ -39,19 +40,26 @@ to quickly create a Cobra application.`,
 
 			var wrappedmux http.Handler
 			wrappedmux = basicserver.NewLoggingMiddleware(mux)
-			wrappedmux = basicserver.NewPromMetricsMiddleware("pocketshortener_testservice", wrappedmux)
+			wrappedmux = basicserver.NewPromMetricsMiddleware("pocketshortener_testWebservice", wrappedmux)
 
-			clarkezoneLog.Successf("Starting httpserver on port %v", internal.Port)
-			bs.StartMetrics()
+			if viper.GetString(internal.ServiceURLVar) != "" {
+				clarkezoneLog.Successf("Delegating to %v", internal.ServiceURL)
+			} else {
+				clarkezoneLog.Debugf("Not delegating to %v", internal.ServiceURL)
+			}
+
+			clarkezoneLog.Successf("Starting web server on port %v", internal.Port)
+			bsweb.StartMetrics()
 			clarkezoneLog.Successf("Starting metrics on port %v", internal.MetricsPort)
-			bs.StartListen("", wrappedmux)
-			return bs.WaitforInterupt()
+			bsweb.StartListen("", wrappedmux)
+			return bsweb.WaitforInterupt()
 		},
 	}
 )
 
 func getHelloHandler() func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
+		//TODO if serviceurl is set, call that service and return the result
 		message := fmt.Sprintln("Hello World<br>")
 		_, err := w.Write([]byte(message))
 		if err != nil {
@@ -62,15 +70,11 @@ func getHelloHandler() func(w http.ResponseWriter, r *http.Request) {
 }
 
 func init() {
-	rootCmd.AddCommand(testserverCmd)
-
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// testserverCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// testserverCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	//rootCmd.AddCommand(testserverWebCmd)
+	testserverWebCmd.PersistentFlags().StringVarP(&internal.ServiceURL, internal.ServiceURLVar, "",
+		viper.GetString(internal.ServiceURLVar), "If value passed, testserverweb will delegate to this service")
+	err := viper.BindPFlag(internal.ServiceURLVar, testserverWebCmd.PersistentFlags().Lookup(internal.ServiceURLVar))
+	if err != nil {
+		panic(err)
+	}
 }

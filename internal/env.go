@@ -47,6 +47,12 @@ const (
 
 	// InitialBranchVar is the name environment variable for the webhook listen flag
 	InitialBranchVar = "initialbranch"
+
+	// StartupMode is the name of the environment variable for the startup mode
+	StartupMode = "startupmode"
+
+	// ServiceURLVar is the name of the environment variable for the service url
+	ServiceURLVar = "serviceurl"
 )
 
 var (
@@ -82,6 +88,9 @@ var (
 
 	// InitialBranch holds the branch that should be cloned on startup
 	InitialBranch string
+
+	// ServiceURL is the url of the service
+	ServiceURL string
 )
 
 func init() {
@@ -105,6 +114,7 @@ func init() {
 	InitialBuild = viper.GetBool(InitialBuildVar)
 	WebhookListen = viper.GetBool(WebhookListenVar)
 	InitialBranch = viper.GetString(InitialBranchVar)
+	ServiceURL = viper.GetString(ServiceURLVar)
 }
 
 func getDefaultKubeConfig() string {

@@ -15,8 +15,10 @@ import (
 	"github.com/spf13/viper"
 )
 
-var cfgFile string
-var outputMode string
+var (
+	cfgFile    string
+	outputMode string
+)
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
@@ -63,7 +65,7 @@ func init() {
 	// Cobra supports persistent flags, which, if defined here,
 	// will be global for your application.
 
-	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.previewd.yaml)")
+	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.pocketshorten.yaml)")
 
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
@@ -75,11 +77,26 @@ func init() {
 	rootCmd.PersistentFlags().StringVar(&outputMode, "logoutput", clarkezoneLog.TTYFormat,
 		"output format for logs (tty, plain, json)")
 	err := viper.BindPFlag(internal.PortVar, rootCmd.PersistentFlags().Lookup(internal.PortVar))
+
+	if err != nil {
+		panic(err)
+	}
+
 	if err != nil {
 		panic(err)
 	}
 
 	err = viper.BindPFlag(internal.LogLevelVar, rootCmd.PersistentFlags().Lookup(internal.LogLevelVar))
+	if err != nil {
+		panic(err)
+	}
+
+	_, err = newTestServerGrpcCmd(rootCmd)
+	if err != nil {
+		panic(err)
+	}
+
+	_, err = newTestClientGrpcCmd(rootCmd)
 	if err != nil {
 		panic(err)
 	}
