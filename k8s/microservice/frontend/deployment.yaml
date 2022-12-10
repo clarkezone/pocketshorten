@@ -30,6 +30,11 @@ spec:
                 configMapKeyRef:
                   name: config-frontend
                   key: LOGLEVEL
+            - name: SERVICEURL
+              valueFrom:
+                configMapKeyRef:
+                  name: config-frontend
+                  key: SERVICEURL
             - name: POCKET_SHORTEN_USERNAME
               valueFrom:
                 secretKeyRef:

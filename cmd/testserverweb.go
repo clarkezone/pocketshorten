@@ -66,7 +66,7 @@ func getHelloHandler() func(w http.ResponseWriter, r *http.Request) {
 		var message string
 
 		if viper.GetString(internal.ServiceURLVar) != "" {
-			conn, err := grpc.Dial(internal.ServiceURL, grpc.WithTransportCredentials(insecure.NewCredentials()))
+			conn, err := grpc.Dial(internal.ServiceURL, grpc.WithTransportCredentials(insecure.NewCredentials()), grpc.WithDefaultServiceConfig(`{"loadBalancingPolicy":"round_robin"}`))
 			if err != nil {
 				clarkezoneLog.Errorf("fail to dial: %v", err)
 			}
@@ -81,6 +81,8 @@ func getHelloHandler() func(w http.ResponseWriter, r *http.Request) {
 					clarkezoneLog.Successf("Result %v", result.Name+result.Greeting)
 					message = fmt.Sprintln(result.Name + result.Greeting + "<br>")
 				}
+			} else {
+				// TODO: return http error code
 			}
 		} else {
 			message = fmt.Sprintln("Hello World<br>")

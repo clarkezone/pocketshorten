@@ -14,7 +14,7 @@ spec:
         app: kustomize
     spec:
       containers:
-        - name: pocketshorten
+        - name: pocketshorten-frontend
           # image: registry.dev.clarkezone.dev/pocketgeotemp:latest
           image:
             registry.hub.docker.com/clarkezone/pocketshorten:main
