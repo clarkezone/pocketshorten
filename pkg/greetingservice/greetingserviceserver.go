@@ -3,8 +3,9 @@ package greetingservice
 
 import (
 	context "context"
+	"os"
 
-	clarkezoneLog "github.com/clarkezone/pocketshorten/pkg/log"
+	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 // GreetingServer is the server API for GreetingService service.
@@ -14,9 +15,10 @@ type GreetingServer struct {
 
 // GetGreeting implements GreetingServer
 func (s *GreetingServer) GetGreeting(ctx context.Context, in *Empty) (*Greeting, error) {
-	clarkezoneLog.Debugf("GetGreeting called")
+	name := os.Getenv("MY_POD_NAME")
 	return &Greeting{
-		Name:     "James",
-		Greeting: "Hello",
+		Name:        name,
+		Greeting:    "Hello",
+		LastUpdated: timestamppb.Now(),
 	}, nil
 }

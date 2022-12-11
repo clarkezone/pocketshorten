@@ -7,15 +7,19 @@ Copyright © 2022 NAME HERE <EMAIL ADDRESS>
 */
 
 import (
+	"context"
 	"fmt"
 	"net/http"
 
 	"github.com/clarkezone/pocketshorten/internal"
 	"github.com/clarkezone/pocketshorten/pkg/basicserver"
 	"github.com/clarkezone/pocketshorten/pkg/config"
+	"github.com/clarkezone/pocketshorten/pkg/greetingservice"
 	clarkezoneLog "github.com/clarkezone/pocketshorten/pkg/log"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 )
 
 var bsweb = basicserver.CreateBasicServer()
@@ -59,18 +63,47 @@ to quickly create a Cobra application.`,
 
 func getHelloHandler() func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
-		//TODO if serviceurl is set, call that service and return the result
-		message := fmt.Sprintln("Hello World<br>")
+		var message string
+
+		if viper.GetString(internal.ServiceURLVar) != "" {
+			conn, err := grpc.Dial(internal.ServiceURL, grpc.WithTransportCredentials(insecure.NewCredentials()))
+			if err != nil {
+				clarkezoneLog.Errorf("fail to dial: %v", err)
+			}
+			defer conn.Close()
+
+			if err == nil {
+				client := greetingservice.NewGreeterClient(conn)
+				result, err := client.GetGreeting(context.Background(), &greetingservice.Empty{})
+				if err != nil {
+					clarkezoneLog.Errorf("Error %v", err)
+				} else {
+					clarkezoneLog.Successf("Result %v from %v", result.Greeting, result.Name)
+					message = fmt.Sprintf("%v from %v at %v<br>", result.Name, result.Greeting, result.LastUpdated)
+				}
+			} else {
+				clarkezoneLog.Errorf("Error %v", err)
+				w.WriteHeader(http.StatusInternalServerError)
+				_, err := w.Write([]byte("500 - Something bad happened!"))
+				if err != nil {
+					clarkezoneLog.Errorf("Error %v", err)
+				}
+			}
+		} else {
+			message = fmt.Sprintln("Hello World<br>")
+		}
+
 		_, err := w.Write([]byte(message))
 		if err != nil {
 			clarkezoneLog.Debugf("Failed to write bytes %v\n", err)
 			panic(err)
 		}
+
 	}
 }
 
 func init() {
-	//rootCmd.AddCommand(testserverWebCmd)
+	rootCmd.AddCommand(testserverWebCmd)
 	testserverWebCmd.PersistentFlags().StringVarP(&internal.ServiceURL, internal.ServiceURLVar, "",
 		viper.GetString(internal.ServiceURLVar), "If value passed, testserverweb will delegate to this service")
 	err := viper.BindPFlag(internal.ServiceURLVar, testserverWebCmd.PersistentFlags().Lookup(internal.ServiceURLVar))

@@ -1,0 +1,21 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: pocketshorten-real
+commonLabels:
+  app: pocketshorten-fe
+resources:
+  - deployment.yaml
+  - service.yaml
+  - ingress.yaml
+  - metricsservice.yaml
+secretGenerator:
+  - name: db-user
+    envs:
+      - .env.creds
+configMapGenerator:
+  - name: config-frontend
+    literals:
+      - URL=http://pb-service:8080
+      - LOGLEVEL=debug
+      - SERVICEURL=10.42.1.232:8090
+      # - SERVICEURL=pocketshorten-service-backend.pocketgeo-real.svc.cluster.local:8091

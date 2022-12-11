@@ -17,9 +17,9 @@ spec:
         - name: pocketshorten-frontend
           # image: registry.dev.clarkezone.dev/pocketgeotemp:latest
           image:
-            registry.hub.docker.com/clarkezone/pocketshorten:main
+            registry.hub.docker.com/clarkezone/pocketshorten:microservicept3
             #        image: registry.hub.docker.com/clarkezone/previewd:webhooke2e
-
+          args: ["testserverweb"]
           imagePullPolicy: Always
           ports:
             - containerPort: 8090
@@ -28,8 +28,13 @@ spec:
             - name: LOGLEVEL
               valueFrom:
                 configMapKeyRef:
-                  name: psconfig
+                  name: config-frontend
                   key: LOGLEVEL
+            - name: SERVICEURL
+              valueFrom:
+                configMapKeyRef:
+                  name: config-frontend
+                  key: SERVICEURL
             - name: POCKET_SHORTEN_USERNAME
               valueFrom:
                 secretKeyRef:
@@ -38,7 +43,7 @@ spec:
             - name: POCKET_DB_URL
               valueFrom:
                 configMapKeyRef:
-                  name: psconfig
+                  name: config-frontend
                   key: URL
             - name: POCKET_SHORTEN_PASSWORD
               valueFrom:
