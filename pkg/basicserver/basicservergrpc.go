@@ -46,9 +46,9 @@ func (bs *BasicServerGrpc) StartListen(secret string) *grpc.Server {
 
 	bs.lis = &lis
 	mid := NewPromMetricsMiddlewareGrpc("basicserver")
-	opts := []grpc.ServerOption{
-		grpc.UnaryInterceptor(bs.logsUnaryInterceptor),
-		grpc.UnaryInterceptor(mid.metricsUnaryInterceptor)}
+	opts := []grpc.ServerOption{grpc.ChainUnaryInterceptor(
+		(bs.logsUnaryInterceptor),
+		(mid.metricsUnaryInterceptor))}
 	bs.grpcServer = grpc.NewServer(opts...)
 
 	go func() {
