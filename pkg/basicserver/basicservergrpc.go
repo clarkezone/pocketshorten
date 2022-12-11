@@ -45,7 +45,10 @@ func (bs *BasicServerGrpc) StartListen(secret string) *grpc.Server {
 	}
 
 	bs.lis = &lis
-	opts := []grpc.ServerOption{grpc.UnaryInterceptor(bs.logsUnaryInterceptor)}
+	mid := NewPromMetricsMiddlewareGrpc("basicserver")
+	opts := []grpc.ServerOption{
+		grpc.UnaryInterceptor(bs.logsUnaryInterceptor),
+		grpc.UnaryInterceptor(mid.metricsUnaryInterceptor)}
 	bs.grpcServer = grpc.NewServer(opts...)
 
 	go func() {
@@ -154,9 +157,4 @@ func (bs *BasicServerGrpc) Shutdown() error {
 func (bs *BasicServerGrpc) logsUnaryInterceptor(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (interface{}, error) {
 	clarkezoneLog.Debugf("gRPC method called %v", info.FullMethod)
 	return handler(ctx, req)
-}
-
-func (bs *BasicServerGrpc) metricsUnaryInterceptor(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (interface{}, error) {
-	result := handler(ctx, req)
-	return result
 }
