@@ -4,6 +4,8 @@ package greetingservice
 import (
 	context "context"
 	"os"
+
+	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 // GreetingServer is the server API for GreetingService service.
@@ -15,7 +17,8 @@ type GreetingServer struct {
 func (s *GreetingServer) GetGreeting(ctx context.Context, in *Empty) (*Greeting, error) {
 	name := os.Getenv("MY_POD_NAME")
 	return &Greeting{
-		Name:     name,
-		Greeting: "Hello",
+		Name:        name,
+		Greeting:    "Hello",
+		LastUpdated: timestamppb.Now(),
 	}, nil
 }

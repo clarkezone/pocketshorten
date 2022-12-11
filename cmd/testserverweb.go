@@ -79,7 +79,7 @@ func getHelloHandler() func(w http.ResponseWriter, r *http.Request) {
 					clarkezoneLog.Errorf("Error %v", err)
 				} else {
 					clarkezoneLog.Successf("Result %v from %v", result.Greeting, result.Name)
-					message = fmt.Sprintf("%v from %v<br>", result.Name, result.Greeting)
+					message = fmt.Sprintf("%v from %v at %v<br>", result.Name, result.Greeting, result.LastUpdated)
 				}
 			} else {
 				clarkezoneLog.Errorf("Error %v", err)
