@@ -78,10 +78,11 @@ func getHelloHandler() func(w http.ResponseWriter, r *http.Request) {
 				if err != nil {
 					clarkezoneLog.Errorf("Error %v", err)
 				} else {
-					clarkezoneLog.Successf("Result %v", result.Name+result.Greeting)
-					message = fmt.Sprintln(result.Name + result.Greeting + "<br>")
+					clarkezoneLog.Successf("Result %v from %v", result.Greeting, result.Name)
+					message = fmt.Sprintf("%v from %v<br>", result.Name, result.Greeting)
 				}
 			} else {
+				clarkezoneLog.Errorf("Error %v", err)
 				w.WriteHeader(http.StatusInternalServerError)
 				_, err := w.Write([]byte("500 - Something bad happened!"))
 				if err != nil {

@@ -15,7 +15,7 @@ type GreetingServer struct {
 func (s *GreetingServer) GetGreeting(ctx context.Context, in *Empty) (*Greeting, error) {
 	name := os.Getenv("MY_POD_NAME")
 	return &Greeting{
-		Name:     "MY_POD_NAME" + name,
+		Name:     name,
 		Greeting: "Hello",
 	}, nil
 }
