@@ -5,7 +5,7 @@ metadata:
   labels:
     app: kustomize
 spec:
-  replicas: 1
+  replicas: 2
   strategy:
     type: Recreate
   template:
@@ -17,7 +17,7 @@ spec:
         - name: pocketshorten-backend
           # image: registry.dev.clarkezone.dev/pocketgeotemp:latest
           image:
-            registry.hub.docker.com/clarkezone/pocketshorten:microservicept3
+            registry.hub.docker.com/clarkezone/pocketshorten:main
             #        image: registry.hub.docker.com/clarkezone/previewd:webhooke2e
           args: ["testservergrpc"]
           imagePullPolicy: Always

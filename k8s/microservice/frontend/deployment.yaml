@@ -17,7 +17,7 @@ spec:
         - name: pocketshorten-frontend
           # image: registry.dev.clarkezone.dev/pocketgeotemp:latest
           image:
-            registry.hub.docker.com/clarkezone/pocketshorten:microservicept3
+            registry.hub.docker.com/clarkezone/pocketshorten:main
             #        image: registry.hub.docker.com/clarkezone/previewd:webhooke2e
           args: ["testserverweb"]
           imagePullPolicy: Always
