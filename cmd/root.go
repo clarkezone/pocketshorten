@@ -111,10 +111,10 @@ func initConfig() {
 		home, err := os.UserHomeDir()
 		cobra.CheckErr(err)
 
-		// Search config in home directory with name ".previewd" (without extension).
+		// Search config in home directory with name ".pocketshorten" (without extension).
 		viper.AddConfigPath(home)
 		viper.SetConfigType("yaml")
-		viper.SetConfigName(".previewd")
+		viper.SetConfigName(".pocketshorten")
 	}
 
 	viper.AutomaticEnv() // read in environment variables that match

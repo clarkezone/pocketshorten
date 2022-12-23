@@ -2,7 +2,7 @@
 package cmd
 
 /*
-Copyright © 2022 NAME HERE <EMAIL ADDRESS>
+Copyright © 2022 James Clarke james@clarkezone.net
 
 */
 
@@ -27,16 +27,16 @@ var bsweb = basicserver.CreateBasicServer()
 var (
 	// testserverWebCmd represents the testserver command
 	testserverWebCmd = &cobra.Command{
-		Use:   "testserverweb",
-		Short: "Starts a test http server to test logging and metrics",
-		Long: `Starts a listener that will
-and usage of using your command. For example:
+		Use:   "serve",
+		Short: "Starts a test pocketshorten server to test logging and metrics",
+		Long: `Starts a URL shorten server that will redirection
+based on the url passed in:
 
 Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			clarkezoneLog.Successf("pocketshorten version %v,%v started in testserver mode\n",
+			clarkezoneLog.Successf("pocketshorten server  version %v,%v \n",
 				config.VersionString, config.VersionHash)
 			clarkezoneLog.Successf("Log level set to %v", internal.LogLevel)
 			mux := basicserver.DefaultMux()
@@ -52,7 +52,7 @@ to quickly create a Cobra application.`,
 				clarkezoneLog.Debugf("Not delegating to %v", internal.ServiceURL)
 			}
 
-			clarkezoneLog.Successf("Starting web server on port %v", internal.Port)
+			clarkezoneLog.Successf("Starting pocketshorten server on port %v", internal.Port)
 			bsweb.StartMetrics()
 			clarkezoneLog.Successf("Starting metrics on port %v", internal.MetricsPort)
 			bsweb.StartListen("", wrappedmux)
