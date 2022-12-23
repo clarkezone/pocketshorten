@@ -22,11 +22,11 @@ import (
 	"google.golang.org/grpc/credentials/insecure"
 )
 
-var bsweb = basicserver.CreateBasicServer()
+var shortenserver = basicserver.CreateBasicServer()
 
 var (
-	// testserverWebCmd represents the testserver command
-	testserverWebCmd = &cobra.Command{
+	// shortenservercmd represents the testserver command
+	shortenservercmd = &cobra.Command{
 		Use:   "serve",
 		Short: "Starts a test pocketshorten server to test logging and metrics",
 		Long: `Starts a URL shorten server that will redirection
@@ -40,7 +40,7 @@ to quickly create a Cobra application.`,
 				config.VersionString, config.VersionHash)
 			clarkezoneLog.Successf("Log level set to %v", internal.LogLevel)
 			mux := basicserver.DefaultMux()
-			mux.HandleFunc("/", getHelloHandler())
+			mux.HandleFunc("/", getServerHandler())
 
 			var wrappedmux http.Handler
 			wrappedmux = basicserver.NewLoggingMiddleware(mux)
@@ -53,15 +53,15 @@ to quickly create a Cobra application.`,
 			}
 
 			clarkezoneLog.Successf("Starting pocketshorten server on port %v", internal.Port)
-			bsweb.StartMetrics()
+			shortenserver.StartMetrics()
 			clarkezoneLog.Successf("Starting metrics on port %v", internal.MetricsPort)
-			bsweb.StartListen("", wrappedmux)
-			return bsweb.WaitforInterupt()
+			shortenserver.StartListen("", wrappedmux)
+			return shortenserver.WaitforInterupt()
 		},
 	}
 )
 
-func getHelloHandler() func(w http.ResponseWriter, r *http.Request) {
+func getServerHandler() func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var message string
 
@@ -103,10 +103,10 @@ func getHelloHandler() func(w http.ResponseWriter, r *http.Request) {
 }
 
 func init() {
-	rootCmd.AddCommand(testserverWebCmd)
-	testserverWebCmd.PersistentFlags().StringVarP(&internal.ServiceURL, internal.ServiceURLVar, "",
+	rootCmd.AddCommand(shortenservercmd)
+	shortenservercmd.PersistentFlags().StringVarP(&internal.ServiceURL, internal.ServiceURLVar, "",
 		viper.GetString(internal.ServiceURLVar), "If value passed, testserverweb will delegate to this service")
-	err := viper.BindPFlag(internal.ServiceURLVar, testserverWebCmd.PersistentFlags().Lookup(internal.ServiceURLVar))
+	err := viper.BindPFlag(internal.ServiceURLVar, shortenservercmd.PersistentFlags().Lookup(internal.ServiceURLVar))
 	if err != nil {
 		panic(err)
 	}
