@@ -95,6 +95,11 @@ func init() {
 		panic(err)
 	}
 
+	_, err = newShortenStateStore(rootCmd)
+	if err != nil {
+		panic(err)
+	}
+
 	_, err = newTestClientGrpcCmd(rootCmd)
 	if err != nil {
 		panic(err)

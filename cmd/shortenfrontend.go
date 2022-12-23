@@ -27,8 +27,8 @@ var shortenserver = basicserver.CreateBasicServer()
 var (
 	// shortenservercmd represents the testserver command
 	shortenservercmd = &cobra.Command{
-		Use:   "serve",
-		Short: "Starts a test pocketshorten server to test logging and metrics",
+		Use:   "servefrontend",
+		Short: "Starts a pocketshorten server frontend instance",
 		Long: `Starts a URL shorten server that will redirection
 based on the url passed in:
 
@@ -36,7 +36,7 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			clarkezoneLog.Successf("pocketshorten server  version %v,%v \n",
+			clarkezoneLog.Successf("pocketshorten frontend server version %v,%v \n",
 				config.VersionString, config.VersionHash)
 			clarkezoneLog.Successf("Log level set to %v", internal.LogLevel)
 			mux := basicserver.DefaultMux()
@@ -44,7 +44,7 @@ to quickly create a Cobra application.`,
 
 			var wrappedmux http.Handler
 			wrappedmux = basicserver.NewLoggingMiddleware(mux)
-			wrappedmux = basicserver.NewPromMetricsMiddlewareWeb("pocketshortener_testWebservice", wrappedmux)
+			wrappedmux = basicserver.NewPromMetricsMiddlewareWeb("pocketshorten_frontend", wrappedmux)
 
 			if viper.GetString(internal.ServiceURLVar) != "" {
 				clarkezoneLog.Successf("Delegating to %v", internal.ServiceURL)
@@ -52,7 +52,7 @@ to quickly create a Cobra application.`,
 				clarkezoneLog.Debugf("Not delegating to %v", internal.ServiceURL)
 			}
 
-			clarkezoneLog.Successf("Starting pocketshorten server on port %v", internal.Port)
+			clarkezoneLog.Successf("Starting pocketshorten frontend server on port %v", internal.Port)
 			shortenserver.StartMetrics()
 			clarkezoneLog.Successf("Starting metrics on port %v", internal.MetricsPort)
 			shortenserver.StartListen("", wrappedmux)
