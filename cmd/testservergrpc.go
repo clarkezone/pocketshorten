@@ -18,12 +18,12 @@ import (
 
 // TestServerGrpcCmd is the command to start a test grpc server
 type TestServerGrpcCmd struct {
-	bs  *basicserver.BasicServerGrpc
+	bs  *basicserver.Grpc
 	mid *basicserver.PromMetricsMiddlewareGrpc
 }
 
 func newTestServerGrpcCmd(partent *cobra.Command) (*TestServerGrpcCmd, error) {
-	bsGrpc := basicserver.CreateBasicServerGrpc()
+	bsGrpc := basicserver.CreateGrpc()
 	tsGrpc := &TestServerGrpcCmd{
 		bs: bsGrpc,
 	}

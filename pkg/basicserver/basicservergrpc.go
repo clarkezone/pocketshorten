@@ -16,8 +16,8 @@ import (
 
 // type cleanupfunc func()
 
-// BasicServerGrpc object
-type BasicServerGrpc struct {
+// Grpc object
+type Grpc struct {
 	lis             *net.Listener
 	grpcServer      *grpc.Server
 	ctx             context.Context
@@ -28,19 +28,19 @@ type BasicServerGrpc struct {
 	interceptors    []grpc.UnaryServerInterceptor
 }
 
-// CreateBasicServerGrpc Create BasicServer object and return
-func CreateBasicServerGrpc() *BasicServerGrpc {
-	bs := BasicServerGrpc{}
+// CreateGrpc Create BasicServer object and return
+func CreateGrpc() *Grpc {
+	bs := Grpc{}
 	return &bs
 }
 
 // AddUnaryInterceptor adds middleware to chain
-func (bs *BasicServerGrpc) AddUnaryInterceptor(i grpc.UnaryServerInterceptor) {
+func (bs *Grpc) AddUnaryInterceptor(i grpc.UnaryServerInterceptor) {
 	bs.interceptors = append(bs.interceptors, i)
 }
 
 // StartListen Start listening for a connection
-func (bs *BasicServerGrpc) StartListen(secret string) *grpc.Server {
+func (bs *Grpc) StartListen(secret string) *grpc.Server {
 	clarkezoneLog.Successf("starting... basic grpc server on :%v", fmt.Sprint(internal.Port))
 
 	bs.exitchan = make(chan bool)
@@ -75,7 +75,7 @@ func (bs *BasicServerGrpc) StartListen(secret string) *grpc.Server {
 }
 
 // StartMetrics Start listening for a connection for metrics
-func (bs *BasicServerGrpc) StartMetrics() {
+func (bs *Grpc) StartMetrics() {
 	clarkezoneLog.Successf("starting... metrics on :%v", fmt.Sprint(internal.MetricsPort))
 
 	if bs.ctx == nil {
@@ -99,7 +99,7 @@ func (bs *BasicServerGrpc) StartMetrics() {
 }
 
 // WaitforInterupt Wait for a sigterm event or for user to press control c when running interacticely
-func (bs *BasicServerGrpc) WaitforInterupt() error {
+func (bs *Grpc) WaitforInterupt() error {
 	if bs.exitchan == nil {
 		clarkezoneLog.Debugf("WaitForInterupt(): server not started\n")
 		return fmt.Errorf("server not started")
@@ -131,40 +131,40 @@ func (bs *BasicServerGrpc) WaitforInterupt() error {
 // }
 
 // Shutdown terminates the listening thread
-func (bs *BasicServerGrpc) Shutdown() error {
+func (bs *Grpc) Shutdown() error {
 	if bs.exitchan == nil {
-		clarkezoneLog.Debugf("BasicServerGrpc: no exit channel detected on shutdown\n")
-		return fmt.Errorf("BasicServerGrpc: no exit channel detected on shutdown")
+		clarkezoneLog.Debugf("Grpc: no exit channel detected on shutdown\n")
+		return fmt.Errorf("Grpc: no exit channel detected on shutdown")
 	}
 	defer bs.ctx.Done()
 	defer bs.cancel()
-	clarkezoneLog.Debugf("BasicServerGrpc: request httpserver shutdown")
+	clarkezoneLog.Debugf("Grpc: request httpserver shutdown")
 	bs.grpcServer.GracefulStop()
-	clarkezoneLog.Debugf("BasicServerGrpc: shutdwon completed, wait for exitchan")
+	clarkezoneLog.Debugf("Grpc: shutdwon completed, wait for exitchan")
 	<-bs.exitchan
-	clarkezoneLog.Debugf("BasicServerGrpc: exit completed function returqn")
+	clarkezoneLog.Debugf("Grpc: exit completed function returqn")
 
 	if bs.metricsserver != nil {
 		if bs.metricsexitchan == nil {
-			clarkezoneLog.Debugf("BasicServerGrpc: metrics no exit channel detected on shutdown\n")
-			return fmt.Errorf("BasicServerGrpc: metrics no exit channel detected on shutdown")
+			clarkezoneLog.Debugf("Grpc: metrics no exit channel detected on shutdown\n")
+			return fmt.Errorf("Grpc: metrics no exit channel detected on shutdown")
 		}
 		metricsexit := bs.metricsserver.Shutdown(bs.ctx)
 
-		clarkezoneLog.Debugf("BasicServerGrpc: metrics shutdwon completed, wait for exitchan")
+		clarkezoneLog.Debugf("Grpc: metrics shutdwon completed, wait for exitchan")
 		<-bs.metricsexitchan
-		clarkezoneLog.Debugf("BasicServerGrpc: metrics exit completed function returqn")
+		clarkezoneLog.Debugf("Grpc: metrics exit completed function returqn")
 		if metricsexit != nil {
 			return metricsexit
 		}
 	} else {
 
-		clarkezoneLog.Debugf("BasicServerGrpc: no metrics server detected on shutdown hence skipping extichannel\n")
+		clarkezoneLog.Debugf("Grpc: no metrics server detected on shutdown hence skipping extichannel\n")
 	}
 	return nil
 }
 
-func (bs *BasicServerGrpc) logsUnaryInterceptor(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (interface{}, error) {
+func (bs *Grpc) logsUnaryInterceptor(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (interface{}, error) {
 	clarkezoneLog.Debugf("gRPC method called %v", info.FullMethod)
 	return handler(ctx, req)
 }

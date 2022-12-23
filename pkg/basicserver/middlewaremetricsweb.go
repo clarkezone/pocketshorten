@@ -43,7 +43,7 @@ func newMiddlewareMetricsWeb(handlerToWrap http.Handler, prefix string) *PromMet
 	return &mw
 }
 
-// NewPromMetricsMiddleware constructs a new Logger middleware handler
+// NewPromMetricsMiddlewareWeb constructs a new Logger middleware handler
 func NewPromMetricsMiddlewareWeb(prefix string, handlerToWrap http.Handler) *PromMetricsMiddlewareWeb {
 	clarkezoneLog.Debugf("NewPromMetricsMiddleware()")
 	return newMiddlewareMetricsWeb(handlerToWrap, prefix)
