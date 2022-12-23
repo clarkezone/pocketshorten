@@ -1,4 +1,4 @@
-// Package cmd contains the cli command definitions for pocketshorten
+// Package cmd contains the cli command definitions for gomicroservicestarter
 package cmd
 
 /*
@@ -18,7 +18,8 @@ import (
 
 // TestServerGrpcCmd is the command to start a test grpc server
 type TestServerGrpcCmd struct {
-	bs *basicserver.BasicServerGrpc
+	bs  *basicserver.BasicServerGrpc
+	mid *basicserver.PromMetricsMiddlewareGrpc
 }
 
 func newTestServerGrpcCmd(partent *cobra.Command) (*TestServerGrpcCmd, error) {
@@ -36,12 +37,12 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			clarkezoneLog.Successf("pocketshorten version %v,%v started in testservergrpc mode\n",
+			clarkezoneLog.Successf("gomicroservicestarter version %v,%v started in testservergrpc mode\n",
 				config.VersionString, config.VersionHash)
 			clarkezoneLog.Successf("Log level set to %v", internal.LogLevel)
-			// wrappedmux = basicserver.NewLoggingMiddleware(mux)
-			// wrappedmux = basicserver.NewPromMetricsMiddleware("pocketshorten_testGrpcservice", wrappedmux)
 
+			tsGrpc.mid = basicserver.NewPromMetricsMiddlewareGrpc("gomicroservicestarter_grpc_server")
+			bsGrpc.AddUnaryInterceptor(tsGrpc.mid.MetricsUnaryInterceptor)
 			clarkezoneLog.Successf("Starting grpc server on port %v", internal.Port)
 			bsGrpc.StartMetrics()
 			clarkezoneLog.Successf("Starting metrics on port %v", internal.MetricsPort)

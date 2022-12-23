@@ -25,12 +25,18 @@ type BasicServerGrpc struct {
 	exitchan        chan (bool)
 	metricsserver   *http.Server
 	metricsexitchan chan (bool)
+	interceptors    []grpc.UnaryServerInterceptor
 }
 
 // CreateBasicServerGrpc Create BasicServer object and return
 func CreateBasicServerGrpc() *BasicServerGrpc {
 	bs := BasicServerGrpc{}
 	return &bs
+}
+
+// AddUnaryInterceptor adds middleware to chain
+func (bs *BasicServerGrpc) AddUnaryInterceptor(i grpc.UnaryServerInterceptor) {
+	bs.interceptors = append(bs.interceptors, i)
 }
 
 // StartListen Start listening for a connection
@@ -45,10 +51,14 @@ func (bs *BasicServerGrpc) StartListen(secret string) *grpc.Server {
 	}
 
 	bs.lis = &lis
-	mid := NewPromMetricsMiddlewareGrpc("basicserver")
+
+	bs.interceptors = append(bs.interceptors, bs.logsUnaryInterceptor)
+
 	opts := []grpc.ServerOption{grpc.ChainUnaryInterceptor(
-		(bs.logsUnaryInterceptor),
-		(mid.metricsUnaryInterceptor))}
+		bs.interceptors...)}
+
+	clarkezoneLog.Debugf("new grpc server with %v interceptors", len(bs.interceptors))
+
 	bs.grpcServer = grpc.NewServer(opts...)
 
 	go func() {

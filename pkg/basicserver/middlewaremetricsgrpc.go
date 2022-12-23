@@ -18,7 +18,8 @@ type PromMetricsMiddlewareGrpc struct {
 	requestDuration *prometheus.HistogramVec
 }
 
-func (l *PromMetricsMiddlewareGrpc) metricsUnaryInterceptor(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (interface{}, error) {
+// MetricsUnaryInterceptor is the interceptor that can be chained
+func (l *PromMetricsMiddlewareGrpc) MetricsUnaryInterceptor(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (interface{}, error) {
 	start := time.Now()
 	result, err := handler(ctx, req)
 
