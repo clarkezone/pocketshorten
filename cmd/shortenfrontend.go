@@ -7,19 +7,14 @@ Copyright © 2022 James Clarke james@clarkezone.net
 */
 
 import (
-	"context"
-	"fmt"
 	"net/http"
 
 	"github.com/clarkezone/pocketshorten/internal"
 	"github.com/clarkezone/pocketshorten/pkg/basicserver"
 	"github.com/clarkezone/pocketshorten/pkg/config"
-	"github.com/clarkezone/pocketshorten/pkg/greetingservice"
 	clarkezoneLog "github.com/clarkezone/pocketshorten/pkg/log"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
-	"google.golang.org/grpc"
-	"google.golang.org/grpc/credentials/insecure"
 )
 
 var shortenserver = basicserver.CreateBasicServer()
@@ -40,7 +35,7 @@ to quickly create a Cobra application.`,
 				config.VersionString, config.VersionHash)
 			clarkezoneLog.Successf("Log level set to %v", internal.LogLevel)
 			mux := basicserver.DefaultMux()
-			mux.HandleFunc("/", getServerHandler())
+			mux.HandleFunc("/", getRedirectHandler())
 
 			var wrappedmux http.Handler
 			wrappedmux = basicserver.NewLoggingMiddleware(mux)
@@ -61,44 +56,15 @@ to quickly create a Cobra application.`,
 	}
 )
 
-func getServerHandler() func(w http.ResponseWriter, r *http.Request) {
+func getRedirectHandler() func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
-		var message string
+		requested := r.URL.Query().Get("shortlink")
 
-		if viper.GetString(internal.ServiceURLVar) != "" {
-			conn, err := grpc.Dial(internal.ServiceURL, grpc.WithTransportCredentials(insecure.NewCredentials()))
-			if err != nil {
-				clarkezoneLog.Errorf("fail to dial: %v", err)
-			}
-			defer conn.Close()
-
-			if err == nil {
-				client := greetingservice.NewGreeterClient(conn)
-				result, err := client.GetGreeting(context.Background(), &greetingservice.Empty{})
-				if err != nil {
-					clarkezoneLog.Errorf("Error %v", err)
-				} else {
-					clarkezoneLog.Successf("Result %v from %v", result.Greeting, result.Name)
-					message = fmt.Sprintf("%v from %v at %v<br>", result.Name, result.Greeting, result.LastUpdated)
-				}
-			} else {
-				clarkezoneLog.Errorf("Error %v", err)
-				w.WriteHeader(http.StatusInternalServerError)
-				_, err := w.Write([]byte("500 - Something bad happened!"))
-				if err != nil {
-					clarkezoneLog.Errorf("Error %v", err)
-				}
-			}
-		} else {
-			message = fmt.Sprintln("Hello World<br>")
+		if requested == "james" {
+			http.Redirect(w, r, "", http.StatusMovedPermanently)
+			return
 		}
-
-		_, err := w.Write([]byte(message))
-		if err != nil {
-			clarkezoneLog.Debugf("Failed to write bytes %v\n", err)
-			panic(err)
-		}
-
+		clarkezoneLog.Debugf("Failed to redirect")
 	}
 }
 
