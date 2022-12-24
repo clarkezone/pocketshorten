@@ -90,12 +90,17 @@ func init() {
 		panic(err)
 	}
 
-	_, err = newTestServerGrpcCmd(rootCmd)
+	_, err = newShortenFrontend(rootCmd)
 	if err != nil {
 		panic(err)
 	}
 
 	_, err = newShortenStateStore(rootCmd)
+	if err != nil {
+		panic(err)
+	}
+
+	_, err = newTestServerGrpcCmd(rootCmd)
 	if err != nil {
 		panic(err)
 	}

@@ -7,6 +7,7 @@ Copyright © 2022 James Clarke james@clarkezone.net
 */
 
 import (
+	"errors"
 	"fmt"
 	"net/http"
 
@@ -18,11 +19,20 @@ import (
 	"github.com/spf13/viper"
 )
 
-var shortenserver = basicserver.CreateBasicServer()
+// ShortenFrontendCmd object
+type ShortenFrontendCmd struct {
+	bs *basicserver.BasicServer
+	lh *lookupHandler
+}
 
-var (
+func newShortenFrontend(parent *cobra.Command) (*ShortenFrontendCmd, error) {
+
+	lhandler := newLookupHandler()
+	ss := basicserver.CreateBasicServer()
+	sfc := &ShortenFrontendCmd{bs: ss, lh: lhandler}
+
 	// shortenservercmd represents the testserver command
-	shortenservercmd = &cobra.Command{
+	shortenservercmd := &cobra.Command{
 		Use:   "servefrontend",
 		Short: "Starts a pocketshorten server frontend instance",
 		Long: `Starts a URL shorten server that will redirection
@@ -35,8 +45,11 @@ to quickly create a Cobra application.`,
 			clarkezoneLog.Successf("pocketshorten frontend server version %v,%v \n",
 				config.VersionString, config.VersionHash)
 			clarkezoneLog.Successf("Log level set to %v", internal.LogLevel)
+
+			// TODO: populate dictstore
+
 			mux := basicserver.DefaultMux()
-			mux.HandleFunc("/", getRedirectHandler())
+			mux.HandleFunc("/", sfc.lh.redirectHandler)
 
 			var wrappedmux http.Handler
 			wrappedmux = basicserver.NewLoggingMiddleware(mux)
@@ -49,46 +62,89 @@ to quickly create a Cobra application.`,
 			}
 
 			clarkezoneLog.Successf("Starting pocketshorten frontend server on port %v", internal.Port)
-			shortenserver.StartMetrics()
+			ss.StartMetrics()
 			clarkezoneLog.Successf("Starting metrics on port %v", internal.MetricsPort)
-			shortenserver.StartListen("", wrappedmux)
-			return shortenserver.WaitforInterupt()
+			ss.StartListen("", wrappedmux)
+			return ss.WaitforInterupt()
 		},
 	}
-)
-
-func getRedirectHandler() func(w http.ResponseWriter, r *http.Request) {
-	return func(w http.ResponseWriter, r *http.Request) {
-		requested := r.URL.Query().Get("shortlink")
-
-		if requested == "" {
-			writeOutput(w, "please supply shortlink query parameter")
-			return
-		}
-
-		if requested == "james" {
-			http.Redirect(w, r, "https://github.com/clarkezone", http.StatusMovedPermanently)
-			return
-		}
-
-		writeOutput(w, fmt.Sprintf("shortlink %v notfound", requested))
+	err := sfc.configFlags(shortenservercmd)
+	if err != nil {
+		return nil, err
 	}
+	parent.AddCommand(shortenservercmd)
+	return sfc, nil
 }
 
-func writeOutput(w http.ResponseWriter, message string) {
+func (ff *ShortenFrontendCmd) configFlags(cmd *cobra.Command) error {
+	cmd.PersistentFlags().StringVarP(&internal.ServiceURL, internal.ServiceURLVar, "",
+		viper.GetString(internal.ServiceURLVar), "If value passed, testserverweb will delegate to this service")
+	err := viper.BindPFlag(internal.ServiceURLVar, cmd.PersistentFlags().Lookup(internal.ServiceURLVar))
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+type urlLookupService interface {
+	Store(string, string) error
+	Lookup(string) (string, error)
+}
+
+//TODO implement service using dictionary
+
+type dictStore struct {
+	m map[string]string
+}
+
+func (store *dictStore) Store(short string, long string) error {
+	store.m[short] = long
+	return nil
+}
+
+func (store *dictStore) Lookup(short string) (string, error) {
+	val, pr := store.m[short]
+	if pr {
+		return val, nil
+	}
+	return "", errors.New("Key not found")
+}
+
+func newLookupHandler() *lookupHandler {
+	ds := &dictStore{}
+	ds.m = make(map[string]string)
+	lh := &lookupHandler{storage: ds}
+	return lh
+}
+
+type lookupHandler struct {
+	storage urlLookupService
+}
+
+func (lh *lookupHandler) redirectHandler(w http.ResponseWriter, r *http.Request) {
+	requested := r.URL.Query().Get("shortlink")
+
+	if requested == "" {
+		writeOutputError(w, "please supply shortlink query parameter")
+		return
+	}
+	uri, err := lh.storage.Lookup(requested)
+	if err != nil {
+		writeOutputError(w, fmt.Sprintf("shortlink %v notfound", requested))
+		return
+	} else {
+		clarkezoneLog.Debugf("redirecting to %v", uri)
+	}
+
+	http.Redirect(w, r, uri, http.StatusMovedPermanently)
+
+}
+
+func writeOutputError(w http.ResponseWriter, message string) {
+	clarkezoneLog.Debugf("Error reported to user %v", message)
 	_, err := w.Write([]byte(message))
 	if err != nil {
-		clarkezoneLog.Debugf("Failed to write bytes %v\n", err)
-		panic(err)
+		clarkezoneLog.Debugf("writeOutputError: Failed to write bytes %v\n", err)
 	}
-}
-
-func init() {
-	rootCmd.AddCommand(shortenservercmd)
-	shortenservercmd.PersistentFlags().StringVarP(&internal.ServiceURL, internal.ServiceURLVar, "",
-		viper.GetString(internal.ServiceURLVar), "If value passed, testserverweb will delegate to this service")
-	err := viper.BindPFlag(internal.ServiceURLVar, shortenservercmd.PersistentFlags().Lookup(internal.ServiceURLVar))
-	if err != nil {
-		panic(err)
-	}
+	w.WriteHeader(http.StatusNotFound)
 }
