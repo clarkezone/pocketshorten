@@ -63,6 +63,7 @@ func getRedirectHandler() func(w http.ResponseWriter, r *http.Request) {
 
 		if requested == "" {
 			writeOutput(w, "please supply shortlink query parameter")
+			return
 		}
 
 		if requested == "james" {
