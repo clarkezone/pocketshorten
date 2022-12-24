@@ -7,6 +7,7 @@ Copyright © 2022 James Clarke james@clarkezone.net
 */
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/clarkezone/pocketshorten/internal"
@@ -60,11 +61,24 @@ func getRedirectHandler() func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		requested := r.URL.Query().Get("shortlink")
 
+		if requested == "" {
+			writeOutput(w, "please supply shortlink query parameter")
+		}
+
 		if requested == "james" {
-			http.Redirect(w, r, "", http.StatusMovedPermanently)
+			http.Redirect(w, r, "https://github.com/clarkezone", http.StatusMovedPermanently)
 			return
 		}
-		clarkezoneLog.Debugf("Failed to redirect")
+
+		writeOutput(w, fmt.Sprintf("shortlink %v notfound", requested))
+	}
+}
+
+func writeOutput(w http.ResponseWriter, message string) {
+	_, err := w.Write([]byte(message))
+	if err != nil {
+		clarkezoneLog.Debugf("Failed to write bytes %v\n", err)
+		panic(err)
 	}
 }
 
