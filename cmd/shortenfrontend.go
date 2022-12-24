@@ -30,7 +30,13 @@ func newShortenFrontend(parent *cobra.Command) (*ShortenFrontendCmd, error) {
 	lhandler := newLookupHandler()
 	ss := basicserver.CreateBasicServer()
 	sfc := &ShortenFrontendCmd{bs: ss, lh: lhandler}
-	// TODO populate dictstore
+
+	//for _, element := range dresp2.Items {
+	//	log.Printf("Storing %v with %v", element.ShortURL, element.LongURL)
+	lhandler.storage.Store("james", "https://github.com/clarkezone")
+	lhandler.storage.Store("clarke", "https://twitter.com/clarkezone")
+	//}
+
 	// TODO populate dictstore from grpc
 
 	// shortenservercmd represents the testserver command
@@ -143,9 +149,9 @@ func (lh *lookupHandler) redirectHandler(w http.ResponseWriter, r *http.Request)
 
 func writeOutputError(w http.ResponseWriter, message string) {
 	clarkezoneLog.Debugf("Error reported to user %v", message)
+	w.WriteHeader(http.StatusNotFound)
 	_, err := w.Write([]byte(message))
 	if err != nil {
 		clarkezoneLog.Debugf("writeOutputError: Failed to write bytes %v\n", err)
 	}
-	w.WriteHeader(http.StatusNotFound)
 }
