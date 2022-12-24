@@ -30,6 +30,8 @@ func newShortenFrontend(parent *cobra.Command) (*ShortenFrontendCmd, error) {
 	lhandler := newLookupHandler()
 	ss := basicserver.CreateBasicServer()
 	sfc := &ShortenFrontendCmd{bs: ss, lh: lhandler}
+	// TODO populate dictstore
+	// TODO populate dictstore from grpc
 
 	// shortenservercmd represents the testserver command
 	shortenservercmd := &cobra.Command{
@@ -45,8 +47,6 @@ to quickly create a Cobra application.`,
 			clarkezoneLog.Successf("pocketshorten frontend server version %v,%v \n",
 				config.VersionString, config.VersionHash)
 			clarkezoneLog.Successf("Log level set to %v", internal.LogLevel)
-
-			// TODO: populate dictstore
 
 			mux := basicserver.DefaultMux()
 			mux.HandleFunc("/", sfc.lh.redirectHandler)
@@ -91,18 +91,18 @@ type urlLookupService interface {
 	Lookup(string) (string, error)
 }
 
-//TODO implement service using dictionary
-
 type dictStore struct {
 	m map[string]string
 }
 
 func (store *dictStore) Store(short string, long string) error {
+	//TODO logging, telemetry
 	store.m[short] = long
 	return nil
 }
 
 func (store *dictStore) Lookup(short string) (string, error) {
+	//TODO logging, telemetry
 	val, pr := store.m[short]
 	if pr {
 		return val, nil
@@ -122,6 +122,7 @@ type lookupHandler struct {
 }
 
 func (lh *lookupHandler) redirectHandler(w http.ResponseWriter, r *http.Request) {
+	//TODO logging, telemetry
 	requested := r.URL.Query().Get("shortlink")
 
 	if requested == "" {
