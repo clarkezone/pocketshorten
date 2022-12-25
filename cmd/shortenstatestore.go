@@ -40,6 +40,22 @@ to quickly create a Cobra application.`,
 				config.VersionString, config.VersionHash)
 			clarkezoneLog.Successf("Log level set to %v", internal.LogLevel)
 
+			values := viper.Get("values").([]interface{})
+
+			if values == nil {
+				clarkezoneLog.Debugf("Shortenstatestore Valus is nil: %v", values)
+			} else {
+
+				clarkezoneLog.Debugf("Shortenstatestore Valus is not nil: number in collection %v", len(values))
+			}
+
+			// Iterate over the string pairs in the array
+			//	for _, pair := range values {
+			//		key := pair[0]
+			//		value := pair[1]
+			//		clarkezoneLog.Debugf("%s: %s\n", key, value)
+			//	}
+
 			sss.mid = basicserver.NewPromMetricsMiddlewareGrpc("pocketshorten_statestore")
 			bssssGrpc.AddUnaryInterceptor(sss.mid.MetricsUnaryInterceptor)
 			clarkezoneLog.Successf("Starting pocketshorten statestore server on port %v", internal.Port)
