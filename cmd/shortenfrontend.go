@@ -102,17 +102,20 @@ type dictStore struct {
 }
 
 func (store *dictStore) Store(short string, long string) error {
-	//TODO logging, telemetry
+	//TODO telemetry
+	clarkezoneLog.Debugf("dictStore store short %v long %v", short, long)
 	store.m[short] = long
 	return nil
 }
 
 func (store *dictStore) Lookup(short string) (string, error) {
-	//TODO logging, telemetry
+	//TODO telemetry
 	val, pr := store.m[short]
 	if pr {
+		clarkezoneLog.Debugf("dictStore lookup short %v found %v", short, pr)
 		return val, nil
 	}
+	clarkezoneLog.Debugf("dictstore keynotfound for %v", short)
 	return "", errors.New("Key not found")
 }
 
@@ -128,10 +131,11 @@ type lookupHandler struct {
 }
 
 func (lh *lookupHandler) redirectHandler(w http.ResponseWriter, r *http.Request) {
-	//TODO logging, telemetry
+	//TODO telemetry
 	requested := r.URL.Query().Get("shortlink")
 
 	if requested == "" {
+		clarkezoneLog.Errorf("redirecthandler called with  missingshortlink")
 		writeOutputError(w, "please supply shortlink query parameter")
 		return
 	}
