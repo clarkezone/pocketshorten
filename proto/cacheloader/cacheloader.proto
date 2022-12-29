@@ -1,0 +1,16 @@
+syntax = "proto3";
+package CacheLoaderService;
+option go_package = "github.com/clakezone/pocketshorten/cacheloaderservice";
+
+service UrlShortlinkCache {
+    rpc GetItems(Empty) returns (stream UrlShortLink){}
+}
+
+message Empty {
+    string id = 1;
+}
+
+message UrlShortLink {
+    string short = 1;
+    string original = 2;
+}

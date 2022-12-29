@@ -10,6 +10,7 @@ import (
 )
 
 func main() {
-	clarkezoneLog.Init(logrus.WarnLevel)
+	//clarkezoneLog.Init(logrus.WarnLevel)
+	clarkezoneLog.Init(logrus.DebugLevel)
 	cmd.Execute()
 }

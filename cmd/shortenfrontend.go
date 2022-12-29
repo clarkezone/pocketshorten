@@ -33,8 +33,15 @@ func newShortenFrontend(parent *cobra.Command) (*ShortenFrontendCmd, error) {
 
 	//for _, element := range dresp2.Items {
 	//	log.Printf("Storing %v with %v", element.ShortURL, element.LongURL)
-	lhandler.storage.Store("james", "https://github.com/clarkezone")
-	lhandler.storage.Store("clarke", "https://twitter.com/clarkezone")
+	err := lhandler.storage.Store("james", "https://github.com/clarkezone")
+	if err != nil {
+		clarkezoneLog.Errorf("Error storing: %v", err)
+	}
+	err = lhandler.storage.Store("clarke", "https://twitter.com/clarkezone")
+	if err != nil {
+		clarkezoneLog.Errorf("Error storing: %v", err)
+	}
+	clarkezoneLog.Debugf("Error storing: %v", err)
 	//}
 
 	// TODO populate dictstore from grpc
@@ -74,7 +81,7 @@ to quickly create a Cobra application.`,
 			return ss.WaitforInterupt()
 		},
 	}
-	err := sfc.configFlags(shortenservercmd)
+	err = sfc.configFlags(shortenservercmd)
 	if err != nil {
 		return nil, err
 	}
@@ -143,9 +150,8 @@ func (lh *lookupHandler) redirectHandler(w http.ResponseWriter, r *http.Request)
 	if err != nil {
 		writeOutputError(w, fmt.Sprintf("shortlink %v notfound", requested))
 		return
-	} else {
-		clarkezoneLog.Debugf("redirecting to %v", uri)
 	}
+	clarkezoneLog.Debugf("redirecting to %v", uri)
 
 	http.Redirect(w, r, uri, http.StatusMovedPermanently)
 

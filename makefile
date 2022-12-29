@@ -82,9 +82,12 @@ build:
 
 .PHONY: buildproto
 buildproto:
-	mkdir -p pkg/greetingservice && protoc -I proto --go_out=pkg/greetingservice --go_opt=paths=source_relative \
+	mkdir -p pkg/greetingservice && protoc -I ./proto/greeter --go_out=pkg/greetingservice --go_opt=paths=source_relative \
           --go-grpc_out=pkg/greetingservice --go-grpc_opt=paths=source_relative \
-          proto/*.proto
+          ./proto/greeter/*.proto
+	mkdir -p pkg/cacheloaderservice && protoc -I ./proto/cacheloader --go_out=pkg/cacheloaderservice --go_opt=paths=source_relative \
+          --go-grpc_out=pkg/cacheloaderservice --go-grpc_opt=paths=source_relative \
+          ./proto/cacheloader/*.proto
 
 .PHONY: buildimage
 buildimage:

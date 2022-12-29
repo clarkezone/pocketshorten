@@ -9,8 +9,8 @@ Copyright © 2022 NAME HERE <EMAIL ADDRESS>
 import (
 	"github.com/clarkezone/pocketshorten/internal"
 	"github.com/clarkezone/pocketshorten/pkg/basicserver"
+	"github.com/clarkezone/pocketshorten/pkg/cacheloaderservice"
 	"github.com/clarkezone/pocketshorten/pkg/config"
-	"github.com/clarkezone/pocketshorten/pkg/greetingservice"
 	clarkezoneLog "github.com/clarkezone/pocketshorten/pkg/log"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -62,7 +62,8 @@ to quickly create a Cobra application.`,
 			bssssGrpc.StartMetrics()
 			clarkezoneLog.Successf("Starting metrics on port %v", internal.MetricsPort)
 			serv := bssssGrpc.StartListen("")
-			greetingservice.RegisterGreeterServer(serv, &greetingservice.GreetingServer{})
+			cls := &cacheloaderservice.CacheLoaderServer{}
+			cacheloaderservice.RegisterUrlShortlinkCacheServer(serv, cls)
 			return bssssGrpc.WaitforInterupt()
 		},
 	}
