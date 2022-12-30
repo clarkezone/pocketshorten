@@ -26,25 +26,8 @@ type ShortenFrontendCmd struct {
 }
 
 func newShortenFrontend(parent *cobra.Command) (*ShortenFrontendCmd, error) {
-
-	lhandler := newLookupHandler()
 	ss := basicserver.CreateBasicServer()
-	sfc := &ShortenFrontendCmd{bs: ss, lh: lhandler}
-
-	//for _, element := range dresp2.Items {
-	//	log.Printf("Storing %v with %v", element.ShortURL, element.LongURL)
-	err := lhandler.storage.Store("james", "https://github.com/clarkezone")
-	if err != nil {
-		clarkezoneLog.Errorf("Error storing: %v", err)
-	}
-	err = lhandler.storage.Store("clarke", "https://twitter.com/clarkezone")
-	if err != nil {
-		clarkezoneLog.Errorf("Error storing: %v", err)
-	}
-	clarkezoneLog.Debugf("Error storing: %v", err)
-	//}
-
-	// TODO populate dictstore from grpc
+	sfc := &ShortenFrontendCmd{bs: ss, lh: nil}
 
 	// shortenservercmd represents the testserver command
 	shortenservercmd := &cobra.Command{
@@ -64,6 +47,8 @@ to quickly create a Cobra application.`,
 			mux := basicserver.DefaultMux()
 			mux.HandleFunc("/", sfc.lh.redirectHandler)
 
+			sfc.lh = newGrpcLookupHandler(internal.ServiceURL)
+
 			var wrappedmux http.Handler
 			wrappedmux = basicserver.NewLoggingMiddleware(mux)
 			wrappedmux = basicserver.NewPromMetricsMiddlewareWeb("pocketshorten_frontend", wrappedmux)
@@ -81,7 +66,7 @@ to quickly create a Cobra application.`,
 			return ss.WaitforInterupt()
 		},
 	}
-	err = sfc.configFlags(shortenservercmd)
+	err := sfc.configFlags(shortenservercmd)
 	if err != nil {
 		return nil, err
 	}
@@ -104,6 +89,9 @@ type urlLookupService interface {
 	Lookup(string) (string, error)
 }
 
+// dictStore
+//
+//lint:ignore U1000 reason backend not selected
 type dictStore struct {
 	m map[string]string
 }
@@ -123,12 +111,39 @@ func (store *dictStore) Lookup(short string) (string, error) {
 		return val, nil
 	}
 	clarkezoneLog.Debugf("dictstore keynotfound for %v", short)
-	return "", errors.New("Key not found")
+	return "", errors.New("key not found")
 }
 
-func newLookupHandler() *lookupHandler {
+// end dictstore
+
+// grpcStore
+type grpcStore struct {
+	serviceUrl string
+}
+
+func (store *grpcStore) Store(short string, long string) error {
+	return nil
+}
+func (store *grpcStore) Lookup(short string) (string, error) {
+	return "", nil
+}
+func (store *grpcStore) Connect() error {
+	return nil
+}
+
+// end grpcStore
+
+//lint:ignore U1000 reason backend not selected
+func newDictLookupHandler() *lookupHandler {
 	ds := &dictStore{}
 	ds.m = make(map[string]string)
+	lh := &lookupHandler{storage: ds}
+	return lh
+}
+
+func newGrpcLookupHandler(s string) *lookupHandler {
+	ds := &grpcStore{}
+	ds.serviceUrl = s
 	lh := &lookupHandler{storage: ds}
 	return lh
 }
