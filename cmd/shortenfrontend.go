@@ -7,31 +7,26 @@ Copyright © 2022 James Clarke james@clarkezone.net
 */
 
 import (
-	"context"
-	"errors"
-	"fmt"
 	"net/http"
 
 	"github.com/clarkezone/pocketshorten/internal"
 	"github.com/clarkezone/pocketshorten/pkg/basicserver"
-	"github.com/clarkezone/pocketshorten/pkg/cacheloaderservice"
 	"github.com/clarkezone/pocketshorten/pkg/config"
 	clarkezoneLog "github.com/clarkezone/pocketshorten/pkg/log"
+	"github.com/clarkezone/pocketshorten/pkg/shortener"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
-	"google.golang.org/grpc"
-	"google.golang.org/grpc/credentials/insecure"
 )
 
-// ShortenFrontendCmd object
-type ShortenFrontendCmd struct {
-	bs *basicserver.BasicServer
-	lh *lookupHandler
+// ShortenFrontendCmdState object
+type ShortenFrontendCmdState struct {
+	webserver *basicserver.BasicServer
+	shortener *shortener.ShortenHandler
 }
 
-func newShortenFrontend(parent *cobra.Command) (*ShortenFrontendCmd, error) {
+func newShortenFrontend(parent *cobra.Command) (*ShortenFrontendCmdState, error) {
 	ss := basicserver.CreateBasicServer()
-	sfc := &ShortenFrontendCmd{bs: ss, lh: nil}
+	cmdstate := &ShortenFrontendCmdState{webserver: ss, shortener: nil}
 
 	// shortenservercmd represents the testserver command
 	shortenservercmd := &cobra.Command{
@@ -48,14 +43,14 @@ to quickly create a Cobra application.`,
 				config.VersionString, config.VersionHash)
 			clarkezoneLog.Successf("Log level set to %v", internal.LogLevel)
 
-			mux := basicserver.DefaultMux()
-			mux.HandleFunc("/", sfc.lh.redirectHandler)
-
 			var err error
-			sfc.lh, err = newGrpcLookupHandler(internal.ServiceURL)
+			cmdstate.shortener, err = shortener.NewGrpcLookupHandler(internal.ServiceURL)
 			if err != nil {
 				return err
 			}
+
+			mux := basicserver.DefaultMux()
+			cmdstate.shortener.RegisterHandlers(mux)
 
 			var wrappedmux http.Handler
 			wrappedmux = basicserver.NewLoggingMiddleware(mux)
@@ -74,15 +69,15 @@ to quickly create a Cobra application.`,
 			return ss.WaitforInterupt()
 		},
 	}
-	err := sfc.configFlags(shortenservercmd)
+	err := cmdstate.configFlags(shortenservercmd)
 	if err != nil {
 		return nil, err
 	}
 	parent.AddCommand(shortenservercmd)
-	return sfc, nil
+	return cmdstate, nil
 }
 
-func (ff *ShortenFrontendCmd) configFlags(cmd *cobra.Command) error {
+func (ff *ShortenFrontendCmdState) configFlags(cmd *cobra.Command) error {
 	cmd.PersistentFlags().StringVarP(&internal.ServiceURL, internal.ServiceURLVar, "",
 		viper.GetString(internal.ServiceURLVar), "If value passed, testserverweb will delegate to this service")
 	err := viper.BindPFlag(internal.ServiceURLVar, cmd.PersistentFlags().Lookup(internal.ServiceURLVar))
@@ -90,147 +85,4 @@ func (ff *ShortenFrontendCmd) configFlags(cmd *cobra.Command) error {
 		return err
 	}
 	return nil
-}
-
-type urlLookupService interface {
-	Store(string, string) error
-	Lookup(string) (string, error)
-}
-
-// dictStore
-//
-//lint:ignore U1000 reason backend not selected
-type dictStore struct {
-	m map[string]string
-}
-
-func (store *dictStore) Store(short string, long string) error {
-	//TODO telemetry
-	clarkezoneLog.Debugf("dictStore store short %v long %v", short, long)
-	store.m[short] = long
-	return nil
-}
-
-func (store *dictStore) Lookup(short string) (string, error) {
-	//TODO telemetry
-	val, pr := store.m[short]
-	if pr {
-		clarkezoneLog.Debugf("dictStore lookup short %v found %v", short, pr)
-		return val, nil
-	}
-	clarkezoneLog.Debugf("dictstore keynotfound for %v", short)
-	return "", errors.New("key not found")
-}
-
-// end dictstore
-
-// grpcStore
-// TODO rename to dictCachePopulator
-type grpcStore struct {
-	serviceUrl string
-	conn       *grpc.ClientConn
-}
-
-func (store *grpcStore) Store(short string, long string) error {
-	return nil
-}
-func (store *grpcStore) Lookup(short string) (string, error) {
-	return "", nil
-}
-func (store *grpcStore) Connect() error {
-	return nil
-}
-
-func (store *grpcStore) startGrpcPopulate(errch chan error) {
-	//TODO rename proto etc for uniform naming
-	client := cacheloaderservice.NewUrlShortlinkCacheClient(store.conn)
-	// this will block
-	getitemsclient, err := client.GetItems(context.Background(), &cacheloaderservice.Empty{})
-	if err != nil {
-		clarkezoneLog.Errorf("grpcStore startGrpcPopulate error %v", err)
-		errch <- err
-	}
-	// TODO while there are more items
-	n, err := getitemsclient.Recv()
-	if err != nil {
-		clarkezoneLog.Errorf("grpcStore startGrpcPopulate error %v", err)
-		errch <- err
-		//TODO send error to channel
-		//TODO handle reconnect
-	}
-	clarkezoneLog.Debugf("grpcStore startGrpcPopulate got %v", n)
-	// TODO add to cache in thread safe manner
-	clarkezoneLog.Debugf("grpcStore goroutine exited")
-	// TODO kill goroutine on defer
-	// TODO unit tests for dictstore and cachepopulator
-	close(errch)
-}
-
-// TODO takes a dictstore, doesn't implement urlLookupService
-func NewGrpcStore(u string) (*grpcStore, error) {
-	ds := &grpcStore{}
-	ds.serviceUrl = u
-	var err error
-	ds.conn, err = grpc.Dial(internal.ServiceURL, grpc.WithTransportCredentials(insecure.NewCredentials()))
-	if err != nil {
-		return nil, err
-	}
-	defer ds.conn.Close()
-	errch := make(chan error)
-	go ds.startGrpcPopulate(errch)
-	//TODO how do we process errors on the errorchan
-	//err = <-errch
-	return ds, nil
-}
-
-// end grpcStore
-
-//lint:ignore U1000 reason backend not selected
-func newDictLookupHandler() *lookupHandler {
-	ds := &dictStore{}
-	ds.m = make(map[string]string)
-	lh := &lookupHandler{storage: ds}
-	return lh
-}
-
-func newGrpcLookupHandler(s string) (*lookupHandler, error) {
-	ds, err := NewGrpcStore(s)
-	if err != nil {
-		return nil, err
-	}
-	lh := &lookupHandler{storage: ds}
-	return lh, nil
-}
-
-type lookupHandler struct {
-	storage urlLookupService
-}
-
-func (lh *lookupHandler) redirectHandler(w http.ResponseWriter, r *http.Request) {
-	//TODO telemetry
-	requested := r.URL.Query().Get("shortlink")
-
-	if requested == "" {
-		clarkezoneLog.Errorf("redirecthandler called with  missingshortlink")
-		writeOutputError(w, "please supply shortlink query parameter")
-		return
-	}
-	uri, err := lh.storage.Lookup(requested)
-	if err != nil {
-		writeOutputError(w, fmt.Sprintf("shortlink %v notfound", requested))
-		return
-	}
-	clarkezoneLog.Debugf("redirecting to %v", uri)
-
-	http.Redirect(w, r, uri, http.StatusMovedPermanently)
-
-}
-
-func writeOutputError(w http.ResponseWriter, message string) {
-	clarkezoneLog.Debugf("Error reported to user %v", message)
-	w.WriteHeader(http.StatusNotFound)
-	_, err := w.Write([]byte(message))
-	if err != nil {
-		clarkezoneLog.Debugf("writeOutputError: Failed to write bytes %v\n", err)
-	}
 }
