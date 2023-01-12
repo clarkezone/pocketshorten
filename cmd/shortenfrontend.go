@@ -24,6 +24,15 @@ type ShortenFrontendCmdState struct {
 	shortener *shortener.ShortenHandler
 }
 
+func (state *ShortenFrontendCmdState) init(url string) *shortener.ShortenHandler {
+	st, err := shortener.NewGrpcLookupHandler(url)
+	if err != nil {
+		clarkezoneLog.Errorf("unable to initialize handler %v", err)
+		return nil
+	}
+	return st
+}
+
 func newShortenFrontend(parent *cobra.Command) (*ShortenFrontendCmdState, error) {
 	ss := basicserver.CreateBasicServer()
 	cmdstate := &ShortenFrontendCmdState{webserver: ss, shortener: nil}
@@ -43,24 +52,13 @@ to quickly create a Cobra application.`,
 				config.VersionString, config.VersionHash)
 			clarkezoneLog.Successf("Log level set to %v", internal.LogLevel)
 
-			var err error
-			cmdstate.shortener, err = shortener.NewGrpcLookupHandler(internal.ServiceURL)
-			if err != nil {
-				return err
-			}
-
 			mux := basicserver.DefaultMux()
+			cmdstate.shortener = cmdstate.init(internal.ServiceURL)
 			cmdstate.shortener.RegisterHandlers(mux)
 
 			var wrappedmux http.Handler
 			wrappedmux = basicserver.NewLoggingMiddleware(mux)
 			wrappedmux = basicserver.NewPromMetricsMiddlewareWeb("pocketshorten_frontend", wrappedmux)
-
-			if viper.GetString(internal.ServiceURLVar) != "" {
-				clarkezoneLog.Successf("Delegating to %v", internal.ServiceURL)
-			} else {
-				clarkezoneLog.Debugf("Not delegating to %v", internal.ServiceURL)
-			}
 
 			clarkezoneLog.Successf("Starting pocketshorten frontend server on port %v", internal.Port)
 			ss.StartMetrics()
