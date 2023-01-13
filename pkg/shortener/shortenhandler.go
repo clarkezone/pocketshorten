@@ -7,8 +7,8 @@ import (
 	clarkezoneLog "github.com/clarkezone/pocketshorten/pkg/log"
 )
 
-type storeLoader interface {
-}
+// type storeLoader interface {
+// }
 
 type urlLookupService interface {
 	Store(string, string) error
