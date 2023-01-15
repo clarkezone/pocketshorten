@@ -7,8 +7,9 @@ import (
 	clarkezoneLog "github.com/clarkezone/pocketshorten/pkg/log"
 )
 
-// type storeLoader interface {
-// }
+type storeLoader interface {
+	Init(urlLookupService)
+}
 
 type urlLookupService interface {
 	Store(string, string) error
@@ -17,9 +18,8 @@ type urlLookupService interface {
 
 //lint:ignore U1000 reason backend not selected
 func newDictLookupHandler() *ShortenHandler {
-	ds := &dictStore{}
-	// viperloader
-	ds.m = make(map[string]string)
+	// need viperStoreLoader
+	ds := NewDictStore(nil)
 	lh := &ShortenHandler{storage: ds}
 	return lh
 }

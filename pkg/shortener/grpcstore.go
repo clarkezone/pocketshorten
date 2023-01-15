@@ -13,7 +13,7 @@ import (
 // grpcStore
 // TODO rename to dictCachePopulator
 type grpcStore struct {
-	serviceUrl string
+	serviceURL string
 	conn       *grpc.ClientConn
 }
 
@@ -55,7 +55,7 @@ func (store *grpcStore) startGrpcPopulate(errch chan error) {
 // TODO takes a dictstore, doesn't implement urlLookupService
 func NewGrpcStore(u string) (*grpcStore, error) {
 	ds := &grpcStore{}
-	ds.serviceUrl = u
+	ds.serviceURL = u
 	var err error
 	ds.conn, err = grpc.Dial(internal.ServiceURL, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
