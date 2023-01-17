@@ -1,4 +1,4 @@
-// shortener package containing URL shortener functionality
+// Package shortener package containing URL shortener functionality
 package shortener
 
 import (

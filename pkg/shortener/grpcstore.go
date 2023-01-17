@@ -12,6 +12,8 @@ import (
 
 // grpcStore
 // TODO rename to dictCachePopulator
+//
+//lint:ignore U1000 reason backend not selected
 type grpcStore struct {
 	serviceURL string
 	conn       *grpc.ClientConn

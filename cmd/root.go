@@ -59,7 +59,7 @@ func Execute() {
 }
 
 func init() {
-	cobra.OnInitialize(initConfig)
+	cobra.OnInitialize(internal.InitConfig)
 
 	// Here you will define your flags and configuration settings.
 	// Cobra supports persistent flags, which, if defined here,
@@ -108,33 +108,5 @@ func init() {
 	_, err = newTestClientGrpcCmd(rootCmd)
 	if err != nil {
 		panic(err)
-	}
-}
-
-// initConfig reads in config file and ENV variables if set.
-func initConfig() {
-	clarkezoneLog.Debugf("initConfig called")
-	if cfgFile != "" {
-		// Use config file from the flag.
-		viper.SetConfigFile(cfgFile)
-	} else {
-		// Find home directory.
-		home, err := os.UserHomeDir()
-		cobra.CheckErr(err)
-
-		// Search config in home directory with name ".pocketshorten" (without extension).
-		viper.AddConfigPath(home)
-		viper.SetConfigType("json")
-		viper.SetConfigName(".pocketshorten")
-	}
-
-	viper.AutomaticEnv() // read in environment variables that match
-
-	// To debug this with logging, change the initial log value in main.go
-	// If a config file is found, read it in.
-	if err := viper.ReadInConfig(); err == nil {
-		clarkezoneLog.Debugf("Using config file: %v", viper.ConfigFileUsed())
-	} else {
-		clarkezoneLog.Errorf("Error reading config %v", err)
 	}
 }

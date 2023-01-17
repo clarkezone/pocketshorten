@@ -19,7 +19,8 @@ type urlLookupService interface {
 //lint:ignore U1000 reason backend not selected
 func newDictLookupHandler() *ShortenHandler {
 	// need viperStoreLoader
-	ds := NewDictStore(nil)
+	vl := &viperLoader{}
+	ds := NewDictStore(vl)
 	lh := &ShortenHandler{storage: ds}
 	return lh
 }
@@ -35,10 +36,12 @@ func NewGrpcLookupHandler(s string) (*ShortenHandler, error) {
 	return lh, nil
 }
 
+// ShortenHandler core logic
 type ShortenHandler struct {
 	storage urlLookupService
 }
 
+// RegisterHandlers attaches handlers to Mux that is passed in
 func (lh *ShortenHandler) RegisterHandlers(mux *http.ServeMux) {
 	mux.HandleFunc("/", lh.redirectHandler)
 }
