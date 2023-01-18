@@ -11,13 +11,17 @@ type viperLoader struct {
 
 func (vl *viperLoader) Init(ls urlLookupService) {
 
-	values := viper.Get("values").([]interface{})
-
+	values := viper.Get("values")
 	if values == nil {
+		panic("no data")
+	}
+	values2 := values.([]interface{})
+
+	if values2 == nil {
 		clarkezoneLog.Debugf("Shortenstatestore Valus is nil: %v", values)
 	} else {
 
-		clarkezoneLog.Debugf("Shortenstatestore Valus is not nil: number in collection %v", len(values))
+		clarkezoneLog.Debugf("Shortenstatestore Valus is not nil: number in collection %v", len(values2))
 	}
 
 	// Iterate over the string pairs in the array

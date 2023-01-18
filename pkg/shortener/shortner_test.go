@@ -4,6 +4,7 @@ import (
 	"os"
 	"testing"
 
+	"github.com/clarkezone/pocketshorten/internal"
 	clarkezoneLog "github.com/clarkezone/pocketshorten/pkg/log"
 	"github.com/sirupsen/logrus"
 )
@@ -11,6 +12,7 @@ import (
 // TestMain initizlie all tests
 func TestMain(m *testing.M) {
 	clarkezoneLog.Init(logrus.DebugLevel)
+	internal.SetupGitRoot()
 	code := m.Run()
 	os.Exit(code)
 }
