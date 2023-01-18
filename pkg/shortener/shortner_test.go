@@ -1,6 +1,8 @@
 package shortener
 
 import (
+	"net/http"
+	"net/http/httptest"
 	"os"
 	"path"
 	"testing"
@@ -54,7 +56,7 @@ func Test_dictLookupHandler(t *testing.T) {
 	}
 }
 
-func Test_viperlookuphandler(t *testing.T) {
+func Test_viperlookuphandlerinit(t *testing.T) {
 	initviperconfig(t)
 
 	handler := newDictLookupHandler()
@@ -66,6 +68,71 @@ func Test_viperlookuphandler(t *testing.T) {
 	if handler.storage.Count() != 3 {
 		t.Errorf("wrong number of items in storage")
 	}
+}
+
+func Test_viperlookuphandlerlookupbadurl(t *testing.T) {
+	initviperconfig(t)
+
+	handler := newDictLookupHandler()
+	if handler == nil {
+		t.Errorf("handler is nil")
+	}
+
+	req, err := http.NewRequest("GET", "/one", nil)
+	if err != nil {
+		t.Errorf("error creating request")
+	}
+
+	rr := httptest.NewRecorder()
+	handler.redirectHandler(rr, req)
+
+	if rr.Code != http.StatusNotFound {
+		t.Errorf("wrong status code")
+	}
+}
+
+func Test_viperlookuphandlergoodurlmissingkey(t *testing.T) {
+	initviperconfig(t)
+
+	handler := newDictLookupHandler()
+	if handler == nil {
+		t.Errorf("handler is nil")
+	}
+
+	req, err := http.NewRequest("GET", "?shortlink=missing", nil)
+	if err != nil {
+		t.Errorf("error creating request")
+	}
+
+	rr := httptest.NewRecorder()
+	handler.redirectHandler(rr, req)
+
+	if rr.Code != http.StatusNotFound {
+		t.Errorf("wrong status code")
+	}
+}
+
+func Test_viperlookuphandlergoodurlgoodkey(t *testing.T) {
+	initviperconfig(t)
+
+	handler := newDictLookupHandler()
+	if handler == nil {
+		t.Errorf("handler is nil")
+	}
+
+	req, err := http.NewRequest("GET", "?shortlink=key1", nil)
+	if err != nil {
+		t.Errorf("error creating request")
+	}
+
+	rr := httptest.NewRecorder()
+	handler.redirectHandler(rr, req)
+
+	if rr.Code != http.StatusMovedPermanently {
+		t.Errorf("wrong status code")
+	}
+
+	//TODO check value
 }
 
 func initviperconfig(t *testing.T) {
