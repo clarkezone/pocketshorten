@@ -10,7 +10,6 @@ type viperLoader struct {
 }
 
 func (vl *viperLoader) Init(ls urlLookupService) {
-
 	values := viper.Get("values")
 	if values == nil {
 		panic("no data")
@@ -24,10 +23,16 @@ func (vl *viperLoader) Init(ls urlLookupService) {
 		clarkezoneLog.Debugf("Shortenstatestore Valus is not nil: number in collection %v", len(values2))
 	}
 
-	// Iterate over the string pairs in the array
-	//	for _, pair := range values {
-	//		key := pair[0]
-	//		value := pair[1]
-	//		clarkezoneLog.Debugf("%s: %s\n", key, value)
-	//	}
+	//Iterate over the string pairs in the array and add to lookup service
+	for _, pair := range values2 {
+		pair2 := pair.([]interface{})
+		key := pair2[0]
+		value := pair2[1]
+		clarkezoneLog.Debugf("%s: %s\n", key, value)
+		if ls != nil {
+			ls.Store(key.(string), value.(string))
+		} else {
+			clarkezoneLog.Debugf("Lookup service is nil skipping %v", key.(string))
+		}
+	}
 }
