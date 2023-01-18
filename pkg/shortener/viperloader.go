@@ -12,7 +12,8 @@ type viperLoader struct {
 func (vl *viperLoader) Init(ls urlLookupService) {
 	values := viper.Get("values")
 	if values == nil {
-		panic("no data")
+		clarkezoneLog.Debugf("viperLoad: no urls found in config", values)
+		return
 	}
 	values2 := values.([]interface{})
 

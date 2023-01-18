@@ -2,6 +2,7 @@ package shortener
 
 import (
 	"os"
+	"path"
 	"testing"
 
 	"github.com/clarkezone/pocketshorten/internal"
@@ -47,9 +48,31 @@ func Test_dictStore(t *testing.T) {
 }
 
 func Test_dictLookupHandler(t *testing.T) {
-	// pass in viper loader
 	handler := newDictLookupHandler()
 	if handler == nil {
 		t.Errorf("handler is nil")
 	}
+}
+
+func Test_viperlookuphandler(t *testing.T) {
+	initviperconfig(t)
+
+	handler := newDictLookupHandler()
+	if handler == nil {
+		t.Errorf("handler is nil")
+	}
+
+	//lint:ignore SA5011 reason test
+	if handler.storage.Count() != 3 {
+		t.Errorf("wrong number of items in storage")
+	}
+}
+
+func initviperconfig(t *testing.T) {
+	cpath := "testfiles/.pocketshorten.json"
+	if internal.GitRoot == "" {
+		t.Fatalf("GitRoot is empty, did you call SetupGitRoot() in test?")
+	}
+	configpath := path.Join(internal.GitRoot, cpath)
+	internal.InitConfig(&configpath)
 }

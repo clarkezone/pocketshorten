@@ -42,4 +42,8 @@ func (store *dictStore) Lookup(short string) (string, error) {
 	return "", errors.New("key not found")
 }
 
+func (stor *dictStore) Count() int {
+	return len(stor.m)
+}
+
 // end dictstore

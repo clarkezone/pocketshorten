@@ -14,14 +14,15 @@ type storeLoader interface {
 type urlLookupService interface {
 	Store(string, string) error
 	Lookup(string) (string, error)
+	Count() int
 }
 
 //lint:ignore U1000 reason backend not selected
 func newDictLookupHandler() *ShortenHandler {
-	// need viperStoreLoader
 	vl := &viperLoader{}
 	ds := NewDictStore(vl)
 	lh := &ShortenHandler{storage: ds}
+	vl.Init(ds)
 	return lh
 }
 

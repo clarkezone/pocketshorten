@@ -25,6 +25,11 @@ func (store *grpcStore) Store(short string, long string) error {
 func (store *grpcStore) Lookup(short string) (string, error) {
 	return "", nil
 }
+
+func (store *grpcStore) Count() int {
+	return 0
+}
+
 func (store *grpcStore) Connect() error {
 	return nil
 }
