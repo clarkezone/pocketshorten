@@ -132,7 +132,11 @@ func Test_viperlookuphandlergoodurlgoodkey(t *testing.T) {
 		t.Errorf("wrong status code")
 	}
 
-	//TODO check value
+	h := rr.Header().Get("location")
+
+	if h != "/value1" {
+		t.Errorf("wrong location")
+	}
 }
 
 func initviperconfig(t *testing.T) {
