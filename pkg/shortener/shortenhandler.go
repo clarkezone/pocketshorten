@@ -18,7 +18,7 @@ type urlLookupService interface {
 }
 
 //lint:ignore U1000 reason backend not selected
-func newDictLookupHandler() *ShortenHandler {
+func NewDictLookupHandler() *ShortenHandler {
 	vl := &viperLoader{}
 	ds := NewDictStore(vl)
 	lh := &ShortenHandler{storage: ds}

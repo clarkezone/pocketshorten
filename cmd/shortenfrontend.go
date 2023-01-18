@@ -25,11 +25,7 @@ type ShortenFrontendCmdState struct {
 }
 
 func (state *ShortenFrontendCmdState) init(url string) *shortener.ShortenHandler {
-	st, err := shortener.NewGrpcLookupHandler(url)
-	if err != nil {
-		clarkezoneLog.Errorf("unable to initialize handler %v", err)
-		return nil
-	}
+	st := shortener.NewDictLookupHandler()
 	return st
 }
 

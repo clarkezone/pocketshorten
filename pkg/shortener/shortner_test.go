@@ -50,7 +50,7 @@ func Test_dictStore(t *testing.T) {
 }
 
 func Test_dictLookupHandler(t *testing.T) {
-	handler := newDictLookupHandler()
+	handler := NewDictLookupHandler()
 	if handler == nil {
 		t.Errorf("handler is nil")
 	}
@@ -59,7 +59,7 @@ func Test_dictLookupHandler(t *testing.T) {
 func Test_viperlookuphandlerinit(t *testing.T) {
 	initviperconfig(t)
 
-	handler := newDictLookupHandler()
+	handler := NewDictLookupHandler()
 	if handler == nil {
 		t.Errorf("handler is nil")
 	}
@@ -73,7 +73,7 @@ func Test_viperlookuphandlerinit(t *testing.T) {
 func Test_viperlookuphandlerlookupbadurl(t *testing.T) {
 	initviperconfig(t)
 
-	handler := newDictLookupHandler()
+	handler := NewDictLookupHandler()
 	if handler == nil {
 		t.Errorf("handler is nil")
 	}
@@ -94,7 +94,7 @@ func Test_viperlookuphandlerlookupbadurl(t *testing.T) {
 func Test_viperlookuphandlergoodurlmissingkey(t *testing.T) {
 	initviperconfig(t)
 
-	handler := newDictLookupHandler()
+	handler := NewDictLookupHandler()
 	if handler == nil {
 		t.Errorf("handler is nil")
 	}
@@ -115,7 +115,7 @@ func Test_viperlookuphandlergoodurlmissingkey(t *testing.T) {
 func Test_viperlookuphandlergoodurlgoodkey(t *testing.T) {
 	initviperconfig(t)
 
-	handler := newDictLookupHandler()
+	handler := NewDictLookupHandler()
 	if handler == nil {
 		t.Errorf("handler is nil")
 	}
