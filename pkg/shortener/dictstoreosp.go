@@ -13,8 +13,8 @@ type dictStore struct {
 	m map[string]string
 }
 
-// NewDictStore initializes a new store backed by a dict
-func NewDictStore(ls storeLoader) *dictStore {
+// newDictStore initializes a new store backed by a dict
+func newDictStore(ls storeLoader) *dictStore {
 	clarkezoneLog.Debugf("NewDictStore called with loader %v", ls)
 	ds := &dictStore{}
 	ds.m = make(map[string]string)

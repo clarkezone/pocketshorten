@@ -36,7 +36,7 @@ func (tlh *testLookupHandler) Init(ls urlLookupService) {
 func Test_dictStore(t *testing.T) {
 	// pass in viper loader
 	tlh := &testLookupHandler{}
-	handler := NewDictStore(tlh)
+	handler := newDictStore(tlh)
 	if handler == nil {
 		t.Errorf("handler is nil")
 	}

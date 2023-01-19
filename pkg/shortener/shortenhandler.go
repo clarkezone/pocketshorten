@@ -17,10 +17,12 @@ type urlLookupService interface {
 	Count() int
 }
 
+// NewDictLookupHandler creates a new instance of type
+//
 //lint:ignore U1000 reason backend not selected
 func NewDictLookupHandler() *ShortenHandler {
 	vl := &viperLoader{}
-	ds := NewDictStore(vl)
+	ds := newDictStore(vl)
 	lh := &ShortenHandler{storage: ds}
 	vl.Init(ds)
 	return lh

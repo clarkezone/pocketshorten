@@ -59,7 +59,7 @@ func (store *grpcStore) startGrpcPopulate(errch chan error) {
 	close(errch)
 }
 
-// TODO takes a dictstore, doesn't implement urlLookupService
+// NewGrpcStore creates a new instance of a GrpcStore
 func NewGrpcStore(u string) (*grpcStore, error) {
 	ds := &grpcStore{}
 	ds.serviceURL = u
