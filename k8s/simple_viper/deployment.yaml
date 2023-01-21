@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pocketshorten-frontend
+  labels:
+    app: kustomize
+spec:
+  replicas: 2
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: kustomize
+    spec:
+      containers:
+        - name: pocketshorten-frontend
+          # image: registry.dev.clarkezone.dev/pocketgeotemp:latest
+          image:
+            registry.hub.docker.com/clarkezone/pocketshorten:main
+            #        image: registry.hub.docker.com/clarkezone/previewd:webhooke2e
+
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8090
+            - containerPort: 8095
+          env:
+            - name: LOGLEVEL
+              valueFrom:
+                configMapKeyRef:
+                  name: psconfig
+                  key: LOGLEVEL
+            - name: POCKET_SHORTEN_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: db-user
+                  key: PW
+            - name: POCKET_DB_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: psconfig
+                  key: URL
+            - name: POCKET_SHORTEN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: db-user
+                  key: PW

@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: pocketshorten
+  annotations:
+    kubernetes.io/ingress.class: traefik
+    traefik.ingress.kubernetes.io/router.tls: "true"
+    traefik.ingress.kubernetes.io/router.entrypoints: https
+    cert-manager.io/cluster-issuer: cloudflare
+spec:
+  tls:
+    - hosts:
+        - pocketshorten-stage.dev.clarkezone.dev
+      secretName: pocketgeo-tls
+  rules:
+    - host: pocketshorten-stage.dev.clarkezone.dev
+      http:
+        paths:
+          - backend:
+              service:
+                name: pocketshorten-service
+                port:
+                  number: 8090
+            path: /
+            pathType: Prefix
