@@ -28,10 +28,11 @@ func NewDictLookupHandler() *ShortenHandler {
 	return lh
 }
 
+// NewGrpcLookupHandler returns a new lookuphandler instance
 func NewGrpcLookupHandler(s string) (*ShortenHandler, error) {
 	// dictstore
 	// grpcloader
-	ds, err := NewGrpcStore(s)
+	ds, err := newGrpcStore(s)
 	if err != nil {
 		return nil, err
 	}

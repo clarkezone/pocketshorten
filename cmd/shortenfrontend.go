@@ -71,7 +71,7 @@ to quickly create a Cobra application.`,
 	return cmdstate, nil
 }
 
-func (ff *ShortenFrontendCmdState) configFlags(cmd *cobra.Command) error {
+func (state *ShortenFrontendCmdState) configFlags(cmd *cobra.Command) error {
 	cmd.PersistentFlags().StringVarP(&internal.ServiceURL, internal.ServiceURLVar, "",
 		viper.GetString(internal.ServiceURLVar), "If value passed, testserverweb will delegate to this service")
 	err := viper.BindPFlag(internal.ServiceURLVar, cmd.PersistentFlags().Lookup(internal.ServiceURLVar))

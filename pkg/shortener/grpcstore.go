@@ -59,8 +59,8 @@ func (store *grpcStore) startGrpcPopulate(errch chan error) {
 	close(errch)
 }
 
-// NewGrpcStore creates a new instance of a GrpcStore
-func NewGrpcStore(u string) (*grpcStore, error) {
+// newGrpcStore creates a new instance of a GrpcStore
+func newGrpcStore(u string) (*grpcStore, error) {
 	ds := &grpcStore{}
 	ds.serviceURL = u
 	var err error

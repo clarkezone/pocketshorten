@@ -31,7 +31,10 @@ func (vl *viperLoader) Init(ls urlLookupService) {
 		value := pair2[1]
 		clarkezoneLog.Debugf("%s: %s\n", key, value)
 		if ls != nil {
-			ls.Store(key.(string), value.(string))
+			err := ls.Store(key.(string), value.(string))
+			if err != nil {
+				clarkezoneLog.Debugf("ViperLoader init: Error %v", err)
+			}
 		} else {
 			clarkezoneLog.Debugf("Lookup service is nil skipping %v", key.(string))
 		}
