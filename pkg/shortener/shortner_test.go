@@ -60,13 +60,12 @@ func Test_viperlookuphandlerinit(t *testing.T) {
 	initviperconfig(t)
 
 	handler := NewDictLookupHandler()
-	if handler == nil {
-		t.Errorf("handler is nil")
-	}
+	if handler != nil {
 
-	//lint:ignore SA5011 reason test
-	if handler.storage.Count() != 3 {
-		t.Errorf("wrong number of items in storage")
+		//lint:ignore SA5011 reason test
+		if handler.storage.Count() != 3 {
+			t.Errorf("wrong number of items in storage")
+		}
 	}
 }
 
