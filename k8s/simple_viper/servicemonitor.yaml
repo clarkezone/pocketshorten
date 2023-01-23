@@ -8,9 +8,9 @@ metadata:
 spec:
   selector:
     matchLabels:
-      app: pocketshorten-fe
+      app: pocketshorten-viper
   namespaceSelector:
     matchNames:
-      - pocketshorten-real
+      - pocketshorten
   endpoints:
     - port: metrics
