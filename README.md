@@ -24,10 +24,11 @@ Bootstrapping infra:
 - [x] k8s public
 - [x] Service Monitor
 - [x] Add load tester
+- [x] Fix double counting of metrics
+- [ ] Metrics for invalid requests
 - [ ] Dashboard for telemetry
 - [ ] Hello world comes from microservice with switch / env for mode in single binary
 - [ ] Cleanup names
-- [ ] Fix double counting of metrics
 - [ ] k8s local override with staging / prod
 - [ ] Instructions for prerequs
 - [ ] Fork and make template (rename target to be new baseline)
