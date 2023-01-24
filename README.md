@@ -29,7 +29,7 @@ Bootstrapping infra:
 - [ ] update URL format to remote shortlink query param
 - [ ] Dashboard for telemetry
 - [ ] spike test
-- [ ] PromAlerts 
+- [ ] PromAlerts
 - [ ] Hello world comes from microservice with switch / env for mode in single binary
 - [ ] Cleanup names
 - [ ] k8s local override with staging / prod
