@@ -23,7 +23,7 @@ Bootstrapping infra:
 - [x] Metrics exposed on independent port
 - [x] k8s public
 - [x] Service Monitor
-- [ ] Add load tester
+- [x] Add load tester
 - [ ] Dashboard for telemetry
 - [ ] Hello world comes from microservice with switch / env for mode in single binary
 - [ ] Cleanup names
