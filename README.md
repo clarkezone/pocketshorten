@@ -26,7 +26,10 @@ Bootstrapping infra:
 - [x] Add load tester
 - [x] Fix double counting of metrics
 - [ ] Metrics for invalid requests
+- [ ] update URL format to remote shortlink query param
 - [ ] Dashboard for telemetry
+- [ ] spike test
+- [ ] PromAlerts
 - [ ] Hello world comes from microservice with switch / env for mode in single binary
 - [ ] Cleanup names
 - [ ] k8s local override with staging / prod
