@@ -5,9 +5,10 @@ import (
 	"net/http"
 	"time"
 
-	clarkezoneLog "github.com/clarkezone/pocketshorten/pkg/log"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promauto"
+
+	clarkezoneLog "github.com/clarkezone/pocketshorten/pkg/log"
 )
 
 // PromMetricsMiddlewareWeb adds simple prometheus metrics type PromMetricsMiddlewareWeb
@@ -18,6 +19,7 @@ type PromMetricsMiddlewareWeb struct {
 }
 
 func (l *PromMetricsMiddlewareWeb) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+
 	rec := statusRecorder{w, 200}
 	start := time.Now()
 	l.handler.ServeHTTP(w, r)
