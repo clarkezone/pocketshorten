@@ -65,7 +65,7 @@ func Test_viperlookuphandlerinit(t *testing.T) {
 	if handler != nil {
 
 		//lint:ignore SA5011 reason test
-		if handler.storage.Count() != 3 {
+		if handler.storage.Count() != 5 {
 			t.Errorf("wrong number of items in storage")
 		}
 	}
@@ -156,7 +156,7 @@ func Test_shortenhandler(t *testing.T) {
 	s := httptest.NewServer(wrappedmux)
 	defer s.Close()
 
-	resp, err := http.DefaultClient.Get(s.URL + "?shortlink=key1")
+	resp, err := http.DefaultClient.Get(s.URL + "?shortlink=hn")
 	if err != nil {
 		t.Fatalf("Error")
 	}
@@ -165,7 +165,7 @@ func Test_shortenhandler(t *testing.T) {
 		t.Fatalf("Unexpected response: %v", resp.StatusCode)
 	}
 
-	if statusMw.Status() != 200 {
+	if statusMw.Status() != http.StatusMovedPermanently {
 		t.Fatalf("Statusmiddleware didn't work.  Expected 200 received %v", statusMw.Status())
 	}
 
