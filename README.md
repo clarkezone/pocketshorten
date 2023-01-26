@@ -27,9 +27,9 @@ Bootstrapping infra:
 - [x] Fix double counting of metrics
 - [ ] Metrics for invalid requests
   - [x] Status tracking middleware with tests
-  - [ ] Test for shortenhandler with mux, verify status has redirect status, error status
+  - [x] Test for shortenhandler with mux, verify status has redirect status, error status
   - [ ] Pass status into metrics middleware (should fix dashboard)
-- [ ] update URL format to remove shor;link query param
+- [ ] update URL format to remove shortlink query param
 - [ ] enable probe scenario (URL that returns true if valid config is present)
 - [ ] Factor out basic server into separate repo
 - [ ] complete dashboards
