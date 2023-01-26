@@ -31,7 +31,6 @@ Bootstrapping infra:
   - [x] Pass status into metrics middleware (should fix dashboard)
 - [ ] update URL format to remove shortlink query param
 - [ ] enable probe scenario (URL that returns true if valid config is present)
-- [ ] Factor out basic server into separate repo
 - [ ] complete dashboards
   - [ ] Fix latency graph adding p50, p75, p99
   - [ ] pick other things / formats
@@ -39,6 +38,10 @@ Bootstrapping infra:
 - [ ] Export dashboard and add to project
 - [ ] Run kubeval, add CPU, Mem limits, probes, PDB
 - [ ] lock dev manifest to a tagged build
+- [ ] Factor out basic server into separate repo
+
+---
+
 - [ ] Hello world comes from microservice with switch / env for mode in single binary
 - [ ] Cleanup names
 - [ ] k8s local override with staging / prod
