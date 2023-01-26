@@ -20,6 +20,10 @@ type StatusWriter struct {
 	status         int
 }
 
+func (s *StatusWriter) Status() int {
+	return s.status
+}
+
 func (l *StatusWriter) Header() http.Header {
 	return l.responseWriter.Header()
 }
@@ -41,6 +45,10 @@ func (l *StatusMiddlewareWeb) ServeHTTP(w http.ResponseWriter, r *http.Request) 
 }
 
 // NewLoggingMiddleware constructs a new Logger middleware handler
-func NewStatusMiddlewareWeb(handlerToWrap http.Handler) *StatusMiddlewareWeb {
-	return &StatusMiddlewareWeb{handlerToWrap, &StatusWriter{}}
+func NewStatusMiddlewareWeb(handlerToWrap http.Handler, sw *StatusWriter) *StatusMiddlewareWeb {
+	return &StatusMiddlewareWeb{handlerToWrap, sw}
+}
+
+func NewStatusRecorder() *StatusWriter {
+	return &StatusWriter{}
 }

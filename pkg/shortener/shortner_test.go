@@ -148,10 +148,10 @@ func Test_shortenhandler(t *testing.T) {
 	h := NewDictLookupHandler()
 	h.RegisterHandlers(mux)
 	var wrappedmux http.Handler
+	sr := basicserver.NewStatusRecorder()
 	wrappedmux = basicserver.NewLoggingMiddleware(mux)
-	statusMw := basicserver.NewStatusMiddlewareWeb(wrappedmux)
-	wrappedmux = basicserver.NewPromMetricsMiddlewareWeb("pocketshorten_frontend", wrappedmux, statusMw)
-	wrappedmux = statusMw
+	wrappedmux = basicserver.NewPromMetricsMiddlewareWeb("pocketshorten_frontend", wrappedmux, sr)
+	wrappedmux = basicserver.NewStatusMiddlewareWeb(wrappedmux, sr)
 
 	s := httptest.NewServer(wrappedmux)
 	defer s.Close()
@@ -165,8 +165,8 @@ func Test_shortenhandler(t *testing.T) {
 		t.Fatalf("Unexpected response: %v", resp.StatusCode)
 	}
 
-	if statusMw.Status() != http.StatusMovedPermanently {
-		t.Fatalf("Statusmiddleware didn't work.  Expected 200 received %v", statusMw.Status())
+	if sr.Status() != http.StatusMovedPermanently {
+		t.Fatalf("Statusmiddleware didn't work.  Expected 200 received %v", sr.Status())
 	}
 
 }

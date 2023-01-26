@@ -16,7 +16,8 @@ func Test_middleware(t *testing.T) {
 	})
 	var wrappedmux http.Handler
 	wrappedmux = NewLoggingMiddleware(mux)
-	statusMw := NewStatusMiddlewareWeb(wrappedmux)
+	sg := NewStatusRecorder()
+	statusMw := NewStatusMiddlewareWeb(wrappedmux, sg)
 	wrappedmux = statusMw
 
 	s := httptest.NewServer(wrappedmux)
