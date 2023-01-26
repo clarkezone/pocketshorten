@@ -149,8 +149,8 @@ func Test_shortenhandler(t *testing.T) {
 	h.RegisterHandlers(mux)
 	var wrappedmux http.Handler
 	wrappedmux = basicserver.NewLoggingMiddleware(mux)
-	wrappedmux = basicserver.NewPromMetricsMiddlewareWeb("pocketshorten_frontend", wrappedmux)
 	statusMw := basicserver.NewStatusMiddlewareWeb(wrappedmux)
+	wrappedmux = basicserver.NewPromMetricsMiddlewareWeb("pocketshorten_frontend", wrappedmux, statusMw)
 	wrappedmux = statusMw
 
 	s := httptest.NewServer(wrappedmux)
