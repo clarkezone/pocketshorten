@@ -7,9 +7,11 @@ import (
 	"path"
 	"testing"
 
-	"github.com/clarkezone/pocketshorten/internal"
-	clarkezoneLog "github.com/clarkezone/pocketshorten/pkg/log"
 	"github.com/sirupsen/logrus"
+
+	"github.com/clarkezone/pocketshorten/internal"
+	"github.com/clarkezone/pocketshorten/pkg/basicserver"
+	clarkezoneLog "github.com/clarkezone/pocketshorten/pkg/log"
 )
 
 // TestMain initizlie all tests
@@ -136,6 +138,37 @@ func Test_viperlookuphandlergoodurlgoodkey(t *testing.T) {
 	if h != "/value1" {
 		t.Errorf("wrong location")
 	}
+}
+
+func Test_shortenhandler(t *testing.T) {
+	initviperconfig(t)
+
+	mux := http.NewServeMux()
+
+	h := NewDictLookupHandler()
+	h.RegisterHandlers(mux)
+	var wrappedmux http.Handler
+	wrappedmux = basicserver.NewLoggingMiddleware(mux)
+	wrappedmux = basicserver.NewPromMetricsMiddlewareWeb("pocketshorten_frontend", wrappedmux)
+	statusMw := basicserver.NewStatusMiddlewareWeb(wrappedmux)
+	wrappedmux = statusMw
+
+	s := httptest.NewServer(wrappedmux)
+	defer s.Close()
+
+	resp, err := http.DefaultClient.Get(s.URL + "?shortlink=key1")
+	if err != nil {
+		t.Fatalf("Error")
+	}
+
+	if resp.StatusCode != http.StatusOK {
+		t.Fatalf("Unexpected response: %v", resp.StatusCode)
+	}
+
+	if statusMw.Status() != 200 {
+		t.Fatalf("Statusmiddleware didn't work.  Expected 200 received %v", statusMw.Status())
+	}
+
 }
 
 func initviperconfig(t *testing.T) {
