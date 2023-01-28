@@ -95,6 +95,27 @@ func Test_viperlookuphandlerlookupbadurl(t *testing.T) {
 	}
 }
 
+func Test_viperrejectlonginput(t *testing.T) {
+	initviperconfig(t)
+
+	handler := NewDictLookupHandler()
+	if handler == nil {
+		t.Errorf("handler is nil")
+	}
+
+	req, err := http.NewRequest("GET", "/onedddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd", nil)
+	if err != nil {
+		t.Errorf("error creating request")
+	}
+
+	rr := httptest.NewRecorder()
+	handler.redirectHandler(rr, req)
+
+	if rr.Code != http.StatusBadRequest {
+		t.Errorf("wrong status code")
+	}
+}
+
 func Test_viperlookuphandlergoodurlmissingkey(t *testing.T) {
 	initviperconfig(t)
 
@@ -124,7 +145,7 @@ func Test_viperlookuphandlergoodurlgoodkey(t *testing.T) {
 		t.Errorf("handler is nil")
 	}
 
-	req, err := http.NewRequest("GET", "?shortlink=key1", nil)
+	req, err := http.NewRequest("GET", "/key1", nil)
 	if err != nil {
 		t.Errorf("error creating request")
 	}
@@ -203,7 +224,7 @@ func Test_shortenhandler(t *testing.T) {
 	s := httptest.NewServer(wrappedmux)
 	defer s.Close()
 
-	resp, err := http.DefaultClient.Get(s.URL + "?shortlink=hn")
+	resp, err := http.DefaultClient.Get(s.URL + "/hn")
 	if err != nil {
 		t.Fatalf("Error")
 	}
