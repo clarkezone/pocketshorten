@@ -2,18 +2,21 @@
 package shortener
 
 import (
-	clarkezoneLog "github.com/clarkezone/pocketshorten/pkg/log"
+	"fmt"
+
 	"github.com/spf13/viper"
+
+	clarkezoneLog "github.com/clarkezone/pocketshorten/pkg/log"
 )
 
 type viperLoader struct {
 }
 
-func (vl *viperLoader) Init(ls urlLookupService) {
+func (vl *viperLoader) Init(ls urlLookupService) error {
 	values := viper.Get("values")
 	if values == nil {
 		clarkezoneLog.Debugf("viperLoad: no urls found in config", values)
-		return
+		return fmt.Errorf("values collection not found in config json")
 	}
 	values2 := values.([]interface{})
 
@@ -34,9 +37,11 @@ func (vl *viperLoader) Init(ls urlLookupService) {
 			err := ls.Store(key.(string), value.(string))
 			if err != nil {
 				clarkezoneLog.Debugf("ViperLoader init: Error %v", err)
+				return err
 			}
 		} else {
 			clarkezoneLog.Debugf("Lookup service is nil skipping %v", key.(string))
 		}
 	}
+	return nil
 }

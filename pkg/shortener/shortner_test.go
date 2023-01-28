@@ -8,8 +8,10 @@ import (
 	"testing"
 
 	"github.com/sirupsen/logrus"
+	"github.com/spf13/viper"
 
 	"github.com/clarkezone/pocketshorten/internal"
+
 	"github.com/clarkezone/pocketshorten/pkg/basicserver"
 	clarkezoneLog "github.com/clarkezone/pocketshorten/pkg/log"
 )
@@ -26,13 +28,14 @@ type testLookupHandler struct {
 	lookup urlLookupService
 }
 
-func (tlh *testLookupHandler) Init(ls urlLookupService) {
+func (tlh *testLookupHandler) Init(ls urlLookupService) error {
 	tlh.lookup = ls
 	err := ls.Store("one", "two")
 	err2 := ls.Store("three", "four")
 	if err != nil || err2 != nil {
-		panic("Init Failed")
+		return err
 	}
+	return nil
 }
 
 func Test_dictStore(t *testing.T) {
@@ -140,6 +143,50 @@ func Test_viperlookuphandlergoodurlgoodkey(t *testing.T) {
 	}
 }
 
+func Test_testReady(t *testing.T) {
+	viper.Reset()
+	initviperconfig(t)
+
+	handler := NewDictLookupHandler()
+	if handler == nil {
+		t.Errorf("handler is nil")
+	}
+
+	req, err := http.NewRequest("GET", "/ready", nil)
+	if err != nil {
+		t.Errorf("error creating request")
+	}
+
+	rr := httptest.NewRecorder()
+	handler.readyHandler(rr, req)
+
+	if rr.Code != http.StatusOK {
+		t.Errorf("wrong status code expected %v, received %v", http.StatusOK, rr.Code)
+	}
+}
+
+func Test_testNotReady(t *testing.T) {
+	viper.Reset()
+	initviperbadconfig(t)
+
+	handler := NewDictLookupHandler()
+	if handler == nil {
+		t.Errorf("handler is nil")
+	}
+
+	req, err := http.NewRequest("GET", "/ready", nil)
+	if err != nil {
+		t.Errorf("error creating request")
+	}
+
+	rr := httptest.NewRecorder()
+	handler.readyHandler(rr, req)
+
+	if rr.Code != http.StatusServiceUnavailable {
+		t.Errorf("wrong status code expected %v, received %v", http.StatusServiceUnavailable, rr.Code)
+	}
+}
+
 func Test_shortenhandler(t *testing.T) {
 	initviperconfig(t)
 
@@ -168,11 +215,19 @@ func Test_shortenhandler(t *testing.T) {
 	if sr.Status() != http.StatusMovedPermanently {
 		t.Fatalf("Statusmiddleware didn't work.  Expected 200 received %v", sr.Status())
 	}
-
 }
 
 func initviperconfig(t *testing.T) {
 	cpath := "testfiles/.pocketshorten.json"
+	if internal.GitRoot == "" {
+		t.Fatalf("GitRoot is empty, did you call SetupGitRoot() in test?")
+	}
+	configpath := path.Join(internal.GitRoot, cpath)
+	internal.InitConfig(&configpath)
+}
+
+func initviperbadconfig(t *testing.T) {
+	cpath := "testfiles/.pocketshorten_corrupt.json"
 	if internal.GitRoot == "" {
 		t.Fatalf("GitRoot is empty, did you call SetupGitRoot() in test?")
 	}
