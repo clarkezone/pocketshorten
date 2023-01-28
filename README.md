@@ -26,11 +26,22 @@ Bootstrapping infra:
 - [x] Add load tester
 - [x] Fix double counting of metrics
 - [x] Metrics for invalid requests
-- [ ] liveness and readiness probes that capture bad config
-- [ ] update URL format to remote shortlink query param
-- [ ] Dashboard for telemetry
-- [ ] spike test
-- [ ] PromAlerts
+  - [x] Status tracking middleware with tests
+  - [x] Test for shortenhandler with mux, verify status has redirect status, error status
+  - [x] Pass status into metrics middleware (should fix dashboard)
+- [ ] update URL format to remove shortlink query param
+- [ ] enable probe scenario (URL that returns true if valid config is present)
+- [ ] complete dashboards
+  - [ ] Fix latency graph adding p50, p75, p99
+  - [ ] pick other things / formats
+- [ ] spike test with alerting
+- [ ] Export dashboard and add to project
+- [ ] Run kubeval, add CPU, Mem limits, probes, PDB
+- [ ] lock dev manifest to a tagged build
+- [ ] Factor out basic server into separate repo
+
+---
+
 - [ ] Hello world comes from microservice with switch / env for mode in single binary
 - [ ] Cleanup names
 - [ ] k8s local override with staging / prod

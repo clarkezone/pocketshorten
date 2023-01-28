@@ -11,6 +11,8 @@ import (
 	"github.com/spf13/viper"
 
 	"github.com/clarkezone/pocketshorten/internal"
+
+	"github.com/clarkezone/pocketshorten/pkg/basicserver"
 	clarkezoneLog "github.com/clarkezone/pocketshorten/pkg/log"
 )
 
@@ -66,7 +68,7 @@ func Test_viperlookuphandlerinit(t *testing.T) {
 	if handler != nil {
 
 		//lint:ignore SA5011 reason test
-		if handler.storage.Count() != 3 {
+		if handler.storage.Count() != 5 {
 			t.Errorf("wrong number of items in storage")
 		}
 	}
@@ -182,6 +184,36 @@ func Test_testNotReady(t *testing.T) {
 
 	if rr.Code != http.StatusServiceUnavailable {
 		t.Errorf("wrong status code expected %v, received %v", http.StatusServiceUnavailable, rr.Code)
+	}
+}
+
+func Test_shortenhandler(t *testing.T) {
+	initviperconfig(t)
+
+	mux := http.NewServeMux()
+
+	h := NewDictLookupHandler()
+	h.RegisterHandlers(mux)
+	var wrappedmux http.Handler
+	sr := basicserver.NewStatusRecorder()
+	wrappedmux = basicserver.NewLoggingMiddleware(mux)
+	wrappedmux = basicserver.NewPromMetricsMiddlewareWeb("pocketshorten_frontend", wrappedmux, sr)
+	wrappedmux = basicserver.NewStatusMiddlewareWeb(wrappedmux, sr)
+
+	s := httptest.NewServer(wrappedmux)
+	defer s.Close()
+
+	resp, err := http.DefaultClient.Get(s.URL + "?shortlink=hn")
+	if err != nil {
+		t.Fatalf("Error")
+	}
+
+	if resp.StatusCode != http.StatusOK {
+		t.Fatalf("Unexpected response: %v", resp.StatusCode)
+	}
+
+	if sr.Status() != http.StatusMovedPermanently {
+		t.Fatalf("Statusmiddleware didn't work.  Expected 200 received %v", sr.Status())
 	}
 }
 

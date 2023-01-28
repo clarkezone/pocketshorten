@@ -5,9 +5,10 @@ import (
 	"net/http"
 	"time"
 
-	clarkezoneLog "github.com/clarkezone/pocketshorten/pkg/log"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promauto"
+
+	clarkezoneLog "github.com/clarkezone/pocketshorten/pkg/log"
 )
 
 // PromMetricsMiddlewareWeb adds simple prometheus metrics type PromMetricsMiddlewareWeb
@@ -15,19 +16,20 @@ type PromMetricsMiddlewareWeb struct {
 	handler         http.Handler
 	opsProcessed    *prometheus.CounterVec
 	requestDuration *prometheus.HistogramVec
+	statusGetter    StatusRecorder
 }
 
 func (l *PromMetricsMiddlewareWeb) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	rec := statusRecorder{w, 200}
 	start := time.Now()
 	l.handler.ServeHTTP(w, r)
 	httpDuration := time.Since(start)
-	l.opsProcessed.WithLabelValues(fmt.Sprint(rec.code), r.Method).Inc()
+	l.opsProcessed.WithLabelValues(fmt.Sprint(l.statusGetter.Status()), r.Method).Inc()
 	l.requestDuration.WithLabelValues(r.RequestURI).Observe(httpDuration.Seconds())
 }
 
-func newMiddlewareMetricsWeb(handlerToWrap http.Handler, prefix string) *PromMetricsMiddlewareWeb {
+func newMiddlewareMetricsWeb(handlerToWrap http.Handler, prefix string, sg StatusRecorder) *PromMetricsMiddlewareWeb {
 	mw := PromMetricsMiddlewareWeb{}
+	mw.statusGetter = sg
 	mw.handler = handlerToWrap
 	mw.opsProcessed = promauto.NewCounterVec(prometheus.CounterOpts{
 		Name: prefix + "_totalops",
@@ -44,7 +46,7 @@ func newMiddlewareMetricsWeb(handlerToWrap http.Handler, prefix string) *PromMet
 }
 
 // NewPromMetricsMiddlewareWeb constructs a new Logger middleware handler
-func NewPromMetricsMiddlewareWeb(prefix string, handlerToWrap http.Handler) *PromMetricsMiddlewareWeb {
+func NewPromMetricsMiddlewareWeb(prefix string, handlerToWrap http.Handler, status StatusRecorder) *PromMetricsMiddlewareWeb {
 	clarkezoneLog.Debugf("NewPromMetricsMiddleware()")
-	return newMiddlewareMetricsWeb(handlerToWrap, prefix)
+	return newMiddlewareMetricsWeb(handlerToWrap, prefix, status)
 }
