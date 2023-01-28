@@ -116,6 +116,27 @@ func Test_viperrejectlonginput(t *testing.T) {
 	}
 }
 
+func Test_viperignorequery(t *testing.T) {
+	initviperconfig(t)
+
+	handler := NewDictLookupHandler()
+	if handler == nil {
+		t.Errorf("handler is nil")
+	}
+
+	req, err := http.NewRequest("GET", "/key1?ignorethis", nil)
+	if err != nil {
+		t.Errorf("error creating request")
+	}
+
+	rr := httptest.NewRecorder()
+	handler.redirectHandler(rr, req)
+
+	if rr.Code != http.StatusMovedPermanently {
+		t.Errorf("wrong status code result %v", rr.Code)
+	}
+}
+
 func Test_viperlookuphandlergoodurlmissingkey(t *testing.T) {
 	initviperconfig(t)
 
