@@ -25,7 +25,8 @@ Bootstrapping infra:
 - [x] Service Monitor
 - [x] Add load tester
 - [x] Fix double counting of metrics
-- [ ] Metrics for invalid requests
+- [x] Metrics for invalid requests
+- [ ] liveness and readiness probes that capture bad config
 - [ ] update URL format to remote shortlink query param
 - [ ] Dashboard for telemetry
 - [ ] spike test
