@@ -3,11 +3,12 @@ package shortener
 import (
 	"context"
 
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
+
 	"github.com/clarkezone/pocketshorten/internal"
 	"github.com/clarkezone/pocketshorten/pkg/cacheloaderservice"
 	clarkezoneLog "github.com/clarkezone/pocketshorten/pkg/log"
-	"google.golang.org/grpc"
-	"google.golang.org/grpc/credentials/insecure"
 )
 
 // grpcStore
@@ -28,6 +29,10 @@ func (store *grpcStore) Lookup(short string) (string, error) {
 
 func (store *grpcStore) Count() int {
 	return 0
+}
+
+func (store *grpcStore) Ready() bool {
+	return true
 }
 
 func (store *grpcStore) Connect() error {

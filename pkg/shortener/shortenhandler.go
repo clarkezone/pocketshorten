@@ -8,13 +8,14 @@ import (
 )
 
 type storeLoader interface {
-	Init(urlLookupService)
+	Init(urlLookupService) error
 }
 
 type urlLookupService interface {
 	Store(string, string) error
 	Lookup(string) (string, error)
 	Count() int
+	Ready() bool
 }
 
 // NewDictLookupHandler creates a new instance of type
@@ -24,7 +25,6 @@ func NewDictLookupHandler() *ShortenHandler {
 	vl := &viperLoader{}
 	ds := newDictStore(vl)
 	lh := &ShortenHandler{storage: ds}
-	vl.Init(ds)
 	return lh
 }
 
@@ -48,6 +48,8 @@ type ShortenHandler struct {
 // RegisterHandlers attaches handlers to Mux that is passed in
 func (lh *ShortenHandler) RegisterHandlers(mux *http.ServeMux) {
 	mux.HandleFunc("/", lh.redirectHandler)
+	mux.HandleFunc("/ready", lh.readyHandler)
+	mux.HandleFunc("/live", lh.liveHandler)
 }
 
 func (lh *ShortenHandler) redirectHandler(w http.ResponseWriter, r *http.Request) {
@@ -67,9 +69,20 @@ func (lh *ShortenHandler) redirectHandler(w http.ResponseWriter, r *http.Request
 	clarkezoneLog.Debugf("redirecting to %v", uri)
 
 	http.Redirect(w, r, uri, http.StatusMovedPermanently)
-
 }
 
+func (lh *ShortenHandler) liveHandler(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(http.StatusOK)
+}
+
+func (lh *ShortenHandler) readyHandler(w http.ResponseWriter, r *http.Request) {
+	if !lh.storage.Ready() {
+		http.Error(w, "Service not available", http.StatusServiceUnavailable)
+	}
+	w.WriteHeader(http.StatusOK)
+}
+
+// TODO kill this and replace with http.Error
 func writeOutputError(w http.ResponseWriter, message string) {
 	clarkezoneLog.Debugf("Error reported to user %v", message)
 	w.WriteHeader(http.StatusNotFound)

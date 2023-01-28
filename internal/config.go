@@ -4,9 +4,10 @@ package internal
 import (
 	"os"
 
-	clarkezoneLog "github.com/clarkezone/pocketshorten/pkg/log"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+
+	clarkezoneLog "github.com/clarkezone/pocketshorten/pkg/log"
 )
 
 // InitConfig reads in config file and ENV variables if set.
