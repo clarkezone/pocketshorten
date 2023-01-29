@@ -3,6 +3,7 @@ package shortener
 import (
 	"fmt"
 	"net/http"
+	"strings"
 
 	clarkezoneLog "github.com/clarkezone/pocketshorten/pkg/log"
 )
@@ -53,17 +54,23 @@ func (lh *ShortenHandler) RegisterHandlers(mux *http.ServeMux) {
 }
 
 func (lh *ShortenHandler) redirectHandler(w http.ResponseWriter, r *http.Request) {
-	//TODO telemetry
-	requested := r.URL.Query().Get("shortlink")
+	//requested := r.URL.Query().Get("shortlink")
+	requested, err := sanitize(r.URL.Path)
+
+	// TODO update scalbility tests
+	clarkezoneLog.Debugf("path: :%v: sanitized:%v:", requested)
+	if err != nil {
+		writeOutputError(w, fmt.Sprintf("input sanitization failed: unabled to process request %v", err), http.StatusBadRequest)
+		return
+	}
 
 	if requested == "" {
-		clarkezoneLog.Errorf("redirecthandler called with  missingshortlink")
-		writeOutputError(w, "please supply shortlink query parameter")
+		writeOutputError(w, "please supply shortlink query parameter", http.StatusNotFound)
 		return
 	}
 	uri, err := lh.storage.Lookup(requested)
 	if err != nil {
-		writeOutputError(w, fmt.Sprintf("shortlink %v notfound", requested))
+		writeOutputError(w, fmt.Sprintf("shortlink %v notfound", requested), http.StatusNotFound)
 		return
 	}
 	clarkezoneLog.Debugf("redirecting to %v", uri)
@@ -77,17 +84,23 @@ func (lh *ShortenHandler) liveHandler(w http.ResponseWriter, r *http.Request) {
 
 func (lh *ShortenHandler) readyHandler(w http.ResponseWriter, r *http.Request) {
 	if !lh.storage.Ready() {
-		http.Error(w, "Service not available", http.StatusServiceUnavailable)
+		writeOutputError(w, "Service not available", http.StatusServiceUnavailable)
 	}
 	w.WriteHeader(http.StatusOK)
 }
 
-// TODO kill this and replace with http.Error
-func writeOutputError(w http.ResponseWriter, message string) {
+func writeOutputError(w http.ResponseWriter, message string, code int) {
 	clarkezoneLog.Debugf("Error reported to user %v", message)
-	w.WriteHeader(http.StatusNotFound)
-	_, err := w.Write([]byte(message))
-	if err != nil {
-		clarkezoneLog.Debugf("writeOutputError: Failed to write bytes %v\n", err)
+	http.Error(w, message, code)
+}
+
+func sanitize(input string) (string, error) {
+	const maxinput int = 20
+	sa := strings.TrimLeft(input, "/")
+	clarkezoneLog.Debugf("sanitized path: %v", sa)
+	le := len(sa)
+	if len(sa) > maxinput {
+		return "", fmt.Errorf("Bad input expected < %v chars received %v chars", maxinput, le)
 	}
+	return sa, nil
 }

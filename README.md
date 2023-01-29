@@ -29,8 +29,8 @@ Bootstrapping infra:
   - [x] Status tracking middleware with tests
   - [x] Test for shortenhandler with mux, verify status has redirect status, error status
   - [x] Pass status into metrics middleware (should fix dashboard)
-- [ ] update URL format to remove shortlink query param
-- [ ] enable probe scenario (URL that returns true if valid config is present)
+- [x] update URL format to remove shortlink query param
+- [x] enable probe scenario (URL that returns true if valid config is present)
 - [ ] complete dashboards
   - [ ] Fix latency graph adding p50, p75, p99
   - [ ] pick other things / formats
