@@ -39,7 +39,7 @@ Bootstrapping infra:
 - [ ] Run kubeval, add CPU, Mem limits, probes, PDB
 - [ ] lock dev manifest to a tagged build
 - [ ] Factor out basic server into separate repo
-
+   - [ ] Updat the bla bla bla
 ---
 
 - [ ] Hello world comes from microservice with switch / env for mode in single binary
