@@ -1,0 +1,6 @@
+namePrefix: dev-
+namespace: pocketshorten
+commonLabels:
+  environment: development
+bases:
+  - ../../base

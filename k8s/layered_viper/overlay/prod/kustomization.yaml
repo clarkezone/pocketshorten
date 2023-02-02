@@ -1,0 +1,6 @@
+namePrefix: prod-
+namespace: pocketshorten
+commonLabels:
+  environment: development
+bases:
+  - ../../base

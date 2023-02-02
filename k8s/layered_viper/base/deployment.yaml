@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pocketshorten-viper
+  labels:
+    app: kustomize
+spec:
+  replicas: 2
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: kustomize
+    spec:
+      containers:
+        - name: pocketshorten-viper
+          image: registry.hub.docker.com/clarkezone/pocketshorten:main
+          args: ["servefrontend", "--config=/pocketshorten.json"]
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8090
+            - containerPort: 8095
+          env:
+            - name: LOGLEVEL
+              valueFrom:
+                configMapKeyRef:
+                  name: psconfig
+                  key: LOGLEVEL
+            - name: CONFIG
+              valueFrom:
+                configMapKeyRef:
+                  name: psconfig
+                  key: CONFIG
+          volumeMounts:
+            - name: vipconf
+              mountPath: /pocketshorten.json
+              subPath: pocketshorten.json
+      volumes:
+        - name: vipconf
+          configMap:
+            name: vipconfig
