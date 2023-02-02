@@ -7,7 +7,6 @@ resources:
   - namespace.yaml
   - deployment.yaml
   - service.yaml
-  - ingress.yaml
   - metricsservice.yaml
 secretGenerator:
 configMapGenerator:
