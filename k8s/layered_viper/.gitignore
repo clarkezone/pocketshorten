@@ -1,3 +1,5 @@
 .env.creds
 overlay/staging/secrets/*
 overlay/prod/secrets/*
+overlay/staging/config/config.yaml
+overlay/prod/config/config.yaml
