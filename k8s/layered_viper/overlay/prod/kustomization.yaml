@@ -4,3 +4,16 @@ commonLabels:
   environment: development
 bases:
   - ../../base
+patchesStrategicMerge:
+resources:
+  - cloudflared.yaml
+secretGenerator:
+  - name: cloudflare-pocketshorten-cert
+    files:
+      - secrets/cert.pem
+  - name: cloudflare-pocketshorten-creds
+    files: secrets/99999.json
+configMapGenerator:
+  - name: cloudflare-pocketshorten-configs
+    files:
+      - config/config.yaml
