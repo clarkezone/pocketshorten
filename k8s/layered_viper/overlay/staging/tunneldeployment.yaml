@@ -2,16 +2,16 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: cloudflared
+  name: cloudflared-tunnel
 spec:
   selector:
     matchLabels:
-      app: kustomize
-  replicas: 2 # You could also consider elastic scaling for this deployment
+      app: pocketshorten-tunnel
+  replicas: 3 # You could also consider elastic scaling for this deployment
   template:
     metadata:
       labels:
-        app: kustomize
+        app: pocketshorten-tunnel
     spec:
       containers:
         - name: cloudflared
