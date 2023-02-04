@@ -31,9 +31,9 @@ type testLookupHandler struct {
 
 func (tlh *testLookupHandler) Init(ls urlLookupService) error {
 	tlh.lookup = ls
-	ue := UrlEntry{"one", "two", "three", time.Now()}
+	ue1 := UrlEntry{"one", "two", "three", time.Now()}
 	ue2 := UrlEntry{"four", "three", "one", time.Now()}
-	err := ls.Store("one", &ue)
+	err := ls.Store("one", &ue1)
 	err2 := ls.Store("three", &ue2)
 	if err != nil || err2 != nil {
 		return err
