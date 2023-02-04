@@ -3,8 +3,8 @@
     ["key1", "value1", "group", ""],
     ["key2", "value2", "", ""],
     ["key3", "value3", "", ""],
-    ["tm", "https://techmeme.com", "sites"],
-    ["bp", "https://blog-preview.clarkezone.dev", "personal"],
-    ["hn", "https://news.ycombinator.com", "sites"]
+    ["tm", "https://techmeme.com", "sites", ""],
+    ["bp", "https://blog-preview.clarkezone.dev", "personal", ""],
+    ["hn", "https://news.ycombinator.com", "sites", ""]
   ]
 }
