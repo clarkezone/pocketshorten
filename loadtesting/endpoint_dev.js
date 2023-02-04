@@ -7,9 +7,7 @@ export let options = {
 };
 
 function testSuccess() {
-  let res = http.get(
-    "https://pocketshorten-stage.dev.clarkezone.dev?shortlink=bp"
-  );
+  let res = http.get("https://pocketshorten-stage.dev.clarkezone.dev/bp");
   check(res, {
     "status was 200": (r) => r.status === 200,
     "redirected correctly": (r) =>
@@ -18,13 +16,11 @@ function testSuccess() {
 }
 
 function testShortlinkNotFound() {
-  let res = http.get(
-    "https://pocketshorten-stage.dev.clarkezone.dev?shortlink=nf"
-  );
+  let res = http.get("https://pocketshorten-stage.dev.clarkezone.dev/nf");
   check(res, {
     "status was 404": (r) => r.status === 404,
     "redirected correctly": (r) =>
-      r.url === "https://pocketshorten-stage.dev.clarkezone.dev?shortlink=nf",
+      r.url === "https://pocketshorten-stage.dev.clarkezone.dev/nf",
   });
 }
 
