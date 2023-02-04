@@ -1,0 +1,5 @@
+.env.creds
+overlay/staging/secrets/*
+overlay/prod/secrets/*
+# git update-index --assume-unchanged overlay/staging/config/config.yaml
+# git update-index --assume-unchanged overlay/prod/config/config.yaml

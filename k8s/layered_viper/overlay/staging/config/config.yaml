@@ -1,0 +1,21 @@
+# cloudflared tunnel create shorten-stage
+# cloudflared tunnel route dns shorten-stage shorten-stage.clarkezone.dev
+# cloudflared tunnel list
+# cp ~/.cloudflared/314b962d-6ba6-447d-a3e6-e3131cc9db76.json secrets/.
+# cp ~/.cloudflared/cert.pem secrets/.
+# replace <CRED_FILE> with guid from `tunnel list` command in this file
+# replace guid in kustomization
+# set <TUNNEL_NAME> in this file to match tunnel name from `tunnel list` command
+# set <CLOUDFLARE_HOSTNAME> in this file
+
+tunnel: <TUNNEL-NAME>
+# must be in creds sub directory:
+credentials-file: /etc/cloudflared/creds/<CRED_FILE>.json
+
+metrics: 0.0.0.0:2000
+no-autoupdate: true
+ingress:
+  - hostname: <CLOUDFLARE_HOSTNAME>.clarkezone.dev
+    service: http://staging-pocketshorten-service:8090
+  # This rule matches any traffic which didn't match a previous rule, and responds with HTTP 404.
+  - service: http_status:404

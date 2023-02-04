@@ -54,6 +54,10 @@ func (lh *ShortenHandler) RegisterHandlers(mux *http.ServeMux) {
 }
 
 func (lh *ShortenHandler) redirectHandler(w http.ResponseWriter, r *http.Request) {
+	if ! lh.storage.Ready() {
+		writeOutputError(w, "server error: not configured", http.StatusInternalServerError)
+		return
+	}
 	//requested := r.URL.Query().Get("shortlink")
 	requested, err := sanitize(r.URL.Path)
 

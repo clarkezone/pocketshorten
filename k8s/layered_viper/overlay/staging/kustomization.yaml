@@ -1,0 +1,23 @@
+namePrefix: staging-
+namespace: pocketshorten
+commonLabels:
+  environment: development
+bases:
+  - ../../base
+patchesStrategicMerge:
+  - deployment.yaml
+resources:
+  - tunneldeployment.yaml
+  - tunnelmetricsservice.yaml
+  - tunnelmonitor.yaml
+secretGenerator:
+  - name: cloudflare-pocketshorten-cert
+    files:
+      - secrets/cert.pem
+  - name: cloudflare-pocketshorten-creds
+    files:
+      - secrets/314b962d-6ba6-447d-a3e6-e3131cc9db76.json
+configMapGenerator:
+  - name: cloudflare-pocketshorten-configs
+    files:
+      - config/config.yaml

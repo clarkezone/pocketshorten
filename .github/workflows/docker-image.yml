@@ -4,6 +4,10 @@ on:
   push:
     paths-ignore:
       - "k8s/**"
+      - "loadtesting/**"
+      - "testfiles/**"
+      - ".gitignore"
+      - "README.md"
     branches:
       - "**"
     tags:
