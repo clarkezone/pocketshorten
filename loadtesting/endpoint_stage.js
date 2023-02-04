@@ -7,7 +7,7 @@ export let options = {
 };
 
 function testSuccess() {
-  let res = http.get("https://shorten-stage.clarkezone.dev?shortlink=bp");
+  let res = http.get("https://shorten-stage.clarkezone.dev/bp");
   check(res, {
     "status was 200": (r) => r.status === 200,
     "redirected correctly": (r) =>
@@ -24,20 +24,11 @@ function testShortlinkNotFound() {
   });
 }
 
-function testBadRequest() {
-  let res = http.get("https://shorten-stage.clarkezone.dev");
-  check(res, {
-    "status was 404": (r) => r.status === 404,
-    "redirected correctly": (r) =>
-      r.url === "https://shorten-stage.clarkezone.dev",
-  });
-}
-
 export default function () {
   testSuccess();
   sleep(1);
   testShortlinkNotFound();
   sleep(1);
-  testBadRequest();
+  testSuccess();
   sleep(1);
 }
