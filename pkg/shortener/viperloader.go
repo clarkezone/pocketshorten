@@ -3,6 +3,7 @@ package shortener
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/spf13/viper"
 
@@ -30,17 +31,20 @@ func (vl *viperLoader) Init(ls urlLookupService) error {
 	//Iterate over the string pairs in the array and add to lookup service
 	for _, pair := range values2 {
 		pair2 := pair.([]interface{})
-		key := pair2[0]
-		value := pair2[1]
-		clarkezoneLog.Debugf("%s: %s\n", key, value)
+		shorturl := pair2[0]
+		longurl := pair2[1]
+		group := pair2[2]
+		timestamp := pair2[3]
+		clarkezoneLog.Debugf("%s: %s %s %s\n", shorturl, longurl, group, timestamp)
 		if ls != nil {
-			err := ls.Store(key.(string), value.(string))
+			st := UrlEntry{shorturl.(string), longurl.(string), group.(string), time.Now()}
+			err := ls.Store(st.ShortLink, &st)
 			if err != nil {
 				clarkezoneLog.Debugf("ViperLoader init: Error %v", err)
 				return err
 			}
 		} else {
-			clarkezoneLog.Debugf("Lookup service is nil skipping %v", key.(string))
+			clarkezoneLog.Debugf("Lookup service is nil skipping %v", shorturl.(string))
 		}
 	}
 	return nil

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 	"strings"
+	"time"
 
 	clarkezoneLog "github.com/clarkezone/pocketshorten/pkg/log"
 )
@@ -12,9 +13,16 @@ type storeLoader interface {
 	Init(urlLookupService) error
 }
 
+type UrlEntry struct {
+	ShortLink       string
+	DestinationLink string
+	LinkGroup       string
+	Created         time.Time
+}
+
 type urlLookupService interface {
-	Store(string, string) error
-	Lookup(string) (string, error)
+	Store(string, *UrlEntry) error
+	Lookup(string) (*UrlEntry, error)
 	Count() int
 	Ready() bool
 }
@@ -54,7 +62,7 @@ func (lh *ShortenHandler) RegisterHandlers(mux *http.ServeMux) {
 }
 
 func (lh *ShortenHandler) redirectHandler(w http.ResponseWriter, r *http.Request) {
-	if ! lh.storage.Ready() {
+	if !lh.storage.Ready() {
 		writeOutputError(w, "server error: not configured", http.StatusInternalServerError)
 		return
 	}
@@ -79,7 +87,7 @@ func (lh *ShortenHandler) redirectHandler(w http.ResponseWriter, r *http.Request
 	}
 	clarkezoneLog.Debugf("redirecting to %v", uri)
 
-	http.Redirect(w, r, uri, http.StatusMovedPermanently)
+	http.Redirect(w, r, uri.DestinationLink, http.StatusMovedPermanently)
 }
 
 func (lh *ShortenHandler) liveHandler(w http.ResponseWriter, r *http.Request) {

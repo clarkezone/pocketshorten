@@ -6,6 +6,7 @@ import (
 	"os"
 	"path"
 	"testing"
+	"time"
 
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
@@ -30,8 +31,10 @@ type testLookupHandler struct {
 
 func (tlh *testLookupHandler) Init(ls urlLookupService) error {
 	tlh.lookup = ls
-	err := ls.Store("one", "two")
-	err2 := ls.Store("three", "four")
+	ue := UrlEntry{"one", "two", "three", time.Now()}
+	ue2 := UrlEntry{"four", "three", "one", time.Now()}
+	err := ls.Store("one", &ue)
+	err2 := ls.Store("three", &ue2)
 	if err != nil || err2 != nil {
 		return err
 	}
@@ -45,11 +48,11 @@ func Test_dictStore(t *testing.T) {
 	if handler == nil {
 		t.Errorf("handler is nil")
 	}
-	val, err := handler.Lookup("three")
+	val, err := handler.Lookup("one")
 	if err != nil {
 		t.Errorf("lookup failed")
 	}
-	if val != "four" {
+	if val.DestinationLink != "two" {
 		t.Errorf("Wrong value")
 	}
 }
@@ -68,7 +71,7 @@ func Test_viperlookuphandlerinit(t *testing.T) {
 	if handler != nil {
 
 		//lint:ignore SA5011 reason test
-		if handler.storage.Count() != 5 {
+		if handler.storage.Count() != 6 {
 			t.Errorf("wrong number of items in storage")
 		}
 	}
