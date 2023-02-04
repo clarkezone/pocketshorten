@@ -2,7 +2,7 @@ apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
   name: pocketshorterner-servicemonitor
-  namespace: monitoring
+  namespace: pocketshorten
   labels:
     name: pocketshorterner-servicemonitor
 spec:

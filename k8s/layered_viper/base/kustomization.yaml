@@ -8,6 +8,7 @@ resources:
   - deployment.yaml
   - service.yaml
   - metricsservice.yaml
+  - servicemonitor.yaml
 secretGenerator:
 configMapGenerator:
   - name: vipconfig

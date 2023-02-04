@@ -9,6 +9,7 @@ patchesStrategicMerge:
 resources:
   - tunneldeployment.yaml
   - tunnelmetricsservice.yaml
+  - tunnelmonitor.yaml
 secretGenerator:
   - name: cloudflare-pocketshorten-cert
     files:
