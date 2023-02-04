@@ -112,7 +112,7 @@ func sanitize(input string) (string, error) {
 	clarkezoneLog.Debugf("sanitized path: %v", sa)
 	le := len(sa)
 	if len(sa) > maxinput {
-		return "", fmt.Errorf("Bad input expected < %v chars received %v chars", maxinput, le)
+		return "", fmt.Errorf("bad input expected < %v chars received %v chars", maxinput, le)
 	}
 	return sa, nil
 }

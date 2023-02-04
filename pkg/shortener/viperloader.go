@@ -35,10 +35,14 @@ func (vl *viperLoader) Init(ls urlLookupService) error {
 		longurl := pair2[1]
 		group := pair2[2]
 		timestamp := pair2[3]
-		clarkezoneLog.Debugf("%s: %s %s %s\n", shorturl, longurl, group, timestamp)
+		clarkezoneLog.Debugf("%s: %s %s %s \n", shorturl, longurl, group, timestamp)
 		if ls != nil {
-			st := UrlEntry{shorturl.(string), longurl.(string), group.(string), time.Now()}
-			err := ls.Store(st.ShortLink, &st)
+			t, err := time.Parse("2006-01-02T15:04:05-0700", timestamp.(string))
+			if err != nil {
+				return err
+			}
+			st := UrlEntry{shorturl.(string), longurl.(string), group.(string), t}
+			err = ls.Store(st.ShortLink, &st)
 			if err != nil {
 				clarkezoneLog.Debugf("ViperLoader init: Error %v", err)
 				return err
