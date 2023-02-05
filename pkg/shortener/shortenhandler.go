@@ -13,7 +13,7 @@ type storeLoader interface {
 	Init(urlLookupService) error
 }
 
-type UrlEntry struct {
+type URLEntry struct {
 	ShortLink       string
 	DestinationLink string
 	LinkGroup       string
@@ -21,8 +21,8 @@ type UrlEntry struct {
 }
 
 type urlLookupService interface {
-	Store(string, *UrlEntry) error
-	Lookup(string) (*UrlEntry, error)
+	Store(string, *URLEntry) error
+	Lookup(string) (*URLEntry, error)
 	Count() int
 	Ready() bool
 }

@@ -20,10 +20,10 @@ type grpcStore struct {
 	conn       *grpc.ClientConn
 }
 
-func (store *grpcStore) Store(short string, entry *UrlEntry) error {
+func (store *grpcStore) Store(short string, entry *URLEntry) error {
 	return nil
 }
-func (store *grpcStore) Lookup(short string) (*UrlEntry, error) {
+func (store *grpcStore) Lookup(short string) (*URLEntry, error) {
 	return nil, nil
 }
 

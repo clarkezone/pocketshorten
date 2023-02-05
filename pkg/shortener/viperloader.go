@@ -41,7 +41,7 @@ func (vl *viperLoader) Init(ls urlLookupService) error {
 			if err != nil {
 				return err
 			}
-			st := UrlEntry{shorturl.(string), longurl.(string), group.(string), t}
+			st := URLEntry{shorturl.(string), longurl.(string), group.(string), t}
 			err = ls.Store(st.ShortLink, &st)
 			if err != nil {
 				clarkezoneLog.Debugf("ViperLoader init: Error %v", err)
