@@ -7,7 +7,7 @@ import (
 
 type urlLookupMetrics struct {
 	underlyingLoader urlLookupService
-	entries          prometheus.Counter
+	entries          prometheus.Gauge
 	lookups          *prometheus.CounterVec
 }
 
@@ -15,9 +15,9 @@ func addMetrics(prefix string, l urlLookupService) urlLookupService {
 	mw := urlLookupMetrics{}
 	mw.underlyingLoader = l
 
-	mw.entries = promauto.NewCounter(prometheus.CounterOpts{
+	mw.entries = promauto.NewGauge(prometheus.GaugeOpts{
 		Name: prefix + "_total_lookup_entries",
-		Help: "Counter containing number of url lookup entries stored",
+		Help: "Gauge containing number of url lookup entries stored",
 	})
 
 	mw.lookups = promauto.NewCounterVec(prometheus.CounterOpts{
