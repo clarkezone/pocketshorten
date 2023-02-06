@@ -33,7 +33,8 @@ type urlLookupService interface {
 func NewDictLookupHandler() *ShortenHandler {
 	vl := &viperLoader{}
 	ds := newDictStore(vl)
-	lh := &ShortenHandler{storage: ds}
+	ul := addMetrics(ds)
+	lh := &ShortenHandler{storage: ul}
 	return lh
 }
 
