@@ -58,7 +58,7 @@ func Test_dictStore(t *testing.T) {
 }
 
 func Test_dictLookupHandler(t *testing.T) {
-	handler := NewDictLookupHandler()
+	handler := NewDictLookupHandler("")
 	if handler == nil {
 		t.Errorf("handler is nil")
 	}
@@ -67,7 +67,7 @@ func Test_dictLookupHandler(t *testing.T) {
 func Test_viperlookuphandlerinit(t *testing.T) {
 	initviperconfig(t)
 
-	handler := NewDictLookupHandler()
+	handler := NewDictLookupHandler("")
 	if handler != nil {
 
 		//lint:ignore SA5011 reason test
@@ -80,7 +80,7 @@ func Test_viperlookuphandlerinit(t *testing.T) {
 func Test_viperlookuphandlerlookupbadurl(t *testing.T) {
 	initviperconfig(t)
 
-	handler := NewDictLookupHandler()
+	handler := NewDictLookupHandler("")
 	if handler == nil {
 		t.Errorf("handler is nil")
 	}
@@ -101,7 +101,7 @@ func Test_viperlookuphandlerlookupbadurl(t *testing.T) {
 func Test_viperrejectlonginput(t *testing.T) {
 	initviperconfig(t)
 
-	handler := NewDictLookupHandler()
+	handler := NewDictLookupHandler("")
 	if handler == nil {
 		t.Errorf("handler is nil")
 	}
@@ -122,7 +122,7 @@ func Test_viperrejectlonginput(t *testing.T) {
 func Test_viperignorequery(t *testing.T) {
 	initviperconfig(t)
 
-	handler := NewDictLookupHandler()
+	handler := NewDictLookupHandler("")
 	if handler == nil {
 		t.Errorf("handler is nil")
 	}
@@ -143,7 +143,7 @@ func Test_viperignorequery(t *testing.T) {
 func Test_viperlookuphandlergoodurlmissingkey(t *testing.T) {
 	initviperconfig(t)
 
-	handler := NewDictLookupHandler()
+	handler := NewDictLookupHandler("")
 	if handler == nil {
 		t.Errorf("handler is nil")
 	}
@@ -164,7 +164,7 @@ func Test_viperlookuphandlergoodurlmissingkey(t *testing.T) {
 func Test_viperlookuphandlergoodurlgoodkey(t *testing.T) {
 	initviperconfig(t)
 
-	handler := NewDictLookupHandler()
+	handler := NewDictLookupHandler("")
 	if handler == nil {
 		t.Errorf("handler is nil")
 	}
@@ -192,7 +192,7 @@ func Test_testReady(t *testing.T) {
 	viper.Reset()
 	initviperconfig(t)
 
-	handler := NewDictLookupHandler()
+	handler := NewDictLookupHandler("")
 	if handler == nil {
 		t.Errorf("handler is nil")
 	}
@@ -214,7 +214,7 @@ func Test_testNotReady(t *testing.T) {
 	viper.Reset()
 	initviperbadconfig(t)
 
-	handler := NewDictLookupHandler()
+	handler := NewDictLookupHandler("")
 	if handler == nil {
 		t.Errorf("handler is nil")
 	}
@@ -237,7 +237,7 @@ func Test_shortenhandler(t *testing.T) {
 
 	mux := http.NewServeMux()
 
-	h := NewDictLookupHandler()
+	h := NewDictLookupHandler("")
 	h.RegisterHandlers(mux)
 	var wrappedmux http.Handler
 	sr := basicserver.NewStatusRecorder()

@@ -19,14 +19,18 @@ import (
 	"github.com/clarkezone/pocketshorten/pkg/shortener"
 )
 
+const (
+	prefix string = "pocketshorten_frontend"
+)
+
 // ShortenFrontendCmdState object
 type ShortenFrontendCmdState struct {
 	webserver *basicserver.BasicServer
 	shortener *shortener.ShortenHandler
 }
 
-func (state *ShortenFrontendCmdState) init(url string) *shortener.ShortenHandler {
-	st := shortener.NewDictLookupHandler()
+func (state *ShortenFrontendCmdState) init(url string, prefix string) *shortener.ShortenHandler {
+	st := shortener.NewDictLookupHandler(prefix)
 	return st
 }
 
@@ -50,13 +54,13 @@ to quickly create a Cobra application.`,
 			clarkezoneLog.Successf("Log level set to %v", internal.LogLevel)
 
 			mux := basicserver.DefaultMux()
-			cmdstate.shortener = cmdstate.init(internal.ServiceURL)
+			cmdstate.shortener = shortener.NewDictLookupHandler(prefix)
 			cmdstate.shortener.RegisterHandlers(mux)
 
 			sg := basicserver.NewStatusRecorder()
 			var wrappedmux http.Handler
 			wrappedmux = basicserver.NewLoggingMiddleware(mux)
-			wrappedmux = basicserver.NewPromMetricsMiddlewareWeb("pocketshorten_frontend", wrappedmux, sg)
+			wrappedmux = basicserver.NewPromMetricsMiddlewareWeb(prefix, wrappedmux, sg)
 			wrappedmux = basicserver.NewStatusMiddlewareWeb(wrappedmux, sg)
 			clarkezoneLog.Successf("Starting pocketshorten frontend server on port %v", internal.Port)
 			ss.StartMetrics()

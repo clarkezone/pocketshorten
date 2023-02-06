@@ -30,23 +30,27 @@ type urlLookupService interface {
 // NewDictLookupHandler creates a new instance of type
 //
 //lint:ignore U1000 reason backend not selected
-func NewDictLookupHandler() *ShortenHandler {
+func NewDictLookupHandler(metricsprefix string) *ShortenHandler {
 	vl := &viperLoader{}
 	ds := newDictStore(vl)
-	ul := addMetrics(ds)
+	var ul urlLookupService = ds
+	if metricsprefix != "" {
+		ul = addMetrics(metricsprefix, ds)
+	}
 	lh := &ShortenHandler{storage: ul}
 	return lh
 }
 
 // NewGrpcLookupHandler returns a new lookuphandler instance
-func NewGrpcLookupHandler(s string) (*ShortenHandler, error) {
+func NewGrpcLookupHandler(metricsprefix string, s string) (*ShortenHandler, error) {
 	// dictstore
 	// grpcloader
 	ds, err := newGrpcStore(s)
+	ul := addMetrics(metricsprefix, ds)
 	if err != nil {
 		return nil, err
 	}
-	lh := &ShortenHandler{storage: ds}
+	lh := &ShortenHandler{storage: ul}
 	return lh, nil
 }
 
