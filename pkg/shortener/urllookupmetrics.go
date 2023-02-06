@@ -3,6 +3,8 @@ package shortener
 import (
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promauto"
+
+	clarkezoneLog "github.com/clarkezone/pocketshorten/pkg/log"
 )
 
 type urlLookupMetrics struct {
@@ -12,6 +14,7 @@ type urlLookupMetrics struct {
 }
 
 func addMetrics(prefix string, l urlLookupService) urlLookupService {
+	clarkezoneLog.Debugf("add metrics called\n")
 	mw := urlLookupMetrics{}
 	mw.underlyingLoader = l
 
@@ -25,6 +28,9 @@ func addMetrics(prefix string, l urlLookupService) urlLookupService {
 		Help: "Counter containing number of key lookups by key",
 	}, []string{"key"})
 	metrics := &mw
+
+	prometheus.MustRegister(mw.entries)
+	prometheus.MustRegister(mw.lookups)
 	return metrics
 }
 
