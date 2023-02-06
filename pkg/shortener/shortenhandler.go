@@ -31,6 +31,7 @@ type urlLookupService interface {
 //
 //lint:ignore U1000 reason backend not selected
 func NewDictLookupHandler(metricsprefix string) *ShortenHandler {
+	clarkezoneLog.Debugf("newDictLookupHandler called with prefix %v", metricsprefix)
 	vl := &viperLoader{}
 	ds := newDictStore(vl)
 	var ul urlLookupService = ds

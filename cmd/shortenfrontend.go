@@ -29,11 +29,6 @@ type ShortenFrontendCmdState struct {
 	shortener *shortener.ShortenHandler
 }
 
-func (state *ShortenFrontendCmdState) init(url string, prefix string) *shortener.ShortenHandler {
-	st := shortener.NewDictLookupHandler(prefix)
-	return st
-}
-
 func newShortenFrontend(parent *cobra.Command) (*ShortenFrontendCmdState, error) {
 	ss := basicserver.CreateBasicServer()
 	cmdstate := &ShortenFrontendCmdState{webserver: ss, shortener: nil}
