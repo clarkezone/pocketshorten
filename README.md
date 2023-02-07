@@ -78,3 +78,6 @@ git tag -a v0.0.1 -m "helloinfra"
 git push origin v0.0.1
 gh release create
 ```
+
+Starting a url shortener locally:
+`./bin/pocketshorten servefrontend --config testfiles/.pocketshorten.json --loglevel=debug`
