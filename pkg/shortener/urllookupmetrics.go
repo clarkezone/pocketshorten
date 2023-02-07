@@ -29,8 +29,6 @@ func addMetrics(prefix string, l urlLookupService) urlLookupService {
 	}, []string{"key"})
 	metrics := &mw
 
-	prometheus.MustRegister(mw.entries)
-	prometheus.MustRegister(mw.lookups)
 	return metrics
 }
 
