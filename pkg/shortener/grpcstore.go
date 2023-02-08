@@ -20,11 +20,11 @@ type grpcStore struct {
 	conn       *grpc.ClientConn
 }
 
-func (store *grpcStore) Store(short string, long string) error {
+func (store *grpcStore) Store(short string, entry *URLEntry) error {
 	return nil
 }
-func (store *grpcStore) Lookup(short string) (string, error) {
-	return "", nil
+func (store *grpcStore) Lookup(short string) (*URLEntry, error) {
+	return nil, nil
 }
 
 func (store *grpcStore) Count() int {

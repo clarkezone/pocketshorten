@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 	"strings"
+	"time"
 
 	clarkezoneLog "github.com/clarkezone/pocketshorten/pkg/log"
 )
@@ -12,9 +13,16 @@ type storeLoader interface {
 	Init(urlLookupService) error
 }
 
+type URLEntry struct {
+	ShortLink       string
+	DestinationLink string
+	LinkGroup       string
+	Created         time.Time
+}
+
 type urlLookupService interface {
-	Store(string, string) error
-	Lookup(string) (string, error)
+	Store(string, *URLEntry) error
+	Lookup(string) (*URLEntry, error)
 	Count() int
 	Ready() bool
 }
@@ -22,22 +30,28 @@ type urlLookupService interface {
 // NewDictLookupHandler creates a new instance of type
 //
 //lint:ignore U1000 reason backend not selected
-func NewDictLookupHandler() *ShortenHandler {
+func NewDictLookupHandler(metricsprefix string) *ShortenHandler {
+	clarkezoneLog.Debugf("newDictLookupHandler called with prefix %v", metricsprefix)
 	vl := &viperLoader{}
 	ds := newDictStore(vl)
-	lh := &ShortenHandler{storage: ds}
+	var ul urlLookupService = ds
+	if metricsprefix != "" {
+		ul = addMetrics(metricsprefix, ds)
+	}
+	lh := &ShortenHandler{storage: ul}
 	return lh
 }
 
 // NewGrpcLookupHandler returns a new lookuphandler instance
-func NewGrpcLookupHandler(s string) (*ShortenHandler, error) {
+func NewGrpcLookupHandler(metricsprefix string, s string) (*ShortenHandler, error) {
 	// dictstore
 	// grpcloader
 	ds, err := newGrpcStore(s)
+	ul := addMetrics(metricsprefix, ds)
 	if err != nil {
 		return nil, err
 	}
-	lh := &ShortenHandler{storage: ds}
+	lh := &ShortenHandler{storage: ul}
 	return lh, nil
 }
 
@@ -54,7 +68,7 @@ func (lh *ShortenHandler) RegisterHandlers(mux *http.ServeMux) {
 }
 
 func (lh *ShortenHandler) redirectHandler(w http.ResponseWriter, r *http.Request) {
-	if ! lh.storage.Ready() {
+	if !lh.storage.Ready() {
 		writeOutputError(w, "server error: not configured", http.StatusInternalServerError)
 		return
 	}
@@ -79,7 +93,7 @@ func (lh *ShortenHandler) redirectHandler(w http.ResponseWriter, r *http.Request
 	}
 	clarkezoneLog.Debugf("redirecting to %v", uri)
 
-	http.Redirect(w, r, uri, http.StatusMovedPermanently)
+	http.Redirect(w, r, uri.DestinationLink, http.StatusMovedPermanently)
 }
 
 func (lh *ShortenHandler) liveHandler(w http.ResponseWriter, r *http.Request) {
@@ -104,7 +118,7 @@ func sanitize(input string) (string, error) {
 	clarkezoneLog.Debugf("sanitized path: %v", sa)
 	le := len(sa)
 	if len(sa) > maxinput {
-		return "", fmt.Errorf("Bad input expected < %v chars received %v chars", maxinput, le)
+		return "", fmt.Errorf("bad input expected < %v chars received %v chars", maxinput, le)
 	}
 	return sa, nil
 }

@@ -1,7 +1,15 @@
 {
   "values": [
-    ["tm", "https://techmeme.com"],
-    ["hn", "https://news.ycombinator.com"],
-    ["bp", "https://blog-preview.clarkezone.dev"]
+    ["key1", "value1", "group", "2006-01-02T15:04:05-0700"],
+    ["key2", "value2", "", "2006-01-02T15:04:05-0700"],
+    ["key3", "value3", "", "2006-01-02T15:04:05-0700"],
+    ["tm", "https://techmeme.com", "sites", "2006-01-02T15:04:05-0700"],
+    [
+      "bp",
+      "https://blog-preview.clarkezone.dev",
+      "personal",
+      "2006-01-02T15:04:05-0700"
+    ],
+    ["hn", "https://news.ycombinator.com", "sites", "2006-01-02T15:04:05-0700"]
   ]
 }
