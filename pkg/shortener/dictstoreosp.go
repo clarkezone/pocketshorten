@@ -10,8 +10,10 @@ import (
 //
 //lint:ignore U1000 reason backend not selected
 type dictStore struct {
-	m     map[string]*URLEntry
-	ready bool
+	m      map[string]*URLEntry
+	ready  bool
+	loader storeLoader
+	ms     *urlLookupMetrics
 }
 
 // newDictStore initializes a new store backed by a dict
@@ -20,17 +22,24 @@ func newDictStore(ls storeLoader) *dictStore {
 	ds := &dictStore{}
 	ds.m = make(map[string]*URLEntry)
 	ds.ready = true
-	if ls != nil {
-		err := ls.Init(ds)
-		if err != nil {
-			ds.ready = false
-		}
-	}
+	ds.loader = ls
 	return ds
 }
 
+func (store *dictStore) Init(m *urlLookupMetrics) {
+	store.ms = m
+	if store.loader != nil {
+		err := store.loader.Init(store)
+		if err != nil {
+			store.ready = false
+		}
+	}
+}
+
 func (store *dictStore) Store(short string, entry *URLEntry) error {
-	//TODO telemetry
+	if store.ms != nil {
+		store.ms.RecordStore()
+	}
 	clarkezoneLog.Debugf("dictStore store short %v long %v", short, entry)
 	store.m[short] = entry
 	return nil

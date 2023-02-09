@@ -13,7 +13,7 @@ type urlLookupMetrics struct {
 	lookups          *prometheus.CounterVec
 }
 
-func addMetrics(prefix string, l urlLookupService) urlLookupService {
+func addMetrics(prefix string, l urlLookupService) (*urlLookupMetrics, urlLookupService) {
 	clarkezoneLog.Debugf("add metrics called\n")
 	mw := urlLookupMetrics{}
 	mw.underlyingLoader = l
@@ -29,11 +29,14 @@ func addMetrics(prefix string, l urlLookupService) urlLookupService {
 	}, []string{"key"})
 	metrics := &mw
 
-	return metrics
+	return &mw, metrics
+}
+
+func (lm *urlLookupMetrics) RecordStore() {
+	lm.entries.Inc()
 }
 
 func (lm *urlLookupMetrics) Store(key string, en *URLEntry) error {
-	lm.entries.Inc()
 	return lm.underlyingLoader.Store(key, en)
 }
 

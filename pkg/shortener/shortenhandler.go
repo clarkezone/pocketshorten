@@ -35,9 +35,11 @@ func NewDictLookupHandler(metricsprefix string) *ShortenHandler {
 	vl := &viperLoader{}
 	ds := newDictStore(vl)
 	var ul urlLookupService = ds
+	var ulm *urlLookupMetrics
 	if metricsprefix != "" {
-		ul = addMetrics(metricsprefix, ds)
+		ulm, ul = addMetrics(metricsprefix, ds)
 	}
+	ds.Init(ulm)
 	lh := &ShortenHandler{storage: ul}
 	return lh
 }
@@ -47,7 +49,7 @@ func NewGrpcLookupHandler(metricsprefix string, s string) (*ShortenHandler, erro
 	// dictstore
 	// grpcloader
 	ds, err := newGrpcStore(s)
-	ul := addMetrics(metricsprefix, ds)
+	_, ul := addMetrics(metricsprefix, ds)
 	if err != nil {
 		return nil, err
 	}
@@ -76,7 +78,7 @@ func (lh *ShortenHandler) redirectHandler(w http.ResponseWriter, r *http.Request
 	requested, err := sanitize(r.URL.Path)
 
 	// TODO update scalbility tests
-	clarkezoneLog.Debugf("path: :%v: sanitized:%v:", requested)
+	clarkezoneLog.Debugf("path: :%v: sanitized:%v:", r.URL.Path, requested)
 	if err != nil {
 		writeOutputError(w, fmt.Sprintf("input sanitization failed: unabled to process request %v", err), http.StatusBadRequest)
 		return

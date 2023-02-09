@@ -8,6 +8,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/prometheus/client_golang/prometheus/testutil"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 
@@ -45,6 +46,7 @@ func Test_dictStore(t *testing.T) {
 	// pass in viper loader
 	tlh := &testLookupHandler{}
 	handler := newDictStore(tlh)
+	handler.Init(nil)
 	if handler == nil {
 		t.Errorf("handler is nil")
 	}
@@ -230,6 +232,21 @@ func Test_testNotReady(t *testing.T) {
 	if rr.Code != http.StatusServiceUnavailable {
 		t.Errorf("wrong status code expected %v, received %v", http.StatusServiceUnavailable, rr.Code)
 	}
+}
+
+func Test_urllookupmetricse2e(t *testing.T) {
+
+	initviperconfig(t)
+	mux := http.NewServeMux()
+	h := NewDictLookupHandler("testprefix")
+	h.RegisterHandlers(mux)
+	metrics := h.storage.(*urlLookupMetrics)
+	lookup := metrics.entries
+	actual := testutil.CollectAndCount(lookup)
+	if actual != 3 {
+		t.Fatalf("entries counter is incorrect: expected %v, got %v", 3, actual)
+	}
+
 }
 
 func Test_shortenhandler(t *testing.T) {
