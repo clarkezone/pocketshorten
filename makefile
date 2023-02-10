@@ -72,6 +72,11 @@ lint:
 	go vet $(shell go list ./...)
 	golangci-lint run
 
+.PHONY: kubescore
+kubescore:
+	kubectl kustomize k8s/layered_viper/overlay/staging > /tmp/pocketshorten_layered_staging_merged.yaml
+	kubectl score /tmp/pocketshorten_layered_staging_merged.yaml
+
 .PHONY: precommit-installhooks
 precommit:
 	pre-commit install
