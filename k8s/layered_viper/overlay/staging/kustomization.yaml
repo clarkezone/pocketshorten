@@ -10,6 +10,7 @@ resources:
   - tunneldeployment.yaml
   - tunnelmetricsservice.yaml
   - tunnelmonitor.yaml
+  - pdb.yaml
 secretGenerator:
   - name: cloudflare-pocketshorten-cert
     files:
