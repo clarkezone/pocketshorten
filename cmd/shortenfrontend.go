@@ -56,7 +56,7 @@ to quickly create a Cobra application.`,
 			var wrappedmux http.Handler
 			wrappedmux = basicserver.NewLoggingMiddleware(mux)
 			wrappedmux = basicserver.NewPromMetricsMiddlewareWeb(prefix, wrappedmux, sg)
-			wrappedmux = basicserver.NewStatusMiddlewareWeb(wrappedmux, sg)
+			//wrappedmux = basicserver.NewStatusMiddlewareWeb(wrappedmux, sg)
 			clarkezoneLog.Successf("Starting pocketshorten frontend server on port %v", internal.Port)
 			ss.StartMetrics()
 			clarkezoneLog.Successf("Starting metrics on port %v", internal.MetricsPort)

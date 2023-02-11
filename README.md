@@ -33,6 +33,7 @@ Bootstrapping infra:
 - [x] enable probe scenario (URL that returns true if valid config is present)
 - [ ] Run kubeval, add CPU, Mem limits, probes, PDB
   - [ ] update makefile with instructions for installing kube-score
+- [ ] Fix racecondition in status recorder by allocating per thread storage for status tracking
 - [ ] complete dashboards
   - [ ] Fix latency graph adding p50, p75, p99
   - [ ] pick other things / formats
