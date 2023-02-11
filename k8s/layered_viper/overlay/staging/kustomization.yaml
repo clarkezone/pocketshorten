@@ -5,7 +5,7 @@ commonLabels:
 bases:
   - ../../base
 patchesStrategicMerge:
-  - deployment.yaml
+  - shortener_deployment.yaml
 resources:
   - tunnel_deployment.yaml
   - tunnel_metricsservice.yaml
