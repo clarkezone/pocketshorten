@@ -48,21 +48,24 @@ endif
 ### Help
 ### -------------------------------------
 
-###@ Help:
+##@ Help:
+
 help: ## Display this help.
 	@awk 'BEGIN {FS = ":.*##"; printf "\nUsage:\n  make \033[36m<target>\033[0m\n"} /^[0-9a-zA-Z_-]+:.*?##/ { printf "  \033[36m%-25s\033[0m %s\n    ", $$1, $$2 } /^##@/ { printf "\n\033[1m%s\033[0m\n", substr($$0, 5) } ' $(MAKEFILE_LIST)
+
+.PHONY: install-binaries
 
 ### -------------------------------------
 ### Install
 ### -------------------------------------
 
-###@ install-protoc-go:
-.PHONY: install-binaries ## install-binaries
-install-protoc-go:
+##@ Install:
+
+install-protoc-go: ## install protoc compiler
 	go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
 	go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
 
-install-tools:
+install-tools:     ## install tooling
 	go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest && \
 	go install github.com/uw-labs/strongbox@latesta && \
 	go install github.com/mgechev/revive@latest
@@ -85,8 +88,13 @@ lint:
 	go vet $(shell go list ./...)
 	golangci-lint run
 
+### -------------------------------------
+### Scan Manifests
+### -------------------------------------
+
+##@ Kubescore:
 .PHONY: kubescore
-kubescore:
+kubescore:## run manifest scans for kubernetes manifests
 	kubectl kustomize k8s/layered_viper/overlay/staging > /tmp/pocketshorten_layered_staging_merged.yaml
 	kubectl score /tmp/pocketshorten_layered_staging_merged.yaml
 
