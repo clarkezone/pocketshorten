@@ -146,3 +146,12 @@ build-all: $(PLATFORMS)
 $(PLATFORMS):
 	GOOS=$(os) GOARCH=$(arch) CGO_ENABLED=0 $(BUILDCOMMAND) -o "bin/$(label)"
 	$(SHACOMMAND) "bin/$(label)" > "bin/$(label).sha256"
+
+### -------------------------------------
+### Run shortener locally
+### -------------------------------------
+
+##@ Run locally:
+.PHONY: kubescore
+runlocal:## Run pocketshorten locally using the test configuration
+	`./bin/pocketshorten servefrontend --config testfiles/.pocketshorten.json --loglevel=debug`
