@@ -31,12 +31,13 @@ Bootstrapping infra:
   - [x] Pass status into metrics middleware (should fix dashboard)
 - [x] update URL format to remove shortlink query param
 - [x] enable probe scenario (URL that returns true if valid config is present)
+- [ ] Run kubeval, add CPU, Mem limits, probes, PDB
+  - [ ] update makefile with instructions for installing kube-score
 - [ ] complete dashboards
   - [ ] Fix latency graph adding p50, p75, p99
   - [ ] pick other things / formats
 - [ ] spike test with alerting
 - [ ] Export dashboard and add to project
-- [ ] Run kubeval, add CPU, Mem limits, probes, PDB
 - [ ] lock dev manifest to a tagged build
 - [ ] Factor out basic server into separate repo
 
@@ -62,8 +63,11 @@ Bring over shortening prototype
 
 1. golang 1.9x
 2. make
-3. TODO rest of items
-4. `precommit-installhooks`
+3. kubectl
+4. krew: [https://krew.sigs.k8s.io/docs/user-guide/quickstart/](https://krew.sigs.k8s.io/docs/user-guide/quickstart/)
+5. kube-score: [https://github.com/zegl/kube-score](https://github.com/zegl/kube-score)
+6. TODO rest of items
+7. `precommit-installhooks`
 
 # Backlog
 
