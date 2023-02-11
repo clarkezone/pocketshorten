@@ -1,7 +1,7 @@
 apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
-  name: staging-pdb
+  name: staging-pdb-shortener
 spec:
   minAvailable: 2
   selector:
