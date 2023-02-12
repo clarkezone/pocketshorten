@@ -18,6 +18,13 @@ spec:
           image: registry.hub.docker.com/clarkezone/pocketshorten:main
           args: ["servefrontend", "--config=/pocketshorten.json"]
           imagePullPolicy: Always
+          livenessProbe:
+            httpGet:
+              path: /ready
+              port: 8090
+            failureThreshold: 1
+            initialDelaySeconds: 10
+            periodSeconds: 10
           ports:
             - containerPort: 8090
             - containerPort: 8095
