@@ -1,0 +1,13 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pocketshorten-viper
+spec:
+  replicas: 3
+  template:
+    spec:
+      containers:
+        - name: pocketshorten-viper
+          image: registry.hub.docker.com/clarkezone/pocketshorten:main
+          strategy: #only for dev.  Breaks PDB
+            type: Recreate

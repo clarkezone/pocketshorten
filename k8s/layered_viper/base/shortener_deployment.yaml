@@ -6,8 +6,6 @@ metadata:
     app: kustomize
 spec:
   replicas: 2
-  strategy:
-    type: Recreate
   template:
     metadata:
       labels:
