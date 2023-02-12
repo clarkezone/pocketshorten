@@ -5,11 +5,13 @@ commonLabels:
 bases:
   - ../../base
 patchesStrategicMerge:
-  - deployment.yaml
+  - shortener_deployment.yaml
 resources:
-  - tunneldeployment.yaml
-  - tunnelmetricsservice.yaml
-  - tunnelmonitor.yaml
+  - tunnel_deployment.yaml
+  - tunnel_metricsservice.yaml
+  - tunnel_monitor.yaml
+  - tunnel_pdb.yaml
+  - shortener_pdb.yaml
 secretGenerator:
   - name: cloudflare-pocketshorten-cert
     files:

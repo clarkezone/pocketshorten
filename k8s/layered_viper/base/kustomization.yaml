@@ -5,10 +5,10 @@ commonLabels:
   app: pocketshorten-viper
 resources:
   - namespace.yaml
-  - deployment.yaml
-  - service.yaml
-  - metricsservice.yaml
-  - servicemonitor.yaml
+  - shortener_deployment.yaml
+  - shortener_service.yaml
+  - shortener_metricsservice.yaml
+  - shortener_servicemonitor.yaml
 secretGenerator:
 configMapGenerator:
   - name: vipconfig
