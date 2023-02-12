@@ -9,3 +9,17 @@ spec:
       containers:
         - name: pocketshorten-viper
           image: registry.hub.docker.com/clarkezone/pocketshorten:0.0.3
+          livenessProbe:
+            httpGet:
+              path: /live
+              port: 8090
+            failureThreshold: 1
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: 8090
+            failureThreshold: 1
+            initialDelaySeconds: 10
+            periodSeconds: 10
