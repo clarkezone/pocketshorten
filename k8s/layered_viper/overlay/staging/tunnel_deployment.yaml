@@ -45,6 +45,16 @@ spec:
             - name: tunnel-creds-volume
               mountPath: /etc/cloudflared/creds
               readOnly: true
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: app
+                    operator: In
+                    values:
+                      - pocketshorten-tunnel
+              topologyKey: "kubernetes.io/hostname"
       volumes:
         - name: tunnel-cert-volume
           secret:

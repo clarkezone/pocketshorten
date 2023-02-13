@@ -23,3 +23,13 @@ spec:
             failureThreshold: 1
             initialDelaySeconds: 10
             periodSeconds: 10
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: app
+                    operator: In
+                    values:
+                      - pocketshorten-viper
+              topologyKey: "kubernetes.io/hostname"
