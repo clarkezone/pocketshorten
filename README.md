@@ -37,12 +37,12 @@ Bootstrapping infra:
   - [x] Add podAntiAffinity to cloudflared and pocketshorten
   - [ ] Add container security to pocketshorten
   - [ ] Add container security to tunnel
-  - [ ] Add probes and image pull policy to cloudflared
+  - [x] Add probes and image pull policy to cloudflared
 - [ ] Fix racecondition in status recorder by allocating per thread storage for status tracking
 - [ ] spike test with alerting
+- [ ] Add limits
 - [ ] complete dashboards
   - [ ] Fix latency graph adding p50, p75, p99
-  - [ ] pick other things / formats
 - [ ] Export dashboard and add to project
 - [ ] lock dev manifest to a tagged build
 - [ ] Factor out basic server into separate repo
