@@ -32,12 +32,17 @@ Bootstrapping infra:
 - [x] update URL format to remove shortlink query param
 - [x] enable probe scenario (URL that returns true if valid config is present)
 - [ ] Run kubeval, add CPU, Mem limits, probes, PDB
-  - [ ] update makefile with instructions for installing kube-score
+  - [x] update makefile with instructions for installing kube-score
+  - [x] Add PDB to cloudflared and pocketshorten
+  - [x] Add podAntiAffinity to cloudflared and pocketshorten
+  - [ ] Add container security to pocketshorten
+  - [ ] Add container security to tunnel
+  - [ ] Add probes and image pull policy to cloudflared
 - [ ] Fix racecondition in status recorder by allocating per thread storage for status tracking
+- [ ] spike test with alerting
 - [ ] complete dashboards
   - [ ] Fix latency graph adding p50, p75, p99
   - [ ] pick other things / formats
-- [ ] spike test with alerting
 - [ ] Export dashboard and add to project
 - [ ] lock dev manifest to a tagged build
 - [ ] Factor out basic server into separate repo
