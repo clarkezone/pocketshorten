@@ -18,6 +18,7 @@ spec:
           image:
             cloudflare/cloudflared:2022.12.1
             #image: cloudflare/cloudflared:2023.2.1
+          imagePullPolicy: Always
           args:
             - tunnel
             - --config
