@@ -43,11 +43,9 @@ to quickly create a Cobra application.`,
 			mux := basicserver.DefaultMux()
 			mux.HandleFunc("/", getHelloHandler())
 
-			sg := basicserver.NewStatusRecorder()
 			var wrappedmux http.Handler
 			wrappedmux = basicserver.NewLoggingMiddleware(mux)
-			wrappedmux = basicserver.NewPromMetricsMiddlewareWeb("pocketshortener_testWebservice", wrappedmux, sg)
-			wrappedmux = basicserver.NewStatusMiddlewareWeb(wrappedmux, sg)
+			wrappedmux = basicserver.NewPromMetricsMiddlewareWeb("pocketshortener_testWebservice", wrappedmux)
 
 			if viper.GetString(internal.ServiceURLVar) != "" {
 				clarkezoneLog.Successf("Delegating to %v", internal.ServiceURL)

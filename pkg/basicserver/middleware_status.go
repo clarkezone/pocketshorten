@@ -5,16 +5,7 @@ import (
 	"net/http"
 )
 
-// LoggingMiddlewareWeb adds logging functionality
-type StatusMiddlewareWeb struct {
-	handler      http.Handler
-	statusWriter *StatusWriter
-}
-
-func (s *StatusMiddlewareWeb) Status() int {
-	return s.statusWriter.status
-}
-
+// StatusWriter tracks status codes for responses
 type StatusWriter struct {
 	responseWriter http.ResponseWriter
 	status         int
@@ -35,20 +26,14 @@ func (l *StatusWriter) Write(bytes []byte) (int, error) {
 func (l *StatusWriter) WriteHeader(statusCode int) {
 	fmt.Println("foo")
 	l.status = statusCode
-	l.responseWriter.WriteHeader(statusCode)
+	if l.responseWriter != nil {
+		l.responseWriter.WriteHeader(statusCode)
+	}
 }
 
-func (l *StatusMiddlewareWeb) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("bar")
-	l.statusWriter.responseWriter = w
-	l.handler.ServeHTTP(l.statusWriter, r)
-}
-
-// NewLoggingMiddleware constructs a new Logger middleware handler
-func NewStatusMiddlewareWeb(handlerToWrap http.Handler, sw *StatusWriter) *StatusMiddlewareWeb {
-	return &StatusMiddlewareWeb{handlerToWrap, sw}
-}
-
-func NewStatusRecorder() *StatusWriter {
-	return &StatusWriter{}
+// NewStatusRecorder constructs a new Logger middleware handler
+func NewStatusRecorder(w http.ResponseWriter) *StatusWriter {
+	sw := &StatusWriter{}
+	sw.responseWriter = w
+	return sw
 }

@@ -16,20 +16,21 @@ type PromMetricsMiddlewareWeb struct {
 	handler         http.Handler
 	opsProcessed    *prometheus.CounterVec
 	requestDuration *prometheus.HistogramVec
-	statusGetter    StatusRecorder
+	rwStatus        http.ResponseWriter
 }
 
 func (l *PromMetricsMiddlewareWeb) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	start := time.Now()
-	l.handler.ServeHTTP(w, r)
+	sr := NewStatusRecorder(w)
+	l.rwStatus = sr
+	l.handler.ServeHTTP(l.rwStatus, r)
 	httpDuration := time.Since(start)
-	l.opsProcessed.WithLabelValues(fmt.Sprint(l.statusGetter.Status()), r.Method).Inc()
+	l.opsProcessed.WithLabelValues(fmt.Sprint(sr.Status()), r.Method).Inc()
 	l.requestDuration.WithLabelValues(r.RequestURI).Observe(httpDuration.Seconds())
 }
 
-func newMiddlewareMetricsWeb(handlerToWrap http.Handler, prefix string, sg StatusRecorder) *PromMetricsMiddlewareWeb {
+func newMiddlewareMetricsWeb(handlerToWrap http.Handler, prefix string) *PromMetricsMiddlewareWeb {
 	mw := PromMetricsMiddlewareWeb{}
-	mw.statusGetter = sg
 	mw.handler = handlerToWrap
 	mw.opsProcessed = promauto.NewCounterVec(prometheus.CounterOpts{
 		Name: prefix + "_totalops",
@@ -46,7 +47,7 @@ func newMiddlewareMetricsWeb(handlerToWrap http.Handler, prefix string, sg Statu
 }
 
 // NewPromMetricsMiddlewareWeb constructs a new Logger middleware handler
-func NewPromMetricsMiddlewareWeb(prefix string, handlerToWrap http.Handler, status StatusRecorder) *PromMetricsMiddlewareWeb {
+func NewPromMetricsMiddlewareWeb(prefix string, handlerToWrap http.Handler) *PromMetricsMiddlewareWeb {
 	clarkezoneLog.Debugf("NewPromMetricsMiddleware()")
-	return newMiddlewareMetricsWeb(handlerToWrap, prefix, status)
+	return newMiddlewareMetricsWeb(handlerToWrap, prefix)
 }
