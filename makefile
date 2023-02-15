@@ -98,6 +98,11 @@ kubescore:## run manifest scans for kubernetes manifests
 	kubectl kustomize k8s/layered_viper/overlay/staging > /tmp/pocketshorten_layered_staging_merged.yaml
 	kubectl score /tmp/pocketshorten_layered_staging_merged.yaml
 
+##@ Config validation
+.PHONY: validateconfig
+cuevalidate: ##Run cue against configuration to validate
+	cue vet testfiles/.pocketshorten.json testfiles/schema.cue
+
 .PHONY: precommit-installhooks
 precommit:
 	pre-commit install
