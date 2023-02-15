@@ -1,0 +1,21 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  labels:
+  name: shortener-alerting-rules
+spec:
+  groups:
+    - name: shortner_frontend_rps
+      rules:
+        - alert: ShortenerRpsAboveSafe
+          annotations:
+            description: is taking trafix above 30RP/s
+            runbook_url: https://runbooks.prometheus-operator.dev/runbooks/node/nodefilesystemspacefillingup
+            summary: High traffic for last 1 minute.
+          expr: |
+            (
+            rate(pocketshorten_frontend_totalops[1m])>30
+            )
+          for: 1m
+          labels:
+            severity: warning

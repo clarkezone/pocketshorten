@@ -12,6 +12,7 @@ resources:
   - tunnel_monitor.yaml
   - tunnel_pdb.yaml
   - shortener_pdb.yaml
+  - shortener_promAlertRule.yaml
 secretGenerator:
   - name: cloudflare-pocketshorten-cert
     files:
