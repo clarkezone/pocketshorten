@@ -37,9 +37,8 @@ func newMiddlewareMetricsWeb(handlerToWrap http.Handler, prefix string) *PromMet
 		Help: "The total number of processed http requests for testserver",
 	}, []string{"responsecode", "method"})
 	mw.requestDuration = prometheus.NewHistogramVec(prometheus.HistogramOpts{
-		Name:    prefix + "_duration_seconds",
-		Help:    "Histogram of duration in seconds",
-		Buckets: []float64{1, 2, 5, 7, 10},
+		Name: prefix + "_duration_seconds",
+		Help: "Histogram of duration in seconds",
 	},
 		[]string{"endpoint"})
 	prometheus.MustRegister(mw.requestDuration)
