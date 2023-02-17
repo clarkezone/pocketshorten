@@ -41,6 +41,7 @@ func newMiddlewareMetricsWeb(handlerToWrap http.Handler, prefix string) *PromMet
 		Help: "Histogram of duration in seconds",
 	},
 		[]string{"endpoint"})
+	// default buckets: 005,.01,.025,.05,.1,.25,.5, 1, 2.5, 5, 10
 	prometheus.MustRegister(mw.requestDuration)
 	return &mw
 }
