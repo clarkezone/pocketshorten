@@ -19,7 +19,7 @@ secretGenerator:
       - secrets/cert.pem
   - name: cloudflare-pocketshorten-creds
     files:
-      - secrets/314b962d-6ba6-447d-a3e6-e3131cc9db76.json
+      - secrets/8218e746-a6f2-4866-a6c3-4656603331bc.json
 configMapGenerator:
   - name: cloudflare-pocketshorten-configs
     files:
