@@ -1,18 +1,25 @@
 namePrefix: prod-
 namespace: pocketshorten
 commonLabels:
-  environment: development
+  environment: production
 bases:
   - ../../base
 patchesStrategicMerge:
+  - shortener_deployment.yaml
 resources:
-  - cloudflared.yaml
+  - tunnel_deployment.yaml
+  - tunnel_metricsservice.yaml
+  - tunnel_monitor.yaml
+  - tunnel_pdb.yaml
+  - shortener_pdb.yaml
+  - shortener_promAlertRule.yaml
 secretGenerator:
   - name: cloudflare-pocketshorten-cert
     files:
       - secrets/cert.pem
   - name: cloudflare-pocketshorten-creds
-    files: secrets/99999.json
+    files:
+      - secrets/8218e746-a6f2-4866-a6c3-4656603331bc.json
 configMapGenerator:
   - name: cloudflare-pocketshorten-configs
     files:
