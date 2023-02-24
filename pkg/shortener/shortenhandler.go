@@ -97,12 +97,17 @@ func (lh *ShortenHandler) redirectHandler(w http.ResponseWriter, r *http.Request
 }
 
 func (lh *ShortenHandler) liveHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Add("mime=type", "text/html")
+	fmt.Fprintf(w, "Live.")
 	w.WriteHeader(http.StatusOK)
 }
 
 func (lh *ShortenHandler) readyHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Add("mime=type", "text/html")
 	if !lh.storage.Ready() {
 		writeOutputError(w, "Service not available", http.StatusServiceUnavailable)
+	} else {
+		fmt.Fprintf(w, "Ready with %d", lh.storage.Count())
 	}
 	w.WriteHeader(http.StatusOK)
 }
