@@ -6,6 +6,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/clarkezone/pocketshorten/pkg/config"
 	clarkezoneLog "github.com/clarkezone/pocketshorten/pkg/log"
 )
 
@@ -99,7 +100,7 @@ func (lh *ShortenHandler) redirectHandler(w http.ResponseWriter, r *http.Request
 func (lh *ShortenHandler) liveHandler(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	w.Header().Add("mime=type", "text/html")
-	fmt.Fprintf(w, "Live.")
+	fmt.Fprintf(w, "Live. Version: %s, Hash: %s", config.VersionString, config.VersionHash)
 }
 
 func (lh *ShortenHandler) readyHandler(w http.ResponseWriter, r *http.Request) {
