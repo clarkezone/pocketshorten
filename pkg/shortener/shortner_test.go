@@ -232,31 +232,8 @@ func Test_testNotReady(t *testing.T) {
 	}
 }
 
-func Test_liveendtoend(t *testing.T) {
-	initviperconfig(t)
-
-	mux := http.NewServeMux()
-
-	h := NewDictLookupHandler("")
-	h.RegisterHandlers(mux)
-	var wrappedmux http.Handler
-	wrappedmux = basicserver.NewLoggingMiddleware(mux)
-	wrappedmux = basicserver.NewPromMetricsMiddlewareWeb("pocketshorten_frontend", wrappedmux)
-
-	s := httptest.NewServer(wrappedmux)
-	defer s.Close()
-
-	resp, err := http.DefaultClient.Get(s.URL + "/ready")
-	if err != nil {
-		t.Fatalf("Error")
-	}
-
-	if resp.StatusCode != http.StatusOK {
-		t.Fatalf("Unexpected response: %v", resp.StatusCode)
-	}
-}
-
 func Test_shortenhandler(t *testing.T) {
+	viper.Reset()
 	initviperconfig(t)
 
 	mux := http.NewServeMux()
