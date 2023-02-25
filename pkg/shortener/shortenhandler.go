@@ -6,6 +6,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/clarkezone/pocketshorten/pkg/config"
 	clarkezoneLog "github.com/clarkezone/pocketshorten/pkg/log"
 )
 
@@ -98,13 +99,18 @@ func (lh *ShortenHandler) redirectHandler(w http.ResponseWriter, r *http.Request
 
 func (lh *ShortenHandler) liveHandler(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
+	w.Header().Add("mime=type", "text/html")
+	fmt.Fprintf(w, "Live. Version: %s, Hash: %s", config.VersionString, config.VersionHash)
 }
 
 func (lh *ShortenHandler) readyHandler(w http.ResponseWriter, r *http.Request) {
 	if !lh.storage.Ready() {
 		writeOutputError(w, "Service not available", http.StatusServiceUnavailable)
+	} else {
+		w.WriteHeader(http.StatusOK)
+		w.Header().Add("mime=type", "text/html")
+		fmt.Fprintf(w, "Ready with %d", lh.storage.Count())
 	}
-	w.WriteHeader(http.StatusOK)
 }
 
 func writeOutputError(w http.ResponseWriter, message string, code int) {

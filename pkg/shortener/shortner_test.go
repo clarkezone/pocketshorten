@@ -233,6 +233,7 @@ func Test_testNotReady(t *testing.T) {
 }
 
 func Test_shortenhandler(t *testing.T) {
+	viper.Reset()
 	initviperconfig(t)
 
 	mux := http.NewServeMux()
