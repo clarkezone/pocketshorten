@@ -7,23 +7,25 @@ Copyright © 2022 NAME HERE <EMAIL ADDRESS>
 */
 
 import (
+	"github.com/clarkezone/boosted-go/basicservergrpc"
+	"github.com/clarkezone/boosted-go/middlewaregrpc"
+	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
+
 	"github.com/clarkezone/pocketshorten/internal"
-	"github.com/clarkezone/pocketshorten/pkg/basicserver"
 	"github.com/clarkezone/pocketshorten/pkg/config"
 	"github.com/clarkezone/pocketshorten/pkg/greetingservice"
 	clarkezoneLog "github.com/clarkezone/pocketshorten/pkg/log"
-	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 )
 
 // TestServerGrpcCmd is the command to start a test grpc server
 type TestServerGrpcCmd struct {
-	bs  *basicserver.Grpc
-	mid *basicserver.PromMetricsMiddlewareGrpc
+	bs  *basicservergrpc.Grpc
+	mid *middlewaregrpc.PromMetricsMiddlewareGrpc
 }
 
 func newTestServerGrpcCmd(partent *cobra.Command) (*TestServerGrpcCmd, error) {
-	bsGrpc := basicserver.CreateGrpc()
+	bsGrpc := basicservergrpc.CreateGrpc()
 	tsGrpc := &TestServerGrpcCmd{
 		bs: bsGrpc,
 	}
@@ -41,7 +43,7 @@ to quickly create a Cobra application.`,
 				config.VersionString, config.VersionHash)
 			clarkezoneLog.Successf("Log level set to %v", internal.LogLevel)
 
-			tsGrpc.mid = basicserver.NewPromMetricsMiddlewareGrpc("gomicroservicestarter_grpc_server")
+			tsGrpc.mid = middlewaregrpc.NewPromMetricsMiddlewareGrpc("gomicroservicestarter_grpc_server")
 			bsGrpc.AddUnaryInterceptor(tsGrpc.mid.MetricsUnaryInterceptor)
 			clarkezoneLog.Successf("Starting grpc server on port %v", internal.Port)
 			bsGrpc.StartMetrics()

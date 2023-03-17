@@ -16,14 +16,16 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 
+	"github.com/clarkezone/boosted-go/basicserverhttp"
+	"github.com/clarkezone/boosted-go/middlewarehttp"
+
 	"github.com/clarkezone/pocketshorten/internal"
-	"github.com/clarkezone/pocketshorten/pkg/basicserver"
 	"github.com/clarkezone/pocketshorten/pkg/config"
 	"github.com/clarkezone/pocketshorten/pkg/greetingservice"
 	clarkezoneLog "github.com/clarkezone/pocketshorten/pkg/log"
 )
 
-var bsweb = basicserver.CreateBasicServer()
+var bsweb = basicserverhttp.CreateBasicServer()
 
 var (
 	// testserverWebCmd represents the testserver command
@@ -40,12 +42,12 @@ to quickly create a Cobra application.`,
 			clarkezoneLog.Successf("pocketshorten version %v,%v started in testserver mode\n",
 				config.VersionString, config.VersionHash)
 			clarkezoneLog.Successf("Log level set to %v", internal.LogLevel)
-			mux := basicserver.DefaultMux()
+			mux := basicserverhttp.DefaultMux()
 			mux.HandleFunc("/", getHelloHandler())
 
 			var wrappedmux http.Handler
-			wrappedmux = basicserver.NewLoggingMiddleware(mux)
-			wrappedmux = basicserver.NewPromMetricsMiddlewareWeb("pocketshortener_testWebservice", wrappedmux)
+			wrappedmux = middlewarehttp.NewLoggingMiddleware(mux)
+			wrappedmux = middlewarehttp.NewPromMetricsMiddlewareWeb("pocketshortener_testWebservice", wrappedmux)
 
 			if viper.GetString(internal.ServiceURLVar) != "" {
 				clarkezoneLog.Successf("Delegating to %v", internal.ServiceURL)

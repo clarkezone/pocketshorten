@@ -12,8 +12,10 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 
+	"github.com/clarkezone/boosted-go/basicserverhttp"
+	"github.com/clarkezone/boosted-go/middlewarehttp"
+
 	"github.com/clarkezone/pocketshorten/internal"
-	"github.com/clarkezone/pocketshorten/pkg/basicserver"
 	"github.com/clarkezone/pocketshorten/pkg/config"
 	clarkezoneLog "github.com/clarkezone/pocketshorten/pkg/log"
 	"github.com/clarkezone/pocketshorten/pkg/shortener"
@@ -25,12 +27,12 @@ const (
 
 // ShortenFrontendCmdState object
 type ShortenFrontendCmdState struct {
-	webserver *basicserver.BasicServer
+	webserver *basicserverhttp.BasicServer
 	shortener *shortener.ShortenHandler
 }
 
 func newShortenFrontend(parent *cobra.Command) (*ShortenFrontendCmdState, error) {
-	ss := basicserver.CreateBasicServer()
+	ss := basicserverhttp.CreateBasicServer()
 	cmdstate := &ShortenFrontendCmdState{webserver: ss, shortener: nil}
 
 	// shortenservercmd represents the testserver command
@@ -48,14 +50,14 @@ to quickly create a Cobra application.`,
 				config.VersionString, config.VersionHash)
 			clarkezoneLog.Successf("Log level set to %v", internal.LogLevel)
 
-			mux := basicserver.DefaultMux()
+			mux := basicserverhttp.DefaultMux()
 			cmdstate.shortener = shortener.NewDictLookupHandler(prefix)
 			cmdstate.shortener.RegisterHandlers(mux)
 
 			//sg := basicserver.NewStatusRecorder()
 			var wrappedmux http.Handler
-			wrappedmux = basicserver.NewLoggingMiddleware(mux)
-			wrappedmux = basicserver.NewPromMetricsMiddlewareWeb(prefix, wrappedmux)
+			wrappedmux = middlewarehttp.NewLoggingMiddleware(mux)
+			wrappedmux = middlewarehttp.NewPromMetricsMiddlewareWeb(prefix, wrappedmux)
 			clarkezoneLog.Successf("Starting pocketshorten frontend server on port %v", internal.Port)
 			ss.StartMetrics()
 			clarkezoneLog.Successf("Starting metrics on port %v", internal.MetricsPort)

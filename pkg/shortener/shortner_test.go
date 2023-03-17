@@ -11,9 +11,10 @@ import (
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 
+	"github.com/clarkezone/boosted-go/middlewarehttp"
+
 	"github.com/clarkezone/pocketshorten/internal"
 
-	"github.com/clarkezone/pocketshorten/pkg/basicserver"
 	clarkezoneLog "github.com/clarkezone/pocketshorten/pkg/log"
 )
 
@@ -241,8 +242,8 @@ func Test_shortenhandler(t *testing.T) {
 	h := NewDictLookupHandler("")
 	h.RegisterHandlers(mux)
 	var wrappedmux http.Handler
-	wrappedmux = basicserver.NewLoggingMiddleware(mux)
-	wrappedmux = basicserver.NewPromMetricsMiddlewareWeb("pocketshorten_frontend", wrappedmux)
+	wrappedmux = middlewarehttp.NewLoggingMiddleware(mux)
+	wrappedmux = middlewarehttp.NewPromMetricsMiddlewareWeb("pocketshorten_frontend", wrappedmux)
 
 	s := httptest.NewServer(wrappedmux)
 	defer s.Close()

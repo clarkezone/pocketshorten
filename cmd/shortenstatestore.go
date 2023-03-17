@@ -7,23 +7,25 @@ Copyright © 2022 NAME HERE <EMAIL ADDRESS>
 */
 
 import (
+	"github.com/clarkezone/boosted-go/basicservergrpc"
+	"github.com/clarkezone/boosted-go/middlewaregrpc"
+	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
+
 	"github.com/clarkezone/pocketshorten/internal"
-	"github.com/clarkezone/pocketshorten/pkg/basicserver"
 	"github.com/clarkezone/pocketshorten/pkg/cacheloaderservice"
 	"github.com/clarkezone/pocketshorten/pkg/config"
 	clarkezoneLog "github.com/clarkezone/pocketshorten/pkg/log"
-	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 )
 
 // ShortenStateStore is the command to start a test grpc server
 type ShortenStateStore struct {
-	bs  *basicserver.Grpc
-	mid *basicserver.PromMetricsMiddlewareGrpc
+	bs  *basicservergrpc.Grpc
+	mid *middlewaregrpc.PromMetricsMiddlewareGrpc
 }
 
 func newShortenStateStore(partent *cobra.Command) (*ShortenStateStore, error) {
-	bssssGrpc := basicserver.CreateGrpc()
+	bssssGrpc := basicservergrpc.CreateGrpc()
 	sss := &ShortenStateStore{
 		bs: bssssGrpc,
 	}
@@ -56,7 +58,7 @@ to quickly create a Cobra application.`,
 			//		clarkezoneLog.Debugf("%s: %s\n", key, value)
 			//	}
 
-			sss.mid = basicserver.NewPromMetricsMiddlewareGrpc("pocketshorten_statestore")
+			sss.mid = middlewaregrpc.NewPromMetricsMiddlewareGrpc("pocketshorten_statestore")
 			bssssGrpc.AddUnaryInterceptor(sss.mid.MetricsUnaryInterceptor)
 			clarkezoneLog.Successf("Starting pocketshorten statestore server on port %v", internal.Port)
 			bssssGrpc.StartMetrics()
