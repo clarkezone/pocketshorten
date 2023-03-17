@@ -16,7 +16,7 @@ require (
 require (
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/cespare/xxhash/v2 v2.2.0 // indirect
-	github.com/clarkezone/boosted-go v0.0.0-20230316144145-2279231d6d2f // indirect
+	github.com/clarkezone/boosted-go v0.0.0-20230317133643-96730c3ae442 // indirect
 	github.com/fsnotify/fsnotify v1.6.0 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect

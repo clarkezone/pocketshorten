@@ -64,6 +64,8 @@ github.com/clarkezone/boosted-go v0.0.0-20230315142652-5c578670925c h1:CtXJlyRjI
 github.com/clarkezone/boosted-go v0.0.0-20230315142652-5c578670925c/go.mod h1:QQjwFK1NU/Yn0mpVS5sBHmDaeIqfxlqAi117pZ7m2lI=
 github.com/clarkezone/boosted-go v0.0.0-20230316144145-2279231d6d2f h1:yIsqnR21xeUzd6OW30Lw9veJVtAoWhtCQgPPYEcQdyg=
 github.com/clarkezone/boosted-go v0.0.0-20230316144145-2279231d6d2f/go.mod h1:QQjwFK1NU/Yn0mpVS5sBHmDaeIqfxlqAi117pZ7m2lI=
+github.com/clarkezone/boosted-go v0.0.0-20230317133643-96730c3ae442 h1:oXQ7TUWM5kKNJqTkErJOgAtj+Xu2+vOv7Ixks8owRyE=
+github.com/clarkezone/boosted-go v0.0.0-20230317133643-96730c3ae442/go.mod h1:QQjwFK1NU/Yn0mpVS5sBHmDaeIqfxlqAi117pZ7m2lI=
 github.com/client9/misspell v0.3.4/go.mod h1:qj6jICC3Q7zFZvVWo7KLAzC3yx5G7kyvSDkc90ppPyw=
 github.com/cncf/udpa/go v0.0.0-20191209042840-269d4d468f6f/go.mod h1:M8M6+tZqaGXZJjfX53e64911xZQV5JYwmTeXPW+k8Sc=
 github.com/cncf/udpa/go v0.0.0-20200629203442-efcf912fb354/go.mod h1:WmhPx2Nbnhtbo57+VJT5O0JRkEi1Wbu0z5j0R8u5Hbk=
