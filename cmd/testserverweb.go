@@ -19,10 +19,11 @@ import (
 	"github.com/clarkezone/boosted-go/basicserverhttp"
 	"github.com/clarkezone/boosted-go/middlewarehttp"
 
+	clarkezoneLog "github.com/clarkezone/boosted-go/log"
+
 	"github.com/clarkezone/pocketshorten/internal"
 	"github.com/clarkezone/pocketshorten/pkg/config"
 	"github.com/clarkezone/pocketshorten/pkg/greetingservice"
-	clarkezoneLog "github.com/clarkezone/pocketshorten/pkg/log"
 )
 
 var bsweb = basicserverhttp.CreateBasicServer()

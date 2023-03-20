@@ -6,9 +6,10 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 
+	clarkezoneLog "github.com/clarkezone/boosted-go/log"
+
 	"github.com/clarkezone/pocketshorten/internal"
 	"github.com/clarkezone/pocketshorten/pkg/cacheloaderservice"
-	clarkezoneLog "github.com/clarkezone/pocketshorten/pkg/log"
 )
 
 // grpcStore
