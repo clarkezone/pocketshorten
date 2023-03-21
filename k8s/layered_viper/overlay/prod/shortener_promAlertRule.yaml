@@ -14,7 +14,7 @@ spec:
             summary: High traffic for last 1 minute.
           expr: |
             (
-            rate(pocketshorten_frontend_totalops[1m])>30
+            sum(rate(pocketshorten_frontend_totalops[1m]))>30
             )
           for: 1m
           labels:
