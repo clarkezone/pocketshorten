@@ -15,7 +15,7 @@ import (
 
 	"github.com/clarkezone/pocketshorten/internal"
 
-	clarkezoneLog "github.com/clarkezone/pocketshorten/pkg/log"
+	clarkezoneLog "github.com/clarkezone/boosted-go/log"
 )
 
 // TestMain initizlie all tests
