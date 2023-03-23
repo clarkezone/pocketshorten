@@ -4,9 +4,10 @@ Copyright © 2022 clarkezone
 package main
 
 import (
-	"github.com/clarkezone/pocketshorten/cmd"
-	clarkezoneLog "github.com/clarkezone/pocketshorten/pkg/log"
+	clarkezoneLog "github.com/clarkezone/boosted-go/log"
 	"github.com/sirupsen/logrus"
+
+	"github.com/clarkezone/pocketshorten/cmd"
 )
 
 func main() {

@@ -6,8 +6,9 @@ import (
 	"strings"
 	"time"
 
+	clarkezoneLog "github.com/clarkezone/boosted-go/log"
+
 	"github.com/clarkezone/pocketshorten/pkg/config"
-	clarkezoneLog "github.com/clarkezone/pocketshorten/pkg/log"
 )
 
 type storeLoader interface {

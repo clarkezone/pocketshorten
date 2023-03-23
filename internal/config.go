@@ -7,7 +7,7 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 
-	clarkezoneLog "github.com/clarkezone/pocketshorten/pkg/log"
+	clarkezoneLog "github.com/clarkezone/boosted-go/log"
 )
 
 // InitConfig reads in config file and ENV variables if set.

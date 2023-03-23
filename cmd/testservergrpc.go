@@ -12,10 +12,11 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 
+	clarkezoneLog "github.com/clarkezone/boosted-go/log"
+
 	"github.com/clarkezone/pocketshorten/internal"
 	"github.com/clarkezone/pocketshorten/pkg/config"
 	"github.com/clarkezone/pocketshorten/pkg/greetingservice"
-	clarkezoneLog "github.com/clarkezone/pocketshorten/pkg/log"
 )
 
 // TestServerGrpcCmd is the command to start a test grpc server

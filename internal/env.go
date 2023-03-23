@@ -7,7 +7,7 @@ import (
 	"os"
 	"path"
 
-	clarkezoneLog "github.com/clarkezone/pocketshorten/pkg/log"
+	clarkezoneLog "github.com/clarkezone/boosted-go/log"
 	"github.com/spf13/viper"
 )
 

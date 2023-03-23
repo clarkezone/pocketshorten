@@ -12,10 +12,11 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 
+	clarkezoneLog "github.com/clarkezone/boosted-go/log"
+
 	"github.com/clarkezone/pocketshorten/internal"
 	"github.com/clarkezone/pocketshorten/pkg/cacheloaderservice"
 	"github.com/clarkezone/pocketshorten/pkg/config"
-	clarkezoneLog "github.com/clarkezone/pocketshorten/pkg/log"
 )
 
 // ShortenStateStore is the command to start a test grpc server

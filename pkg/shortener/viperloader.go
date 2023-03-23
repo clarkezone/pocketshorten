@@ -7,7 +7,7 @@ import (
 
 	"github.com/spf13/viper"
 
-	clarkezoneLog "github.com/clarkezone/pocketshorten/pkg/log"
+	clarkezoneLog "github.com/clarkezone/boosted-go/log"
 )
 
 type viperLoader struct {

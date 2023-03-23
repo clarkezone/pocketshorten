@@ -15,9 +15,10 @@ import (
 	"github.com/clarkezone/boosted-go/basicserverhttp"
 	"github.com/clarkezone/boosted-go/middlewarehttp"
 
+	clarkezoneLog "github.com/clarkezone/boosted-go/log"
+
 	"github.com/clarkezone/pocketshorten/internal"
 	"github.com/clarkezone/pocketshorten/pkg/config"
-	clarkezoneLog "github.com/clarkezone/pocketshorten/pkg/log"
 	"github.com/clarkezone/pocketshorten/pkg/shortener"
 )
 
