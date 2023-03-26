@@ -8,60 +8,35 @@
 [![GitHub release](https://img.shields.io/github/release/clarkezone/pocketshorten.svg?style=flat-square)](https://github.com/clarkezone/pocketshorten/releases)
 ![Total Downloads](https://img.shields.io/github/downloads/clarkezone/pocketshorten/total?logo=github&logoColor=white)
 
-# project state
+## Project State
 
-Bootstrapping infra:
+MVP completed as of 0.0.8
 
-- [x] Local build
-- [x] Local build from dockerfile
-- [x] Local precommit / linting / githook
-- [x] Fix name to be consistent
-- [x] Implement CI build, publish to docker
-- [x] Fix CI artifacts (eg code coverage)
-- [x] Fix repo badges
-- [x] Best practices from mail log
-- [x] Metrics exposed on independent port
-- [x] k8s public
-- [x] Service Monitor
-- [x] Add load tester
-- [x] Fix double counting of metrics
-- [x] Metrics for invalid requests
-  - [x] Status tracking middleware with tests
-  - [x] Test for shortenhandler with mux, verify status has redirect status, error status
-  - [x] Pass status into metrics middleware (should fix dashboard)
-- [x] update URL format to remove shortlink query param
-- [x] enable probe scenario (URL that returns true if valid config is present)
-- [ ] Run kubeval, add CPU, Mem limits, probes, PDB
-  - [x] update makefile with instructions for installing kube-score
-  - [x] Add PDB to cloudflared and pocketshorten
-  - [x] Add podAntiAffinity to cloudflared and pocketshorten
-  - [ ] Add container security to pocketshorten
-  - [ ] Add container security to tunnel
-  - [x] Add probes and image pull policy to cloudflared
-- [ ] Fix racecondition in status recorder by allocating per thread storage for status tracking
-- [ ] spike test with alerting
+Cleanup
+
+- [ ] Update readme with pre-requs and full instructions
+- [ ] Add container security to pocketshorten
+- [ ] Add container security to tunnel
 - [ ] Add limits
 - [ ] complete dashboards
-  - [ ] Fix latency graph adding p50, p75, p99
-- [ ] Export dashboard and add to project
-- [ ] lock dev manifest to a tagged build
-- [ ] Factor out basic server into separate repo
+
+## Phase 3
+
+- [ ] Push-based config updates sourced from microservice
+  - [ ] logging for microservice calls
+- [ ] Pocketbase or FowlerTodo
+
+## Phases
+
+Phase 1 Infra bringup: CI/CD in place
+Phase 2 MVP: Pocketshorten runs natively or in container, state from viper config, metrics and k8s manifests with best practices
+Phase 3 UI for modifying shorten routes
+
+## Backlog
+
+- Distributed Throttling / rate limiting
 
 ---
-
-- [ ] Hello world comes from microservice with switch / env for mode in single binary
-- [ ] Cleanup names
-- [ ] k8s local override with staging / prod
-- [ ] Instructions for prerequs
-- [ ] Fork and make template (rename target to be new baseline)
-- [ ] Turn on PR enforcement, protect main branch
-
-Template backlog
-
-- Add k8s manifest scanner for best practices (PDB, CPU/MEM requests and limits)
-- Add DT
-
-Bring over shortening prototype
 
 # Building
 
