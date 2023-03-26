@@ -8,7 +8,7 @@ spec:
     spec:
       containers:
         - name: pocketshorten-viper
-          image: registry.hub.docker.com/clarkezone/pocketshorten:0.0.7
+          image: registry.hub.docker.com/clarkezone/pocketshorten:0.0.8
           livenessProbe:
             httpGet:
               path: /live
