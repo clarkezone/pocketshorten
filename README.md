@@ -56,7 +56,7 @@ Phase 3 UI for modifying shorten routes
 - complete openssf best practices
 - Add minimal viable covernance
 
-# Breating a new release
+# Creating a new release
 
 ```bash
 git tag -a v0.0.1 -m "helloinfra"
