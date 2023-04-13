@@ -43,7 +43,15 @@ Phase 3 UI for modifying shorten routes
 
 ## Running locally
 
-`./bin/pocketshorten servefrontend --config testfiles/.pocketshorten.json --loglevel=debug`
+1. Build using instructions above
+2. Start local executable
+   `./bin/pocketshorten servefrontend --config testfiles/.pocketshorten.json --loglevel=debug`
+3. View telemetry
+4. Run local load
+
+## Running locally in kind
+
+## Running in Kubernetes
 
 ## Backlog
 
