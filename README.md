@@ -15,9 +15,6 @@ MVP completed as of 0.0.8
 Cleanup
 
 - [ ] Update readme with pre-requs and full instructions
-- [ ] Add container security to pocketshorten
-- [ ] Add container security to tunnel
-- [ ] Add limits
 - [ ] complete dashboards
 
 ## Phase 3
@@ -32,15 +29,9 @@ Phase 1 Infra bringup: CI/CD in place
 Phase 2 MVP: Pocketshorten runs natively or in container, state from viper config, metrics and k8s manifests with best practices
 Phase 3 UI for modifying shorten routes
 
-## Backlog
+## Building
 
-- Distributed Throttling / rate limiting
-
----
-
-# Building
-
-## Install prerequisites
+### Install prerequisites
 
 1. golang 1.9x
 2. make
@@ -50,19 +41,32 @@ Phase 3 UI for modifying shorten routes
 6. TODO rest of items
 7. `precommit-installhooks`
 
-# Backlog
+## Running locally
+
+1. Build using instructions above
+2. Start local executable
+   `./bin/pocketshorten servefrontend --config testfiles/.pocketshorten.json --loglevel=debug`
+3. View telemetry
+4. Run local load
+
+## Running locally in kind
+
+## Running in Kubernetes
+
+## Backlog
 
 - Add vscode devcontaienr
 - complete openssf best practices
 - Add minimal viable covernance
+- Add container security to pocketshorten
+- Add container security to tunnel
+- Add limits
+- Distributed Throttling / rate limiting
 
-# Breating a new release
+# Creating a new release
 
 ```bash
 git tag -a v0.0.1 -m "helloinfra"
 git push origin v0.0.1
 gh release create
 ```
-
-Starting a url shortener locally:
-`./bin/pocketshorten servefrontend --config testfiles/.pocketshorten.json --loglevel=debug`
