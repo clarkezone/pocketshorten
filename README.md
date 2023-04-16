@@ -46,12 +46,25 @@ Phase 3 UI for modifying shorten routes
 1. Build using instructions above
 2. Start local executable
    `./bin/pocketshorten servefrontend --config testfiles/.pocketshorten.json --loglevel=debug`
-3. View telemetry
-4. Run local load
+3. View telemetry TODO
+4. Run local load TODO. TODO need a target that isn't exposing me
 
-## Running locally in kind
+## Running locally in Docker
 
-## Running in Kubernetes
+1. `docker run -it --rm -p 8090:8090 -p 8095:8095 -v ${PWD}/testfiles:/testfiles -e LOGLEVEL=debug registry.hub.docker.com/clarkezone/pocketshorten:main servefrontend --config /testfiles/pocketshorten.json`
+
+2. View telemetry TODO
+3. Run load
+
+## Running in Kubernetes with Cloudflare tunnel
+
+pre-requs:
+
+1. k8s cluster (eg k3s)
+2. Storage provider (eg longhorn)
+3. Prom stack (prometheus, grafana, loki)
+4. Cloudflare account
+5. Cloudflare API key
 
 ## Backlog
 
