@@ -74,10 +74,6 @@ EOF
 docker run --rm -d -p 8090:8090 -p 8095:8095 -v ${PWD}/testfiles:/testfiles -e LOGLEVEL=debug --name web nginx registry.hub.docker.com/clarkezone/pocketshorten:main servefrontend --config /testfiles/redirectTest.json
 ````
 
-1. View telemetry TODO
-2. Run load locally TODO
-3. Stop containers TODO
-
 ## Running in Kubernetes with Cloudflare tunnel
 
 pre-requs:
