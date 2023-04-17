@@ -56,23 +56,26 @@ a target for the redirect operation and then start an instance
 of pocketshorten running in docker.
 
 1. `docker run --rm -d -p 8080:80 --name web nginx`
-
 2. Create a test configuration file that sets up a redirect rule to
    point to above nginx server
 
-````bash
-cat <<EOF > testfiles/redirectTest.json
-{
-  "values": [
-    ["nginxlocal", "http://0.0.0.0:8080", "testgroup", "2023-01-02T15:04:05-0700"]
-  ]
-}
-EOF
+   ```bash
+   cat <<EOF > testfiles/redirectTest.json
+   {
+     "values": [
+       ["nginxlocal", "http://0.0.0.0:8080", "testgroup", "2023-01-02T15:04:05-0700"]
+     ]
+   }
+   EOF
+   ```
 
 3. Start pocketshorten in docker:
-```bash
-docker run --rm -d -p 8090:8090 -p 8095:8095 -v ${PWD}/testfiles:/testfiles -e LOGLEVEL=debug --name web nginx registry.hub.docker.com/clarkezone/pocketshorten:main servefrontend --config /testfiles/redirectTest.json
-````
+
+````bash
+docker run --rm -d -p 8090:8090 -p 8095:8095 -v ${PWD}/testfiles:/testfiles -e LOGLEVEL=debug --name web nginx registry.hub.docker.com/clarkezone/pocketshorten:main servefrontend --config /testfiles/redirectTest.json```
+* telemetry
+* run local load
+* delete containers
 
 ## Running in Kubernetes with Cloudflare tunnel
 
@@ -100,4 +103,4 @@ pre-requs:
 git tag -a v0.0.1 -m "helloinfra"
 git push origin v0.0.1
 gh release create
-```
+````
