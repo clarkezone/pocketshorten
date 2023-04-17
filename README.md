@@ -51,10 +51,29 @@ Phase 3 UI for modifying shorten routes
 
 ## Running locally in Docker
 
-1. `docker run -it --rm -p 8090:8090 -p 8095:8095 -v ${PWD}/testfiles:/testfiles -e LOGLEVEL=debug registry.hub.docker.com/clarkezone/pocketshorten:main servefrontend --config /testfiles/pocketshorten.json`
+Here you will start a nginx test webserver to act as
+a target for the redirect operation and then start an instance
+of pocketshorten running in docker.
 
-2. View telemetry TODO
-3. Run load
+1. `docker run --rm -d -p 8080:80 --name web nginx`
+
+2. Create a test configuration file that sets up a redirect rule to
+   point to above nginx server
+
+````bash
+cat <<EOF > testfiles/redirectTest.json
+{
+  "values": [
+    ["nginxlocal", "http://0.0.0.0:8080", "testgroup", "2023-01-02T15:04:05-0700"]
+  ]
+}
+EOF
+
+3. `docker run --rm -d -p 8090:8090 -p 8095:8095 -v ${PWD}/testfiles:/testfiles -e LOGLEVEL=debug --name web nginx registry.hub.docker.com/clarkezone/pocketshorten:main servefrontend --config /testfiles/redirectTest.json`
+
+4. View telemetry TODO
+4. Run load locally TODO
+5. Stop containers TODO
 
 ## Running in Kubernetes with Cloudflare tunnel
 
@@ -82,4 +101,4 @@ pre-requs:
 git tag -a v0.0.1 -m "helloinfra"
 git push origin v0.0.1
 gh release create
-```
+````
