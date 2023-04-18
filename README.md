@@ -74,9 +74,46 @@ of pocketshorten running in docker.
       docker run --rm -d -p 8090:8090 -p 8095:8095 -v ${PWD}/testfiles:/testfiles -e LOGLEVEL=debug --name web nginx registry.hub.docker.com/clarkezone/pocketshorten:main servefrontend --config /testfiles/redirectTest.json
    ```
 
-4. telemetry
-5. run local load
+4. Read telemetry endpoint and look at the lookup statistics
+
+   ```bash
+   curl -s localhost:8095 | grep pocketshorten_frontend_total_lookups{
+   ```
+
+5. Attempt to resolve the nginxlocal destination:
+
+   ```bash
+   curl localhost:8090/nginxlocal
+   <a href="http://0.0.0.0:8080">Moved Permanently</a>.
+
+   ```
+
+   You should see a http redirect instructions. If you tell curl to follow redirects you should see the output of the running nginx server returned
+
+   ```bash
+   curl -L loclhost:8090/nginxlocal
+
+   <!DOCTYPE html>
+   <html>
+   <head>
+   <title>Welcome to nginx!</title>
+   <style>
+   html { color-scheme: light dark; }
+   ...
+   ```
+
+   Repeating the telemetry query should now show the number of lookups at 2
+
+   ```bash
+   curl -s localhost:8095 | grep pocketshorten_frontend_total_lookups{
+   ```
+
 6. delete containers
+
+   ```bash
+   docker stop $(docker ps -q --filter name=nginx )
+   docker stop $(docker ps -q --filter name=pocketshorten )
+   ```
 
 ## Running in Kubernetes with Cloudflare tunnel
 
