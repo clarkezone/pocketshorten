@@ -121,9 +121,14 @@ pre-requs:
 
 1. k8s cluster (eg k3s)
 2. Storage provider (eg longhorn)
-3. Prom stack (prometheus, grafana, loki)
+3. Prom operator (prometheus, grafana, loki)
 4. Cloudflare account
 5. Cloudflare API key
+
+steps
+
+1. Cloudflare prep. Configure DNS in cloudflare, create tunnel, put values into config file
+2. TODO get other todos from craft
 
 ## Backlog
 
