@@ -12,5 +12,3 @@ cli
 bin/*
 coverage.txt
 dist
-
-config.yaml

@@ -121,9 +121,20 @@ pre-requs:
 
 1. k8s cluster (eg k3s)
 2. Storage provider (eg longhorn)
-3. Prom stack (prometheus, grafana, loki)
+3. Prom operator (prometheus, grafana, loki)
 4. Cloudflare account
 5. Cloudflare API key
+6. `cloudflared` cli installed
+
+From the cloudflared readme at github.com/cloudflare/cloudflared, add a website to Cloudflare, authenticate cloudflared with your Cloudflare account. The from the cloudflared cli on your devbox:
+
+1. run createtunnel.sh -tunelname -domain
+2. run applytunnel.sh
+
+steps
+
+1. Cloudflare prep. Configure DNS in cloudflare, create tunnel, put values into config file
+2. TODO get other todos from craft
 
 ## Backlog
 

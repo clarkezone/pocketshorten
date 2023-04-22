@@ -1,0 +1,22 @@
+namespace: nginxsimple
+resources:
+  - namespace.yaml
+  - deployment.yaml
+  - service.yaml
+  - html.yaml
+  - tunnel_deployment.yaml
+
+configMapGenerator:
+  - name: html3
+    files:
+      - configs/html3.html #this is raw file
+  - name: cloudflare-nginxsimplefile-configs
+    files:
+      - config/config.yaml
+secretGenerator:
+  - name: cloudflare-nginxsimplefile-cert
+    files:
+      - secrets/cert.pem
+  - name: cloudflare-nginxsimplefile-creds
+    files:
+      - secrets/TUNNEL_ID.json
