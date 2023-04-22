@@ -7,10 +7,6 @@ metadata:
 spec:
   ports:
     - port: 80
-      protocol: TCP
-      targetPort: 80
-      nodePort: 30958
   selector:
     app: nginx-helloworld
   sessionAffinity: None
-  type: NodePort
