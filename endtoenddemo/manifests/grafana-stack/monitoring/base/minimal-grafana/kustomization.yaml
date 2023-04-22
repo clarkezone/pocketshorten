@@ -1,0 +1,14 @@
+namespace: monitoring
+commonLabels:
+  app: grafana
+resources:
+  - grafana-deployment.yaml
+  - grafana-pvc.yaml
+  - grafana-service.yaml
+  - grafana-serviceaccount.yaml
+  - grafana-dashboardSources.yaml
+  - grafana-config.yaml
+secretGenerator:
+  - name: grafana-admin-user
+    envs:
+      - .env.adminuser
