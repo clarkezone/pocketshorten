@@ -6,5 +6,3 @@ resources:
   - minimal-prometheus
   - minimal-alertmanager
   - minimal-grafana
-  - servicemonitors
-  - alertingrules

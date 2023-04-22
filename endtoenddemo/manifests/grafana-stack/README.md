@@ -16,13 +16,13 @@ sed -i 's/namespace: default/namespace: monitoring/g' bundle.yaml
 
 # Apply bundle into monitoring namespace
 kubectl create namespace monitoring
-k apply -f bundle.yaml --force-conflicts=true --server-side
+kubectl apply -f bundle.yaml --force-conflicts=true --server-side
 ```
 
 ## Apply minimal Prometheus / Alertmanager / Grapha stack using prometheus operator
 
 ```bash
-k apply -k monitoring/overlays/production
+kubectl apply -k monitoring/overlays/production
 ```
 
 # Visit Grafana page
