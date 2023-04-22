@@ -7,6 +7,6 @@ metrics: 0.0.0.0:2000
 no-autoupdate: true
 ingress:
   - hostname: psdemotarget.clarkezone.dev
-    service: http://nginx-helloworld-service:80
+    service: http://nginx-helloworld:80
   # This rule matches any traffic which didn't match a previous rule, and responds with HTTP 404.
   - service: http_status:404
