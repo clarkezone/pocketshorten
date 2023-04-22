@@ -11,3 +11,4 @@ mkdir -p manifests/layered_viper_apply/overlay/prod/config
 mkdir -p manifests/layered_viper_apply/overlay/prod/secrets
 
 ./createtunnel.sh pocketshortene2edemo-tunnel-prod psdemo.clarkezone.dev manifests/layered_viper_apply/overlay/prod
+./createtunnel.sh pocketshortene2edemo-target-tunnel-prod psdemotarget.clarkezone.dev manifests/nginx_simplefile
