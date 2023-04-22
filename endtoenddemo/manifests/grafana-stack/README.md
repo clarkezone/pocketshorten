@@ -39,3 +39,9 @@ kubectl port-forward -n monitoring services/grafana-service 3000:3000 --address 
 helm unistall -n loki-stack loki
 kubectl delete namespace loki-stack
 ```
+
+## Remove monitoring stack
+
+```bash
+kubectl delete namespace monitoring
+```

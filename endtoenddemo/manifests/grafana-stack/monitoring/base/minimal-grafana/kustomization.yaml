@@ -6,6 +6,7 @@ resources:
   - grafana-pvc.yaml
   - grafana-service.yaml
   - grafana-serviceaccount.yaml
+  - grafana-dashboardDatasources.yaml
   - grafana-dashboardSources.yaml
   - grafana-config.yaml
 secretGenerator:

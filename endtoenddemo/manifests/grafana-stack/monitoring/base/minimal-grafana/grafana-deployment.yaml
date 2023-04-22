@@ -54,18 +54,6 @@ spec:
             - mountPath: /etc/grafana/provisioning/dashboards
               name: grafana-dashboards
               readOnly: false
-            - mountPath: /grafana-dashboard-definitions/0/traefik
-              name: dashboard-traefik
-              readOnly: false
-            - mountPath: /grafana-dashboard-definitions/0/lonhorn
-              name: dashboard-longhorn
-              readOnly: false
-            - mountPath: /grafana-dashboard-definitions/0/blog
-              name: dashboard-blog
-              readOnly: false
-            - mountPath: /grafana-dashboard-definitions/0/certmanager
-              name: dashboard-certmanager
-              readOnly: false
             - mountPath: /etc/grafana
               name: grafana-config
               readOnly: false
@@ -84,18 +72,6 @@ spec:
         - configMap:
             name: grafana-dashboards
           name: grafana-dashboards
-        - configMap:
-            name: dashboard-traefik
-          name: dashboard-traefik
-        - configMap:
-            name: dashboard-blog
-          name: dashboard-blog
-        - configMap:
-            name: dashboard-longhorn
-          name: dashboard-longhorn
-        - configMap:
-            name: dashboard-certmanager
-          name: dashboard-certmanager
         - name: grafana-config
           secret:
             secretName: grafana-config
