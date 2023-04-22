@@ -1,0 +1,20 @@
+resources:
+  - deployment.yaml
+  - service.yaml
+  - html.yaml
+  - tunnel_deployment.yaml
+
+configMapGenerator:
+  - name: html3
+    files:
+      - configs/html3.html #this is raw file
+  - name: cloudflare-pocketshorten-configs
+    files:
+      - config/config.yaml
+secretGenerator:
+  - name: cloudflare-pocketshorten-cert
+    files:
+      - secrets/cert.pem
+  - name: cloudflare-pocketshorten-creds
+    files:
+      - secrets/8218e746-a6f2-4866-a6c3-4656603331bc.json

@@ -124,6 +124,12 @@ pre-requs:
 3. Prom operator (prometheus, grafana, loki)
 4. Cloudflare account
 5. Cloudflare API key
+6. `cloudflared` cli installed
+
+From the cloudflared readme at github.com/cloudflare/cloudflared, add a website to Cloudflare, authenticate cloudflared with your Cloudflare account. The from the cloudflared cli on your devbox:
+
+1. run createtunnel.sh -tunelname -domain
+2. run applytunnel.sh
 
 steps
 
