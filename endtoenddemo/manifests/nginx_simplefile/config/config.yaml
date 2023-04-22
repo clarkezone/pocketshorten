@@ -1,0 +1,12 @@
+# See the createtunnel.sh script in endtoenddemo in the root of this repo for how this needs to be populated
+tunnel: pocketshortene2edemo-target-tunnel-prod
+# must be in creds sub directory:
+credentials-file: /etc/cloudflared/creds/f426d106-a06a-4b13-ab24-8558e73ec4a3.json
+
+metrics: 0.0.0.0:2000
+no-autoupdate: true
+ingress:
+  - hostname: psdemotarget.clarkezone.dev
+    service: http://nginx-helloworld-service:80
+  # This rule matches any traffic which didn't match a previous rule, and responds with HTTP 404.
+  - service: http_status:404
