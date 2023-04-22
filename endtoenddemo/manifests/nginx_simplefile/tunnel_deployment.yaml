@@ -57,19 +57,7 @@ spec:
                     operator: In
                     values:
                       - nginxsimplefile-tunnel
-              topologyKey:
-                "kubernetes.io/hostname"
-                #        podAntiAffinity:
-                #          preferredDuringSchedulingIgnoredDuringExecution:
-                #          - weight: 100
-                #            podAffinityTerm:
-                #              labelSelector:
-                #                matchExpressions:
-                #                  - key: app
-                #                    operator: In
-                #                    values:
-                #                      - pocketshorten-tunnel
-                #              topologyKey: "kubernetes.io/hostname"
+              topologyKey: "kubernetes.io/hostname"
       volumes:
         - name: tunnel-cert-volume
           secret:

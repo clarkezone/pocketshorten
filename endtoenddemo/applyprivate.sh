@@ -2,13 +2,19 @@
 set -e
 cue vet pocketshorten.json ../testfiles/schema.cue
 
-rm -rf manifest/layered_viper_apply
-mkdir -p manifests/layered_viper_apply
-cp -r ../k8s/layered_viper/* manifests/layered_viper_apply/.
-cp pocketshorten.json manifests/layered_viper_apply/base/.
+rm -rf manifest/apply/layered_viper_apply
+rm -rf manifest/apply/nginx_simplefile
 
-mkdir -p manifests/layered_viper_apply/overlay/prod/config
-mkdir -p manifests/layered_viper_apply/overlay/prod/secrets
+mkdir -p manifests/apply/layered_viper_apply
+cp -r ../k8s/layered_viper/* manifests/apply/layered_viper_apply/.
+cp pocketshorten.json manifests/apply/layered_viper_apply/base/.
 
-./createtunnel.sh pocketshortene2edemo-tunnel-prod psdemo.clarkezone.dev manifests/layered_viper_apply/overlay/prod
-./createtunnel.sh pocketshortene2edemo-target-tunnel-prod psdemotarget.clarkezone.dev manifests/nginx_simplefile
+mkdir -p manifests/apply/layered_viper_apply/overlay/prod/config
+mkdir -p manifests/apply/layered_viper_apply/overlay/prod/secrets
+
+./createtunnel.sh pocketshortene2edemo-tunnel-prod psdemo.clarkezone.dev manifests/apply/layered_viper_apply/overlay/prod
+
+# For the nginx test target deployment
+mkdir -p manifests/apply/nginx_simplefile_apply
+cp -r manifests/nginx_simplefile/* manifests/apply/nginx_simplefile_apply
+./createtunnel.sh pocketshortene2edemo-target-tunnel-prod psdemotarget.clarkezone.dev manifests/apply/nginx_simplefile_apply
