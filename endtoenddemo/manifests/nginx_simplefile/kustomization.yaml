@@ -1,4 +1,6 @@
+namespace: nginxsimple
 resources:
+  - namespace.yaml
   - deployment.yaml
   - service.yaml
   - html.yaml
@@ -8,13 +10,13 @@ configMapGenerator:
   - name: html3
     files:
       - configs/html3.html #this is raw file
-  - name: cloudflare-pocketshorten-configs
+  - name: cloudflare-nginxsimplefile-configs
     files:
       - config/config.yaml
 secretGenerator:
-  - name: cloudflare-pocketshorten-cert
+  - name: cloudflare-nginxsimplefile-cert
     files:
       - secrets/cert.pem
-  - name: cloudflare-pocketshorten-creds
+  - name: cloudflare-nginxsimplefile-creds
     files:
-      - secrets/8218e746-a6f2-4866-a6c3-4656603331bc.json
+      - secrets/TUNNEL_ID.json

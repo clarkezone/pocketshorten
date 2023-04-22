@@ -6,12 +6,12 @@ metadata:
 spec:
   selector:
     matchLabels:
-      app: pocketshorten-tunnel
+      app: nginxsimplefile-tunnel
   replicas: 3 # You could also consider elastic scaling for this deployment
   template:
     metadata:
       labels:
-        app: pocketshorten-tunnel
+        app: nginxsimplefile-tunnel
     spec:
       containers:
         - name: cloudflared
@@ -56,7 +56,7 @@ spec:
                   - key: app
                     operator: In
                     values:
-                      - pocketshorten-tunnel
+                      - nginxsimplefile-tunnel
               topologyKey:
                 "kubernetes.io/hostname"
                 #        podAntiAffinity:
@@ -73,10 +73,10 @@ spec:
       volumes:
         - name: tunnel-cert-volume
           secret:
-            secretName: cloudflare-pocketshorten-cert
+            secretName: cloudflare-nginxsimplefile-cert
         - name: tunnel-creds-volume
           secret:
-            secretName: cloudflare-pocketshorten-creds
+            secretName: cloudflare-nginxsimplefile-creds
         - name: tunnel-config
           configMap:
-            name: cloudflare-pocketshorten-configs
+            name: cloudflare-nginxsimplefile-configs
