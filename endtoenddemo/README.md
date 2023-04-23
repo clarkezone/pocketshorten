@@ -20,12 +20,19 @@
 
 ## Run load
 
-1. k6 run endpoint_prod_variable.js
+1. k6 run endpoint_prod_variable.js (switch k9s to nodes)
 
 Todo:
 
-1. fix k6 success
-2. Add two more pages to nginx site and make load test randomly pick those
+1. Add two more pages to nginx site and make load test randomly pick those
+2. break out cloudflare tunnel into this readme / separate script
 3. Is there a way of showing peek r/s in last hour?
 4. tidy up this readme with bash
-5. talk through grafana cloud steps
+
+Grafana cloud scenario
+
+1. walk through grafana cloud steps
+
+Azure Kubernetes Service scenario
+
+1. walk through the steps
