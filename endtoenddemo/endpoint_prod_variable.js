@@ -15,10 +15,14 @@ function testSuccess() {
   const sourceUrls = [
     "https://psdemo.clarkezone.dev/tsh",
     "https://psdemo.clarkezone.dev/lol",
+    "https://psdemo.clarkezone.dev/m2",
+    "https://psdemo.clarkezone.dev/m3",
   ];
   const targetUrls = [
     "https://psdemotarget.clarkezone.dev/",
-    "https://psdemotarget.clarkezone.dev/html1.html",
+    "https://psdemotarget.clarkezone.dev/meme1.html",
+    "https://psdemotarget.clarkezone.dev/meme2.html",
+    "https://psdemotarget.clarkezone.dev/meme3.html",
   ];
   const randomIndex = Math.floor(Math.random() * sourceUrls.length);
   const url = sourceUrls[randomIndex];

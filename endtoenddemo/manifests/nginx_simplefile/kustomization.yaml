@@ -8,9 +8,9 @@ resources:
 configMapGenerator:
   - name: html3
     files:
-      - nginxconfig/html3.html #this is raw file
-      - nginxconfig/html2.html #this is raw file
-      - nginxconfig/html1.html #this is raw file
+      - nginxconfig/meme3.html #this is raw file
+      - nginxconfig/meme2.html #this is raw file
+      - nginxconfig/meme1.html #this is raw file
       - nginxconfig/index.html #this is raw file
       - nginxconfig/cheezburger.jpg
   - name: cloudflare-nginxsimplefile-configs
