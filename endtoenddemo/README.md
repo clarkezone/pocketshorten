@@ -9,7 +9,6 @@
 5. A kubernetes cluster
 6. Default storageclass configured (eg Longhorn)
 7. A cloudflare account and domain
-8.
 
 ## Install
 
@@ -37,7 +36,7 @@ Todo:
 
 1. Add two more pages to nginx site and [DONE]
 2. make load test randomly pick those
-3. break out cloudflare tunnel into this readme / separate script
+3. break out cloudflare tunnel into this readme / separate script [DONE]
 4. Is there a way of showing peek r/s in last hour?
 5. tidy up this readme with bash
 

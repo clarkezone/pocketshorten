@@ -3,7 +3,7 @@ import { check, sleep } from "k6";
 
 export let options = {
   stages: [
-    { duration: "100s", target: 10 },
+    { duration: "10s", target: 10 },
     //   { duration: "5s", target: 100 },
     //   { duration: "20s", target: 200 },
     //   { duration: "100s", target: 200 },
@@ -12,12 +12,22 @@ export let options = {
 };
 
 function testSuccess() {
-  let res = http.get("https://psdemo.clarkezone.dev/tsh");
-  //  console.log(res.url);
+  const sourceUrls = [
+    "https://psdemo.clarkezone.dev/tsh",
+    "https://psdemo.clarkezone.dev/lol",
+  ];
+  const targetUrls = [
+    "https://psdemotarget.clarkezone.dev/",
+    "https://psdemotarget.clarkezone.dev/html1.html",
+  ];
+  const randomIndex = Math.floor(Math.random() * sourceUrls.length);
+  const url = sourceUrls[randomIndex];
+
+  let res = http.get(url);
+  console.log(res.url + targetUrls[randomIndex] + res.status);
   check(res, {
     "status was 200": (r) => r.status === 200,
-    "redirected correctly": (r) =>
-      r.url === "https://psdemotarget.clarkezone.dev/",
+    "redirected correctly": (r) => r.url === targetUrls[randomIndex],
   });
 }
 
