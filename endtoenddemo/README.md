@@ -2,13 +2,22 @@
 
 ## Prerequisites
 
-1. helm
-2. kubectl
-3. cue
-4. cloudflared
-5. A kubernetes cluster
-6. Default storageclass configured (eg Longhorn)
-7. A cloudflare account and domain
+### Environment
+
+In order to follow along you'll need the following:
+
+1. A Kubernetes cluster
+2. Default storageclass configured (eg Longhorn)
+3. A cloudflare account and domain
+
+### Tools
+
+Ensure the following tools are installed:
+
+1. `helm`
+2. `kubectl`
+3. `cue`
+4. `cloudflared`
 
 ## Deploy monitoring
 
@@ -16,7 +25,9 @@
 
 ## Deploy test target site to cluster
 
-1. Run following commands to prepare and deploy a test website onto the cluster
+Ensure that the `cloudflared` cli is logged in.
+
+1. Run following commands to prepare and deploy a nginx test website onto the cluster to use as a target of URL shortening:
 
    ```bash
    # copy manifests for a test website which will be the target of shorten operations
@@ -91,14 +102,10 @@ Deploy the url shortener application to the cluster. Use the following configura
    k6 run endpoint_prod_variable.js (switch k9s to nodes)
    ```
 
-Todo:
-
-1. Is there a way of showing peek r/s in last hour?
-
-Grafana cloud scenario
+## Grafana cloud scenario
 
 1. walk through grafana cloud steps
 
-Azure Kubernetes Service scenario
+## Azure Kubernetes Service scenario
 
 1. walk through the steps

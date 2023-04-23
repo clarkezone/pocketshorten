@@ -4,10 +4,10 @@ import { check, sleep } from "k6";
 export let options = {
   stages: [
     { duration: "10s", target: 10 },
-    //   { duration: "5s", target: 100 },
-    //   { duration: "20s", target: 200 },
-    //   { duration: "100s", target: 200 },
-    //   { duration: "500s", target: 10 },
+    { duration: "5s", target: 100 },
+    { duration: "20s", target: 200 },
+    { duration: "100s", target: 200 },
+    { duration: "500s", target: 10 },
   ],
 };
 
@@ -28,7 +28,7 @@ function testSuccess() {
   const url = sourceUrls[randomIndex];
 
   let res = http.get(url);
-  console.log(res.url + targetUrls[randomIndex] + res.status);
+  // console.log(res.url + targetUrls[randomIndex] + res.status);
   check(res, {
     "status was 200": (r) => r.status === 200,
     "redirected correctly": (r) => r.url === targetUrls[randomIndex],
