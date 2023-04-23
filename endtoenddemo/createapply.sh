@@ -11,9 +11,6 @@ cp pocketshorten.json manifests/apply/pocketshorten_apply/base/.
 mkdir -p manifests/apply/pocketshorten_apply/overlay/prod/tunnelconfig
 mkdir -p manifests/apply/pocketshorten_apply/overlay/prod/tunnelsecrets
 
-./createtunnel.sh pocketshortene2edemo-tunnel-prod psdemo.clarkezone.dev manifests/apply/pocketshorten_apply/overlay/prod
-
 # For the nginx test target deployment
 mkdir -p manifests/apply/nginx_simplefile_apply
 cp -r manifests/nginx_simplefile/* manifests/apply/nginx_simplefile_apply
-./createtunnel.sh pocketshortene2edemo-target-tunnel-prod psdemotarget.clarkezone.dev manifests/apply/nginx_simplefile_apply

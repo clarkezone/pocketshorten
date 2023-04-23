@@ -14,9 +14,20 @@
 ## Install
 
 1. Install monitoring stack todo link
-2. ./createapply.sh
-3. kubectl apply -k manifests/apply/pocketshorten_apply/overlay/prod
-4. kubectl apply -k manifests/apply/nginx_simplefile_apply
+2. Run `createapply.sh` script to copy and update manifests ready for deployment, ensure tunnels created for `nginx` and `pocketshorten`
+
+   ```bash
+   ./createapply.sh
+   ./createtunnel.sh pocketshortene2edemo-tunnel-prod psdemo.clarkezone.dev manifests/apply/pocketshorten_apply/overlay/prod
+   ./createtunnel.sh pocketshortene2edemo-target-tunnel-prod psdemotarget.clarkezone.dev manifests/apply/nginx_simplefile_apply
+   ```
+
+3. Apply the prepared manifests:
+
+   ```bash
+   kubectl apply -k manifests/apply/pocketshorten_apply/overlay/prod
+   kubectl apply -k manifests/apply/nginx_simplefile_apply
+   ```
 
 ## Run load
 
@@ -24,10 +35,11 @@
 
 Todo:
 
-1. Add two more pages to nginx site and make load test randomly pick those
-2. break out cloudflare tunnel into this readme / separate script
-3. Is there a way of showing peek r/s in last hour?
-4. tidy up this readme with bash
+1. Add two more pages to nginx site and [DONE]
+2. make load test randomly pick those
+3. break out cloudflare tunnel into this readme / separate script
+4. Is there a way of showing peek r/s in last hour?
+5. tidy up this readme with bash
 
 Grafana cloud scenario
 
