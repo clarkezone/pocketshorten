@@ -3,20 +3,23 @@ resources:
   - namespace.yaml
   - deployment.yaml
   - service.yaml
-  - html.yaml
   - tunnel_deployment.yaml
 
 configMapGenerator:
   - name: html3
     files:
-      - configs/html3.html #this is raw file
+      - nginxconfig/meme3.html #this is raw file
+      - nginxconfig/meme2.html #this is raw file
+      - nginxconfig/meme1.html #this is raw file
+      - nginxconfig/index.html #this is raw file
+      - nginxconfig/cheezburger.jpg
   - name: cloudflare-nginxsimplefile-configs
     files:
-      - config/config.yaml
+      - tunnelconfig/config.yaml
 secretGenerator:
   - name: cloudflare-nginxsimplefile-cert
     files:
-      - secrets/cert.pem
+      - tunnelsecrets/cert.pem
   - name: cloudflare-nginxsimplefile-creds
     files:
       - secrets/TUNNEL_ID.json

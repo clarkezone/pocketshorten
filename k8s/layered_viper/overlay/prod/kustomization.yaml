@@ -16,11 +16,11 @@ resources:
 secretGenerator:
   - name: cloudflare-pocketshorten-cert
     files:
-      - secrets/cert.pem
+      - tunnelsecrets/cert.pem
   - name: cloudflare-pocketshorten-creds
     files:
-      - secrets/TUNNEL_ID.json
+      - tunnelsecrets/TUNNEL_ID.json
 configMapGenerator:
   - name: cloudflare-pocketshorten-configs
     files:
-      - config/config.yaml
+      - tunnelconfig/config.yaml

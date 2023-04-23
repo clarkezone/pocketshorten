@@ -1,0 +1,8 @@
+namespace: monitoring
+commonLabels:
+  app: prometheus-instance
+resources:
+  - prom-clusterrole.yaml
+  - prom-clusterrolebinding.yaml
+  - prom-instance.yaml
+  - prom-serviceaccount.yaml

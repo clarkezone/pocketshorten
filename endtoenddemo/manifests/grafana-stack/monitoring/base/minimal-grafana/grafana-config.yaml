@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  labels:
+    app.kubernetes.io/component: grafana
+    app.kubernetes.io/name: grafana
+  name: grafana-config
+  namespace: monitoring
+stringData:
+  grafana.ini: |
+    [date_formats]
+    default_timezone = UTC
+    [auth]
+    disable_login_form = false
+    [auth.anonymous]
+    enabled = false
+    org_name = Clarkezone
+    org_role = Editor
+    [auth.basic]
+    enabled = true
+type: Opaque

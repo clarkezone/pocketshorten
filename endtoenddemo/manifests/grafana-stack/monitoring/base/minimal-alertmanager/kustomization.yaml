@@ -1,0 +1,6 @@
+namespace: monitoring
+commonLabels:
+  app: alertmanager
+resources:
+  - alertmanager-serviceAccount.yaml
+  - alertmanager-alertmanager.yaml
