@@ -8,8 +8,8 @@ mkdir -p manifests/apply/pocketshorten_apply
 cp -r ../k8s/layered_viper/* manifests/apply/pocketshorten_apply/.
 cp pocketshorten.json manifests/apply/pocketshorten_apply/base/.
 
-mkdir -p manifests/apply/pocketshorten_apply/overlay/prod/config
-mkdir -p manifests/apply/pocketshorten_apply/overlay/prod/secrets
+mkdir -p manifests/apply/pocketshorten_apply/overlay/prod/tunnelconfig
+mkdir -p manifests/apply/pocketshorten_apply/overlay/prod/tunnelsecrets
 
 ./createtunnel.sh pocketshortene2edemo-tunnel-prod psdemo.clarkezone.dev manifests/apply/pocketshorten_apply/overlay/prod
 
