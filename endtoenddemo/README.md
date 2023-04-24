@@ -2,48 +2,114 @@
 
 ## Prerequisites
 
-1. helm
-2. kubectl
-3. cue
-4. cloudflared
-5. A kubernetes cluster
-6. Default storageclass configured (eg Longhorn)
-7. A cloudflare account and domain
+### Environment
 
-## Install
+In order to follow along you'll need the following:
 
-1. Install monitoring stack todo link
-2. Run `createapply.sh` script to copy and update manifests ready for deployment, ensure tunnels created for `nginx` and `pocketshorten`
+1. A Kubernetes cluster
+2. Default storageclass configured (eg Longhorn)
+3. A cloudflare account and domain
+
+### Tools
+
+Ensure the following tools are installed:
+
+1. `helm`
+2. `kubectl`
+3. `cue`
+4. `cloudflared`
+
+## Deploy monitoring
+
+1. (Optional) to install a graphana stack on the cluster, go [here](https://github.com/clarkezone/pocketshorten/tree/main/endtoenddemo/manifests/grafana-stack)
+
+## Deploy test target site to cluster
+
+Ensure that the `cloudflared` cli is logged in by typing `cloudflared tunnel list`
+
+1. Run following commands to prepare and deploy a nginx test website onto the cluster to use as a target of URL shortening:
 
    ```bash
-   ./createapply.sh
-   ./createtunnel.sh pocketshortene2edemo-tunnel-prod psdemo.clarkezone.dev manifests/apply/pocketshorten_apply/overlay/prod
+   # copy manifests for a test website which will be the target of shorten operations
+   ./createapplytestsite.sh
+
+   # ensure cloudflare tunnel is created, update the manifests with secrets and tunnel identifiers
    ./createtunnel.sh pocketshortene2edemo-target-tunnel-prod psdemotarget.clarkezone.dev manifests/apply/nginx_simplefile_apply
-   ```
 
-3. Apply the prepared manifests:
-
-   ```bash
-   kubectl apply -k manifests/apply/pocketshorten_apply/overlay/prod
+   # apply prepared manifests to cluster
    kubectl apply -k manifests/apply/nginx_simplefile_apply
    ```
 
+2. Verify that the site is up by visiting [https://psdemotarget.clarkezone.dev](https://psdemotarget.clarkezone.dev)
+
+3. To instpect the manifests as applied to the cluster use `kubectl kustomize manifests/apply/nginx_simplefile_apply`
+
+## Deploy pocketshorten to cluster
+
+Deploy the url shortener application to the cluster. Use the following configuration file to set up a couple of shortcut routes that point to the test website from 1. above.
+
+```json
+{
+  "values": [
+    [
+      "tsh", # short link
+      "https://psdemotarget.clarkezone.dev/", # target url
+      "group",
+      "2023-04-22T15:04:05-0700"
+    ],
+    [
+      "lol", # short link
+      "https://psdemotarget.clarkezone.dev/meme1.html", # target url
+      "group",
+      "2023-04-22T15:04:05-0700"
+    ],
+    [
+      "m2",
+      "https://psdemotarget.clarkezone.dev/meme2.html",
+      "group",
+      "2023-04-22T15:04:05-0700"
+    ],
+    [
+      "m3",
+      "https://psdemotarget.clarkezone.dev/meme3.html",
+      "group",
+      "2023-04-22T15:04:05-0700"
+    ],
+    ["tm", "https://techmeme.com", "sites", "2023-04-22T15:04:05-0700"],
+    ["hn", "https://news.ycombinator.com", "sites", "2023-04-22T15:04:05-0700"]
+  ]
+}
+```
+
+1. To perform deployment, run the following commands:
+
+   ```bash
+   # copy pocketshorten manifests to apply directory, copy config files for test deployment
+   ./createapplypocketshorten.sh
+
+   # ensure cloudflare tunnel is created for url shortener application, update the manifests with secrets and tunnel identifiers
+   ./createtunnel.sh pocketshortene2edemo-tunnel-prod psdemo.clarkezone.dev manifests/apply/pocketshorten_apply/overlay/prod
+
+   # Apply the preparted manifests
+   kubectl apply -k manifests/apply/pocketshorten_apply/overlay/prod
+   ```
+
+2. Verify shortener is working by visiting [https://psdemo.clarkezone.dev]
+
+3. To instpect the manifests as applied to the cluster use `kubectl kustomize manifests/apply/pocketshorten_apply/overlay/prod`
+
 ## Run load
 
-1. k6 run endpoint_prod_variable.js (switch k9s to nodes)
+1. Run load on local dev machine.
 
-Todo:
+   ```bash
+   k6 run endpoint_prod_variable.js (switch k9s to nodes)
+   ```
 
-1. Add two more pages to nginx site and [DONE]
-2. make load test randomly pick those
-3. break out cloudflare tunnel into this readme / separate script [DONE]
-4. Is there a way of showing peek r/s in last hour?
-5. tidy up this readme with bash
-
-Grafana cloud scenario
+## Grafana cloud scenario
 
 1. walk through grafana cloud steps
 
-Azure Kubernetes Service scenario
+## Azure Kubernetes Service scenario
 
 1. walk through the steps

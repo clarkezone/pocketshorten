@@ -12,6 +12,7 @@
 
 MVP completed as of 0.0.8
 
+[End-to-end demo](https://github.com/clarkezone/pocketshorten/tree/main/endtoenddemo)
 Cleanup
 
 - [ ] Update readme with pre-requs and full instructions

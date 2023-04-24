@@ -25,12 +25,6 @@
       "2023-04-22T15:04:05-0700"
     ],
     ["tm", "https://techmeme.com", "sites", "2023-04-22T15:04:05-0700"],
-    [
-      "bp",
-      "https://blog-preview.clarkezone.dev",
-      "personal",
-      "2023-04-22T15:04:05-0700"
-    ],
     ["hn", "https://news.ycombinator.com", "sites", "2023-04-22T15:04:05-0700"]
   ]
 }
