@@ -25,7 +25,7 @@ Ensure the following tools are installed:
 
 ## Deploy test target site to cluster
 
-Ensure that the `cloudflared` cli is logged in.
+Ensure that the `cloudflared` cli is logged in by typing `cloudflared tunnel list`
 
 1. Run following commands to prepare and deploy a nginx test website onto the cluster to use as a target of URL shortening:
 
