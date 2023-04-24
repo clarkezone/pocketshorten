@@ -42,6 +42,8 @@ Ensure that the `cloudflared` cli is logged in by typing `cloudflared tunnel lis
 
 2. Verify that the site is up by visiting [https://psdemotarget.clarkezone.dev](https://psdemotarget.clarkezone.dev)
 
+3. To instpect the manifests as applied to the cluster use `kubectl kustomize manifests/apply/nginx_simplefile_apply`
+
 ## Deploy pocketshorten to cluster
 
 Deploy the url shortener application to the cluster. Use the following configuration file to set up a couple of shortcut routes that point to the test website from 1. above.
@@ -93,6 +95,8 @@ Deploy the url shortener application to the cluster. Use the following configura
    ```
 
 2. Verify shortener is working by visiting [https://psdemo.clarkezone.dev]
+
+3. To instpect the manifests as applied to the cluster use `kubectl kustomize manifests/apply/pocketshorten_apply/overlay/prod`
 
 ## Run load
 
