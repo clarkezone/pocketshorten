@@ -106,9 +106,51 @@ Deploy the url shortener application to the cluster. Use the following configura
    k6 run endpoint_prod_variable.js (switch k9s to nodes)
    ```
 
+2. View alerts. Todo port forward alert manager
+
 ## Grafana cloud scenario
 
-1. walk through grafana cloud steps
+### Install grafana cloud stack
+
+1. uninstall the local observability stack:
+
+   ```bash
+   kubectl delete namespace monitoring
+   kubectl delete namespace loki-stack
+   ```
+
+2. Create a new Grafana cloud account
+3. Connect Data
+4. Start sending data
+5. scroll down and click agent operator
+6. ensure cluster is named and namespace is grafanacloud
+7. open `installgrafanacloud.sh` and replace `#TODO: insert config from dashboard` with the config
+8. IMPORTANT! Update `serviceMonitorSelector` and `podMonitorSelector` with {}
+9. Run `installgrafanacloud.sh`
+
+Browse through pages of K8s default dashboards
+Look at logs
+
+### Run cloud load using k6 in cloud mode
+
+1. Import pocketshorten dashboard
+2. Goto load tab in browser, get login command
+3. Run load `k6 cloud endpoint_prod_variable.js`
+4. open load test in browser, click on running
+
+### Add an alerting rule
+
+1. From hamburger, go to alerts
+2. Click on create new rule
+3. click on Code and paste `sum(rate(pocketshorten_frontend_totalops[5m]))`
+4. Click preview to see the graph is alerting
+
+Uninstall:
+
+```bash
+helm uninstall operator -n grafanacloud
+kubectl delete namespace grafanacloud
+```
 
 ## Azure Kubernetes Service scenario
 
