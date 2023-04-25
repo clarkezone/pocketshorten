@@ -8,9 +8,9 @@ resources:
 configMapGenerator:
   - name: html3
     files:
-      - nginxconfig/meme3.html #this is raw file
-      - nginxconfig/meme2.html #this is raw file
-      - nginxconfig/meme1.html #this is raw file
+      - nginxconfig/grumpycat-meme-page.html #this is raw file
+      - nginxconfig/gangnamstyle-meme-page.html #this is raw file
+      - nginxconfig/canihascheezburger-meme-page.html #this is raw file
       - nginxconfig/index.html #this is raw file
       - nginxconfig/cheezburger.jpg
       - nginxconfig/gangnamstyle.jpg

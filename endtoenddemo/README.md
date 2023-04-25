@@ -52,26 +52,26 @@ Deploy the url shortener application to the cluster. Use the following configura
 {
   "values": [
     [
-      "tsh", # short link
-      "https://psdemotarget.clarkezone.dev/", # target url
+      "tsh",
+      "https://psdemotarget.clarkezone.dev/",
       "group",
       "2023-04-22T15:04:05-0700"
     ],
     [
-      "lol", # short link
-      "https://psdemotarget.clarkezone.dev/meme1.html", # target url
+      "lol",
+      "https://psdemotarget.clarkezone.dev/canihascheezburger-meme-page.html",
       "group",
       "2023-04-22T15:04:05-0700"
     ],
     [
-      "m2",
-      "https://psdemotarget.clarkezone.dev/meme2.html",
+      "gc",
+      "https://psdemotarget.clarkezone.dev/grumpycat-meme-page.html",
       "group",
       "2023-04-22T15:04:05-0700"
     ],
     [
-      "m3",
-      "https://psdemotarget.clarkezone.dev/meme3.html",
+      "gns",
+      "https://psdemotarget.clarkezone.dev/gangnamstyle-meme-page.html",
       "group",
       "2023-04-22T15:04:05-0700"
     ],
@@ -108,6 +108,8 @@ Deploy the url shortener application to the cluster. Use the following configura
 
 2. View alerts. Todo port forward alert manager
 
+3. View alerts. Todo port forward alert manager
+
 ## Grafana cloud scenario
 
 ### Install grafana cloud stack
@@ -123,8 +125,8 @@ Deploy the url shortener application to the cluster. Use the following configura
 3. Connect Data
 4. Start sending data
 5. scroll down and click agent operator
-6. ensure cluster is named and namespace is grafanacloud
-7. open `installgrafanacloud.sh` and replace `#TODO: insert config from dashboard` with the config
+6. ensure cluster is named `rapi-c4` and namespace is `grafanacloud`
+7. open `installgrafanacloud.sh` in VSCODE (to paste from host) and replace `#TODO: insert config from dashboard` with the config
 8. IMPORTANT! Update `serviceMonitorSelector` and `podMonitorSelector` with {}
 9. Run `installgrafanacloud.sh`
 
@@ -154,4 +156,60 @@ kubectl delete namespace grafanacloud
 
 ## Azure Kubernetes Service scenario
 
-1. walk through the steps
+### Create cluster and retrieve credentials
+
+```bash
+# Login to Azure
+az login
+
+# ensure that the correct subscription is selected
+az account show
+
+# create AKS cluster
+az group create -n shortenaks-rg --location westus
+az aks create -g shortenaks-rg -n shortencluster --generate-ssh-keys
+az aks get-credentials --admin --name shortencluster --resource-group shortenaks-rg
+
+# Get Kube Config
+az aks get-credentials --admin --name shortencluster --resource-group shortenaks-rg
+```
+
+### Install Grafana Cloud observability
+
+1. open installgrafanacloud.sh in vscode
+2. Replace rapi-c4
+3. `./installgrafanacloud.sh`
+
+### Install Pocketshorten
+
+```bash
+   kubectl apply -k manifests/apply/pocketshorten_apply/overlay/prod
+```
+
+### Uninstall
+
+```bash
+helm uninstall operator -n grafanacloud
+kubectl delete namespace grafanacloud
+kubectl delete namespace pocketshorten
+```
+
+### Reset
+
+```bash
+helm uninstall operator -n grafanacloud
+kubectl delete namespace grafanacloud
+kubectl delete namespace pocketshorten
+# DELETE AKS CLUSTER!
+
+k config use-context rapi-c4
+helm uninstall operator -n grafanacloud
+kubectl delete namespace grafanacloud
+kubectl delete namespace pocketshorten
+kubectl delete namespace nginxsimple
+
+az account show
+
+```
+
+Delete stacks from: `https://grafana.com/orgs/jeclarke`
