@@ -52,26 +52,26 @@ Deploy the url shortener application to the cluster. Use the following configura
 {
   "values": [
     [
-      "tsh", # short link
-      "https://psdemotarget.clarkezone.dev/", # target url
+      "tsh",
+      "https://psdemotarget.clarkezone.dev/",
       "group",
       "2023-04-22T15:04:05-0700"
     ],
     [
-      "lol", # short link
-      "https://psdemotarget.clarkezone.dev/meme1.html", # target url
+      "lol",
+      "https://psdemotarget.clarkezone.dev/canihascheezburger-meme-page.html",
       "group",
       "2023-04-22T15:04:05-0700"
     ],
     [
-      "m2",
-      "https://psdemotarget.clarkezone.dev/meme2.html",
+      "gc",
+      "https://psdemotarget.clarkezone.dev/grumpycat-meme-page.html",
       "group",
       "2023-04-22T15:04:05-0700"
     ],
     [
-      "m3",
-      "https://psdemotarget.clarkezone.dev/meme3.html",
+      "gns",
+      "https://psdemotarget.clarkezone.dev/gangnamstyle-meme-page.html",
       "group",
       "2023-04-22T15:04:05-0700"
     ],
