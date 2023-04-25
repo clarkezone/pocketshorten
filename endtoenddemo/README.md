@@ -108,6 +108,8 @@ Deploy the url shortener application to the cluster. Use the following configura
 
 2. View alerts. Todo port forward alert manager
 
+3. View alerts. Todo port forward alert manager
+
 ## Grafana cloud scenario
 
 ### Install grafana cloud stack
