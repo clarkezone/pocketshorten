@@ -100,13 +100,19 @@ Deploy the url shortener application to the cluster. Use the following configura
 
 ## Run load
 
+1. Start port forward for grafana dashboard:
+
+   ```bash
+   kubectl port-forward -n monitoring services/grafana-service 3000:3000 --address 0.0.0.0
+   ```
+
 1. Run load on local dev machine.
 
    ```bash
    k6 run endpoint_prod_variable.js
    ```
 
-2. Import dashboard and view traffic
+1. Import dashboard and view traffic
 
 ## Grafana cloud scenario
 
