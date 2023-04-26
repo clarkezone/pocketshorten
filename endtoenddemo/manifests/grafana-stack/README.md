@@ -21,14 +21,17 @@ kubectl apply -f bundle.yaml --force-conflicts=true --server-side
 
 ## Apply minimal Prometheus / Alertmanager / Grapha stack using prometheus operator
 
-````bash
+```bash
 kubectl apply -k manifests/grafana-stack/monitoring/overlay/production
+```
 
 # Visit Grafana page
 
 ```bash
 kubectl port-forward -n monitoring services/grafana-service 3000:3000 --address 0.0.0.0
-````
+```
+
+Point browser at `http://localhost:3000`
 
 # Remove monitoring stack
 
