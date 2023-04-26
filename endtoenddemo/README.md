@@ -103,12 +103,10 @@ Deploy the url shortener application to the cluster. Use the following configura
 1. Run load on local dev machine.
 
    ```bash
-   k6 run endpoint_prod_variable.js (switch k9s to nodes)
+   k6 run endpoint_prod_variable.js
    ```
 
-2. View alerts. Todo port forward alert manager
-
-3. View alerts. Todo port forward alert manager
+2. Import dashboard and view traffic
 
 ## Grafana cloud scenario
 
