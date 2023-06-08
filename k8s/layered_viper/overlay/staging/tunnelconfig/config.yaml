@@ -1,0 +1,12 @@
+# See the createtunnel.sh script in endtoenddemo in the root of this repo for how this needs to be populated
+tunnel: TUNNEL_NAME
+# must be in creds sub directory:
+credentials-file: /etc/cloudflared/creds/TUNNEL_ID.json
+
+metrics: 0.0.0.0:2000
+no-autoupdate: true
+ingress:
+  - hostname: HOSTNAME
+    service: http://prod-pocketshorten-service:8090
+  # This rule matches any traffic which didn't match a previous rule, and responds with HTTP 404.
+  - service: http_status:404
