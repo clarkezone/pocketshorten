@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: pocketshorten-viper
 spec:
-  replicas: 3
+  replicas: 6
   template:
     spec:
       containers:
@@ -23,27 +23,12 @@ spec:
             failureThreshold: 1
             initialDelaySeconds: 10
             periodSeconds: 10
-      affinity:
-        podAntiAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            - labelSelector:
-                matchExpressions:
-                  - key: app
-                    operator: In
-                    values:
-                      - pocketshorten-viper
-              topologyKey:
-                "kubernetes.io/hostname"
-
-                #      affinity:
-                #        podAntiAffinity:
-                #          preferredDuringSchedulingIgnoredDuringExecution:
-                #          - weight: 100
-                #            podAffinityTerm:
-                #              labelSelector:
-                #                matchExpressions:
-                #                  - key: app
-                #                    operator: In
-                #                    values:
-                #                      - pocketshorten-viper
-                #              topologyKey: "kubernetes.io/hostname"
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels:
+              app: pocketshorten-viper
+          matchLabelKeys:
+            - pod-template-hash
