@@ -1,10 +1,15 @@
+# TODO don't add same link multiple times
+# If shortlink exits, update markdown
+# only update links and markdown with flags
+# fix linting errors
+
 import re
 import argparse
 import json
 from datetime import datetime, timezone
 
+
 def extract_urls(file_path, json_data, json_file_path, key_for_add):
-    # Create a dictionary with expanded URLs as keys and their corresponding shortened forms as values
     url_dict = {entry[1]: entry[0] for entry in json_data["values"]}
 
     with open(file_path, 'r') as file:
@@ -33,6 +38,7 @@ def extract_urls(file_path, json_data, json_file_path, key_for_add):
         with open(json_file_path, 'w') as jfile:
             json.dump(json_data, jfile, indent=4)
 
+
 def main():
     parser = argparse.ArgumentParser(description='Check URLs from a markdown file against a JSON list.')
     parser.add_argument('md_file', help='Path to the markdown file.')
@@ -50,6 +56,7 @@ def main():
         print("Error: One of the provided files was not found.")
     except Exception as e:
         print(f"An error occurred: {e}")
+
 
 if __name__ == "__main__":
     main()
