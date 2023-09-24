@@ -3,7 +3,7 @@ import json
 from datetime import datetime, timezone
 import argparse
 
-SHORT_URL_PREFIX = "http://q6o.to/"
+SHORT_URL_PREFIX = "https://q6o.to/"
 
 def extract_urls(file_path, json_data, json_file_path, tag):
     # Create a dictionary with expanded URLs as keys and their corresponding shortened forms as values
