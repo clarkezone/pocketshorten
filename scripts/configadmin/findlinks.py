@@ -15,29 +15,26 @@ def extract_urls(file_path, json_data, json_file_path, tag):
     with open(file_path, 'r') as file:
         content = file.read()
 
-    pattern = r'\[.*?\]\((http[s]?://(?!q6o\.com).*?)\)'
-    urls = re.findall(pattern, content)
-    for url in urls:
-        # Skip URLs starting with the short form prefix
-        if url.startswith(SHORT_URL_PREFIX):
+    for url, shortened in url_dict.items():
+        if not shortened:  # If the shortened form is empty
             continue
-        elif url in url_dict and url_dict[url]:
-            # Only replace if the shortened form is not an empty string
-            shortened_url = SHORT_URL_PREFIX + url_dict[url]
-            content = content.replace(url, shortened_url)
+        markdown_link_pattern = r'(\[.*?\]\()' + re.escape(url) + r'(\))'
+        shortened_url = SHORT_URL_PREFIX + shortened
+        if re.search(markdown_link_pattern, content):
+            content = re.sub(markdown_link_pattern, r'\1' + shortened_url + r'\2', content)
             replacements_count += 1
-        else:
-            # Check if URL is already in json_data during this run
-            if any(entry for entry in json_data["values"] if entry[1] == url):
-                continue
 
-            print(url, "not found in JSON")
-
-            # Adjusting the datetime format to remove the ':' in the timezone portion
-            current_time = datetime.now(timezone.utc).astimezone().strftime('%Y-%m-%dT%H:%M:%S%z')
-            current_time = current_time[:-2] + current_time[-2:]  # Removing the ':' from the offset
-            json_data["values"].append(["", url, tag, current_time])  # Use the tag here
-            new_entries_count += 1
+    pattern = r'\[.*?\]\((https[s]?://(?!q6o\.to).*?)\)'
+    unmatched_urls = re.findall(pattern, content)
+    for url in unmatched_urls:
+        # Check if URL is already in json_data during this run
+        if any(entry for entry in json_data["values"] if entry[1] == url):
+            continue
+        print(url, "not found in JSON")
+        current_time = datetime.now(timezone.utc).astimezone().strftime('%Y-%m-%dT%H:%M:%S%z')
+        current_time = current_time[:-2] + current_time[-2:]
+        json_data["values"].append(["", url, tag, current_time])
+        new_entries_count += 1
 
     # Only write the updated markdown content back if replacements were made
     if replacements_count > 0:
