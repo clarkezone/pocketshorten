@@ -5,8 +5,13 @@ import argparse
 
 SHORT_URL_PREFIX = "https://q6o.to/"
 
-def extract_urls(file_path, json_data, json_file_path, tag):
-    # Create a dictionary with expanded URLs as keys and their corresponding shortened forms as values
+
+def extract_urls(file_path,
+                 json_data,
+                 json_file_path,
+                 tag):
+    # Create a dictionary with expanded URLs
+    # as keys and their corresponding shortened forms as values
     url_dict = {entry[1]: entry[0] for entry in json_data["values"]}
 
     new_entries_count = 0  # Counter for new entries added to the JSON
@@ -21,7 +26,8 @@ def extract_urls(file_path, json_data, json_file_path, tag):
         markdown_link_pattern = r'(\[.*?\]\()' + re.escape(url) + r'(\))'
         shortened_url = SHORT_URL_PREFIX + shortened
         if re.search(markdown_link_pattern, content):
-            content = re.sub(markdown_link_pattern, r'\1' + shortened_url + r'\2', content)
+            content = re.sub(markdown_link_pattern, r'\1'
+                             + shortened_url + r'\2', content)
             replacements_count += 1
 
     pattern = r'\[.*?\]\((https[s]?://(?!q6o\.to).*?)\)'
@@ -31,7 +37,8 @@ def extract_urls(file_path, json_data, json_file_path, tag):
         if any(entry for entry in json_data["values"] if entry[1] == url):
             continue
         print(url, "not found in JSON")
-        current_time = datetime.now(timezone.utc).astimezone().strftime('%Y-%m-%dT%H:%M:%S%z')
+        current_time = datetime.now(timezone.utc)\
+            .astimezone().strftime('%Y-%m-%dT%H:%M:%S%z')
         current_time = current_time[:-2] + current_time[-2:]
         json_data["values"].append(["", url, tag, current_time])
         new_entries_count += 1
@@ -47,14 +54,19 @@ def extract_urls(file_path, json_data, json_file_path, tag):
             json.dump(json_data, jfile, indent=4)
 
     # Print the summary
-    print(f"Summary:\nNew entries added to JSON: {new_entries_count}\nReplacements made in markdown: {replacements_count}")
+    print('Summary:\nNew entries added to JSON:'
+          '{}\nReplacements made in markdown:'
+          '{}'.format(new_entries_count, replacements_count))
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Extract URLs from a markdown file and check against a JSON file.")
+    parser = argparse.ArgumentParser(description="Extract URLs"
+                                     "from a markdown file and check "
+                                     "against a JSON file.")
     parser.add_argument("markdown_file", help="Path to the markdown file.")
     parser.add_argument("json_file", help="Path to the JSON file.")
-    parser.add_argument("tag", help="Tag to use for new entries in the JSON data.")  # New argument for the tag
+    parser.add_argument("tag", help="Tag to use for new "
+                        "entries in the JSON data.")
     args = parser.parse_args()
 
     with open(args.json_file, 'r') as jfile:
