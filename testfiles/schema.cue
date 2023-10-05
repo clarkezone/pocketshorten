@@ -10,5 +10,3 @@ import "list"
   _shortnamesunique: true & list.UniqueItems(shortnames)
   _urlsunique: true & list.UniqueItems(urls)
 }
-
-
