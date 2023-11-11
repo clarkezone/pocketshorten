@@ -16,7 +16,7 @@ spec:
       containers:
         - name: cloudflared
           image:
-            cloudflare/cloudflared:2023.5.1
+            cloudflare/cloudflared:2023.6.0
             #image: cloudflare/cloudflared:2023.2.1
           imagePullPolicy: Always
           args:
